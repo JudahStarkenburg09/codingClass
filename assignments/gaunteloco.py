@@ -13,7 +13,7 @@ os.chdir(os.path.join(current_directory, folder1))
 
 pygame.init()
 
-pygame.mixer.music.load('lose.mp3')
+
 
 losses = 0
 caught = 0
@@ -111,6 +111,8 @@ while running:
         caught += 1
         x1 = randx1
         y1 = 000
+        pygame.mixer.music.load('Ding.mp3')
+        pygame.mixer.music.play()
     if ball2_rect.colliderect(glove_rect): #Collision ball2 with glove, resets up to top
         speedInc += 0.8
         speed2 = (random.uniform(5, 12) + speedInc)
@@ -119,6 +121,8 @@ while running:
         caught += 1
         x2 = randx2
         y2 = 000
+        pygame.mixer.music.load('Ding.mp3')
+        pygame.mixer.music.play()
     if y1 > 650: #Ball1 makes it to bottom
         speed1 = random.uniform(5, 12)
         posNeg1 = random.randint(1, 2)
@@ -126,14 +130,16 @@ while running:
         losses += 1
         x1 = randx1
         y1 = 000
+        pygame.mixer.music.load('lose.mp3')
         pygame.mixer.music.play()
-    if y2 > 650: #Ball1 makes it to bottom
+    if y2 > 650: #Ball2 makes it to bottom
         speed2 = random.uniform(5, 12)
         posNeg2 = random.randint(1, 2)
         randx2 = random.randint(100, 900)
         losses += 1
         x2 = randx2
         y2 = 000
+        pygame.mixer.music.load('lose.mp3')
         pygame.mixer.music.play()
     if x3 < -5: #Bounce glove off left side
         x3 = x3 + 16
