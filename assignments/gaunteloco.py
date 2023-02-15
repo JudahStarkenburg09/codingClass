@@ -9,6 +9,8 @@ os.chdir(os.path.join(current_directory, folder1))
 
 
 
+
+
 pygame.init()
 
 pygame.mixer.music.load('lose.mp3')

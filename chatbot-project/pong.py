@@ -86,7 +86,7 @@ There will be a 10 second countdown before game starts!
 The controls are w/s and ^/v. 
         
         """)
-
+        pygame.mixer.music.load("countdown.mp3")
         countdown = 10
         while countdown > 0:
             countdown_text = font.render(str(countdown), True, (255, 255, 255))
@@ -97,6 +97,7 @@ The controls are w/s and ^/v.
             screen.blit(background, (0, 0))
             pygame.draw.rect(screen, (255, 255, 255), (paddle1_x, paddle1_y, paddle_width, paddle_height))
             pygame.draw.rect(screen, (255, 255, 255), (paddle2_x, paddle2_y, paddle_width, paddle_height))
+            pygame.mixer.music.play()
 
         # Set up countdown timer
         countdown_time = 3
@@ -150,6 +151,8 @@ The controls are w/s and ^/v.
                 ball_speed_x = -ball_speed_x
                 COLOR = random.choice(COLORS)
                 screen.blit(background, (0, 0))
+                pygame.mixer.music.load("boing.mp3")
+                pygame.mixer.music.play()
                 pygame.draw.rect(screen, (COLOR), (paddle1_x, paddle1_y, paddle_width, paddle_height))
                 pygame.draw.rect(screen, (COLOR), (paddle2_x, paddle2_y, paddle_width, paddle_height))
                 pygame.draw.circle(screen, (COLOR), (ball_x, ball_y), ball_radius)
@@ -159,6 +162,8 @@ The controls are w/s and ^/v.
                 ball_speed_x = -ball_speed_x
                 COLOR = random.choice(COLORS)
                 screen.blit(background, (0, 0))
+                pygame.mixer.music.load("boing.mp3")
+                pygame.mixer.music.play()
                 pygame.draw.rect(screen, (COLOR), (paddle1_x, paddle1_y, paddle_width, paddle_height))
                 pygame.draw.rect(screen, (COLOR), (paddle2_x, paddle2_y, paddle_width, paddle_height))
                 pygame.draw.circle(screen, (COLOR), (ball_x, ball_y), ball_radius)
