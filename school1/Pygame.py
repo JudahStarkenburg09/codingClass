@@ -1,5 +1,10 @@
 import pygame
 import time
+import os
+
+current_directory = os.getcwd()
+folder1 = 'school1'
+os.chdir(os.path.join(current_directory, folder1))
 
 pygame.init()
 

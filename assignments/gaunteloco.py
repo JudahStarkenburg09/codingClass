@@ -1,17 +1,11 @@
 import pygame
 import time
 import random
-import os
 
-current_directory = os.getcwd()
-folder1 = 'assignments'
-os.chdir(os.path.join(current_directory, folder1))
+
 
 pygame.init()
-
-print("Hello!")
-#Get rid of this line --^
-
+print()
 pygame.mixer.music.load('lose.mp3')
 
 speed1 = random.uniform(6, 8)
