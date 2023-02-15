@@ -5,7 +5,7 @@ import random
 pygame.init()
 print()
 pygame.mixer.music.load('lose.mp3')
-
+ 
 speed1 = random.uniform(6, 8)
 posNeg1 = random.randint(1,2)
 randx1 = random.randint(100,900)
