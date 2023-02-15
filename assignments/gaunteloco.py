@@ -10,6 +10,7 @@ os.chdir(os.path.join(current_directory, folder1))
 pygame.init()
 
 print("Hello!")
+#Get rid of this line --^
 
 pygame.mixer.music.load('lose.mp3')
 
