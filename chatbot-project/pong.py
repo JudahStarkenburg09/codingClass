@@ -150,6 +150,8 @@ The controls are w/s and ^/v.
                 ball_speed_x = -ball_speed_x
                 COLOR = random.choice(COLORS)
                 screen.blit(background, (0, 0))
+                pygame.mixer.music.load("boing.mp3")
+                pygame.mixer.music.play()
                 pygame.draw.rect(screen, (COLOR), (paddle1_x, paddle1_y, paddle_width, paddle_height))
                 pygame.draw.rect(screen, (COLOR), (paddle2_x, paddle2_y, paddle_width, paddle_height))
                 pygame.draw.circle(screen, (COLOR), (ball_x, ball_y), ball_radius)
@@ -159,6 +161,8 @@ The controls are w/s and ^/v.
                 ball_speed_x = -ball_speed_x
                 COLOR = random.choice(COLORS)
                 screen.blit(background, (0, 0))
+                pygame.mixer.music.load("boing.mp3")
+                pygame.mixer.music.play()
                 pygame.draw.rect(screen, (COLOR), (paddle1_x, paddle1_y, paddle_width, paddle_height))
                 pygame.draw.rect(screen, (COLOR), (paddle2_x, paddle2_y, paddle_width, paddle_height))
                 pygame.draw.circle(screen, (COLOR), (ball_x, ball_y), ball_radius)

@@ -1,5 +1,6 @@
 import random
 from termcolor import colored
+import os
 os.system('cls')
 text_linus = colored('<Linus> ', 'green', attrs=['dark','bold'])
 print(text_linus + "Linus will need to install a database for many features to work, please wait... Do not close the app")
@@ -9,7 +10,6 @@ nltk.download('wordnet')
 from nltk.corpus import wordnet
 import re
 import sys
-import os
 import pygame
 from email.message import EmailMessage
 import ssl
@@ -20,7 +20,7 @@ from TicTacToe1p import tic_tac_toe1p
 from TicTacToe2p import tic_tac_toe2p
 from countryData import CCCdatbase
 import math
-
+os.system("cls")
 
 
 
@@ -42,6 +42,7 @@ def tic_tac_toe():
         
     else:
         return "Canceled"
+
 
 current_directory = os.getcwd()
 folder1 = 'data'
