@@ -7,17 +7,20 @@ current_directory = os.getcwd()
 folder1 = 'assignments'
 os.chdir(os.path.join(current_directory, folder1))
 
+
+
 pygame.init()
-print()
+
 pygame.mixer.music.load('lose.mp3')
 
 losses = 0
-
-speed1 = random.uniform(6, 8)
+caught = 0
+speedInc = 0.2
+speed1 = random.uniform(5, 10) #INITIAL SPEED FOR BALL1
 posNeg1 = random.randint(1,2)
 randx1 = random.randint(100,900)
 
-speed2 = random.uniform(6, 8)
+speed2 = random.uniform(5, 10) #INITIAL SPEED FOR BALL2
 posNeg2 = random.randint(1,2)
 randx2 = random.randint(100,900)
 
@@ -56,13 +59,13 @@ while running:
             running = False
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
-        x3 -= 15
+        x3 -= 16
     if keys[pygame.K_RIGHT]:
-        x3 += 15
+        x3 += 16
     if keys[pygame.K_UP]:
-        y3 -= 15
+        y3 -= 16
     if keys[pygame.K_DOWN]:
-        y3 += 15
+        y3 += 16
 
 
     if posNeg1 == 1:
@@ -99,19 +102,23 @@ while running:
     if x2 > 950: #Bounce ball2 off right side
         posNeg2 = 2
     if ball1_rect.colliderect(glove_rect): #Collision ball1 with glove, resets up to top
-        speed1 = random.uniform(5, 10)
+        speedInc += 0.8
+        speed1 = (random.uniform(5, 12) + speedInc)
         posNeg1 = random.randint(1, 2)
         randx1 = random.randint(100, 900)
+        caught += 1
         x1 = randx1
         y1 = 000
     if ball2_rect.colliderect(glove_rect): #Collision ball2 with glove, resets up to top
-        speed2 = random.uniform(5, 10)
+        speedInc += 0.8
+        speed2 = (random.uniform(5, 12) + speedInc)
         posNeg2 = random.randint(1, 2)
         randx2 = random.randint(100, 900)
+        caught += 1
         x2 = randx2
         y2 = 000
     if y1 > 650: #Ball1 makes it to bottom
-        speed1 = random.uniform(5, 10)
+        speed1 = random.uniform(5, 12)
         posNeg1 = random.randint(1, 2)
         randx1 = random.randint(100, 900)
         losses += 1
@@ -119,7 +126,7 @@ while running:
         y1 = 000
         pygame.mixer.music.play()
     if y2 > 650: #Ball1 makes it to bottom
-        speed2 = random.uniform(5, 10)
+        speed2 = random.uniform(5, 12)
         posNeg2 = random.randint(1, 2)
         randx2 = random.randint(100, 900)
         losses += 1
@@ -127,14 +134,26 @@ while running:
         y2 = 000
         pygame.mixer.music.play()
     if x3 < -5: #Bounce glove off left side
-        x3 = x3 + 15
+        x3 = x3 + 16
     if y3 > 570: #Bounce glove off bottom
-        y3 = y3 - 15
+        y3 = y3 - 16
     if x3 > 910: #Bounce glove off right side
-        x3 = x3 - 15
+        x3 = x3 - 16
     if y3 < 0:  #Bounce glove off top
-        y3 = y3 + 15
-
+        y3 = y3 + 16
+    liveLeft = 10 - losses
+    font = pygame.font.Font(None, 30)
+    score = font.render("Score: " + str(caught) + " :-: " + str(liveLeft), True, (0, 0, 0))
+    screen.blit(score, (860,10))
+    if liveLeft <= 0:
+        pygame.mixer.music.stop()
+        os.system("cls")
+        print("\n")
+        print("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV")
+        print("GAME OVER! FINAL SCORE: " + str(caught))
+        print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+        print("\n")
+        break
     time.sleep(.03) #ALL ANIMATIONS SPEED
     pygame.display.update()
     pygame.display.flip()
