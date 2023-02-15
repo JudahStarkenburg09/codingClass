@@ -1,10 +1,17 @@
 import pygame
 import time
 import random
+import os
+
+current_directory = os.getcwd()
+folder1 = 'assignments'
+os.chdir(os.path.join(current_directory, folder1))
 
 pygame.init()
 print()
 pygame.mixer.music.load('lose.mp3')
+
+losses = 0
 
 speed1 = random.uniform(6, 8)
 posNeg1 = random.randint(1,2)
@@ -85,36 +92,45 @@ while running:
     #All Collisions
     if x1 < 0: #Bounce ball1 off left side
         posNeg1 = 1
-    if x1 > 980: #Bounce ball1 off right side
+    if x1 > 950: #Bounce ball1 off right side
         posNeg1 = 2
     if x2 < 0: #Bounce ball2 off left side
         posNeg2 = 1
-    if x2 > 980: #Bounce ball2 off right side
+    if x2 > 950: #Bounce ball2 off right side
         posNeg2 = 2
     if ball1_rect.colliderect(glove_rect): #Collision ball1 with glove, resets up to top
-        speed1 = random.uniform(6, 8)
-        posNeg1 = random.randint(1,2)
-        randx1 = random.randint(100,900)
+        speed1 = random.uniform(5, 10)
+        posNeg1 = random.randint(1, 2)
+        randx1 = random.randint(100, 900)
         x1 = randx1
         y1 = 000
     if ball2_rect.colliderect(glove_rect): #Collision ball2 with glove, resets up to top
-        speed2 = random.uniform(6, 8)
-        posNeg2 = random.randint(1,2)
-        randx2 = random.randint(100,900)
+        speed2 = random.uniform(5, 10)
+        posNeg2 = random.randint(1, 2)
+        randx2 = random.randint(100, 900)
         x2 = randx2
         y2 = 000
     if y1 > 650: #Ball1 makes it to bottom
-        speed2 = random.uniform(6, 8)
-        posNeg2 = random.randint(1,2)
-        randx2 = random.randint(100,900)
+        speed1 = random.uniform(5, 10)
+        posNeg1 = random.randint(1, 2)
+        randx1 = random.randint(100, 900)
+        losses += 1
         x1 = randx1
         y1 = 000
+        pygame.mixer.music.play()
+    if y2 > 650: #Ball1 makes it to bottom
+        speed2 = random.uniform(5, 10)
+        posNeg2 = random.randint(1, 2)
+        randx2 = random.randint(100, 900)
+        losses += 1
+        x2 = randx2
+        y2 = 000
         pygame.mixer.music.play()
     if x3 < -5: #Bounce glove off left side
         x3 = x3 + 15
     if y3 > 570: #Bounce glove off bottom
         y3 = y3 - 15
-    if x3 > 930: #Bounce glove off right side
+    if x3 > 910: #Bounce glove off right side
         x3 = x3 - 15
     if y3 < 0:  #Bounce glove off top
         y3 = y3 + 15
