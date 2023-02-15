@@ -8,7 +8,9 @@ folder1 = 'assignments'
 os.chdir(os.path.join(current_directory, folder1))
 
 pygame.init()
-print()
+
+print("Hello!")
+
 pygame.mixer.music.load('lose.mp3')
 
 speed1 = random.uniform(6, 8)
