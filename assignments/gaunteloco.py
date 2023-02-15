@@ -1,6 +1,11 @@
 import pygame
 import time
 import random
+import os
+
+current_directory = os.getcwd()
+folder1 = 'assignments'
+os.chdir(os.path.join(current_directory, folder1))
 
 pygame.init()
 print()
