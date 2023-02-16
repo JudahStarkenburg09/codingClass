@@ -3,10 +3,13 @@ from termcolor import colored
 import os
 os.system('cls')
 text_linus = colored('<Linus> ', 'green', attrs=['dark','bold'])
-print(text_linus + "Linus will need to install a database for many features to work, please wait... Do not close the app")
-print("\n")
 import nltk
-nltk.download('wordnet')
+if not nltk.corpus.wordnet.exists():
+    # download wordnet resource
+    print(text_linus + "Linus will need to install a database for many features to work, please wait... Do not close the app")
+    nltk.download('wordnet')
+    print("\n")
+
 from nltk.corpus import wordnet
 import re
 import sys
