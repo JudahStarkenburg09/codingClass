@@ -4,11 +4,11 @@ import os
 os.system('cls')
 text_linus = colored('<Linus> ', 'green', attrs=['dark','bold'])
 import nltk
-if not nltk.corpus.wordnet.exists():
+# if not nltk.corpus.wordnet.exists():
     # download wordnet resource
-    print(text_linus + "Linus will need to install a database for many features to work, please wait... Do not close the app")
-    nltk.download('wordnet')
-    print("\n")
+print(text_linus + "Linus will need to install a database for many features to work, please wait... Do not close the app")
+nltk.download('wordnet')
+print("\n")
 
 from nltk.corpus import wordnet
 import re
