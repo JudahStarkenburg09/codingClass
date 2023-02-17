@@ -6,10 +6,10 @@ import os
 current_directory = os.getcwd()
 folder1 = 'assignments'
 os.chdir(os.path.join(current_directory, folder1))
-
-import pygame
+runningMenu = True
 
 def mouseGame():
+    pygame.init()
     losses = 0
     caught = 0
     speedInc = 0.2
@@ -51,6 +51,7 @@ def mouseGame():
 
     running = True
     while running:
+        pygame.init()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -155,18 +156,20 @@ def mouseGame():
             print("GAME OVER! FINAL SCORE: " + str(caught))
             print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
             print("\n")
+            pygame.quit()
             break
         time.sleep(.03) #ALL ANIMATIONS SPEED
         pygame.display.update()
         pygame.display.flip()
     pygame.quit()
 
-pygame.init()
+
 
 
 
 
 def arrowKeyGame():
+    pygame.init()
     losses = 0
     caught = 0
     speedInc = 0.2
@@ -208,6 +211,7 @@ def arrowKeyGame():
 
     running = True
     while running:
+        pygame.init()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -315,35 +319,37 @@ def arrowKeyGame():
             print("GAME OVER! FINAL SCORE: " + str(caught))
             print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
             print("\n")
+            pygame.quit()
             break
+
         time.sleep(.03) #ALL ANIMATIONS SPEED
         pygame.display.update()
         pygame.display.flip()
     pygame.quit()
 
-pygame.init()
 
 
 
-# Set up the menu screen
-width1, height1 = 1000, 650
-menu = pygame.display.set_mode((width1, height1))
 
-# Set up the font for the button labels
-font = pygame.font.Font(None, 50)
 
-# Set up the first button
-button1 = pygame.Rect(300, 200, 400, 100)  # x, y, width, height
-label1 = font.render("Play With Arrow Keys", True, (255, 255, 255))  # text, antialiasing, color
 
-# Set up the second button
-button2 = pygame.Rect(300, 350, 400, 100)
-label2 = font.render("Play With Mouse", True, (255, 255, 255))
-
-# Main game loop
-runningMenu = True
 while runningMenu:
+    pygame.init()
     # Handle events
+    # Set up the menu screen
+    width1, height1 = 1000, 650
+    menu = pygame.display.set_mode((width1, height1))
+
+    # Set up the font for the button labels
+    font = pygame.font.Font(None, 50)
+
+    # Set up the first button
+    button1 = pygame.Rect(300, 200, 400, 100)  # x, y, width, height
+    label1 = font.render("Play With Arrow Keys", True, (255, 255, 255))  # text, antialiasing, color
+
+    # Set up the second button
+    button2 = pygame.Rect(300, 350, 400, 100)
+    label2 = font.render("Play With Mouse", True, (255, 255, 255))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             runningMenu = False
@@ -354,13 +360,26 @@ while runningMenu:
             elif button2.collidepoint(event.pos):
                 mouseGame()
 
+    # Check if the mouse is currently hovering over a button, and change its color accordingly
+    if button1.collidepoint(pygame.mouse.get_pos()):
+        button1_color = (100, 100, 255)  # blue+
+    else:
+        button1_color = (0, 0, 255)  # blue
+
+    if button2.collidepoint(pygame.mouse.get_pos()):
+        button2_color = (100, 100, 255)  # blue+
+    else:
+        button2_color = (0, 0, 255)  # blue
+
     # Draw the buttons and labels
-    pygame.draw.rect(menu, (0, 0, 255), button1)
-    pygame.draw.rect(menu, (0, 0, 255), button2)
+    pygame.draw.rect(menu, button1_color, button1)
+    pygame.draw.rect(menu, button2_color, button2)
     menu.blit(label1, (button1.centerx - label1.get_width() // 2, button1.centery - label1.get_height() // 2))
     menu.blit(label2, (button2.centerx - label2.get_width() // 2, button2.centery - label2.get_height() // 2))
 
     # Update the display
     pygame.display.update()
 
-pygame.quit()
+
+
+    

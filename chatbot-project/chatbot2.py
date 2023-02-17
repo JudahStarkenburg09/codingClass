@@ -1,14 +1,24 @@
 import random
 from termcolor import colored
 import os
+import time
 os.system('cls')
 text_linus = colored('<Linus> ', 'green', attrs=['dark','bold'])
 import nltk
-# if not nltk.corpus.wordnet.exists():
-    # download wordnet resource
-print(text_linus + "Linus will need to install a database for many features to work, please wait... Do not close the app")
-nltk.download('wordnet')
-print("\n")
+progressBar = [colored('[█   ]', 'green'), colored('[██  ]', 'green'), colored('[███ ]', 'green'), colored('[████]', 'green')]
+if not nltk.downloader.Downloader().is_installed('wordnet'):
+    print(text_linus + "Downloading 'wordnet' corpus, a useful feature for this app... Please do not close the application, it will be a short download!")
+    nltk.download('wordnet', quiet=False)
+    for i in range(4):
+        os.system('cls')
+        print(progressBar[i])
+        time.sleep(0.33333)
+
+    
+    
+
+
+
 
 from nltk.corpus import wordnet
 import re
@@ -22,10 +32,11 @@ from pong import pongGame
 from TicTacToe1p import tic_tac_toe1p
 from TicTacToe2p import tic_tac_toe2p
 from countryData import CCCdatbase
+from nameGenerator import randName
 import math
 os.system("cls")
 
-
+os.system('cls')
 
 abilities = ["""
 I can do many things, some things I can do are:
@@ -46,6 +57,8 @@ def tic_tac_toe():
     else:
         return "Canceled"
 
+def randomNameGenerator():
+    return randName()
 
 current_directory = os.getcwd()
 folder1 = 'data'
@@ -271,6 +284,10 @@ responses = [
     {
         "regex": r'(sin|cos|tan|sin-1|cos-1|tan-1|sine|cosine|tangent|sine-1|cosine-1|tangent-1)\s*(?:of)?\s*(\d*\.?\d+)',
         "action": "SinCosTan"
+    },
+    {
+        "input": ["pick a random name", "random name", "random name generator"],
+        "action": "randomNameGenerator"
     }
 ]
 
