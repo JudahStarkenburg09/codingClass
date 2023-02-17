@@ -4,6 +4,7 @@ import os
 import time
 os.system('cls')
 text_linus = colored('<Linus> ', 'green', attrs=['dark','bold'])
+print(text_linus + "Please wait...")
 import nltk
 progressBar = [colored('[█   ]', 'green'), colored('[██  ]', 'green'), colored('[███ ]', 'green'), colored('[████]', 'green')]
 if not nltk.downloader.Downloader().is_installed('wordnet'):
