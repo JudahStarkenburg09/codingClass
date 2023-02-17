@@ -12,9 +12,17 @@ def randName():
         picking = True
         pickedName = random.choice(fromNames)
         waitTime = 0
+        amountNamesLeft = len(nameList) 
+        #                                                     40                                                                  
+        loadBarNamesNotDone = colored("████████████████████████████████████████", 'green')
+        bracketsNames = ["[", "]"]
         while picking:
             os.system('cls')
-            print(random.choice(fromNames))
+            print(random.choice(fromNames) + '\n' + '\n')
+            loadBarNamesNotDone = loadBarNamesNotDone[:-1]
+            print(bracketsNames[0] + loadBarNamesNotDone + bracketsNames[1])
+
+
             pickingProgress += 1
             if pickingProgress >= 40:
                 os.system('cls')

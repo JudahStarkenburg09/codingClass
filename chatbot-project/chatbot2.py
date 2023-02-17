@@ -34,6 +34,7 @@ from TicTacToe1p import tic_tac_toe1p
 from TicTacToe2p import tic_tac_toe2p
 from countryData import CCCdatbase
 from nameGenerator import randName
+from gaunteloco import guanteloco
 import math
 os.system("cls")
 
@@ -60,6 +61,9 @@ def tic_tac_toe():
 
 def randomNameGenerator():
     return randName()
+
+def guanteLocoGame():
+    return guanteloco()
 
 current_directory = os.getcwd()
 folder1 = 'data'
@@ -258,6 +262,10 @@ responses = [
         "action": "tic_tac_toe"
     },
     {
+        "input": ["play guanteloco", "play baseball game", "play guanteloco game", "play baseball", "guanteloco", "baseball", "guanteloco game", "baseball game"],
+        "action": 'guanteLocoGame'
+    },
+    {
         "regex": r'(^play)\s*((the song)?)\s*([\w\s]*)',
         "action": "playSong",
     },
@@ -289,7 +297,7 @@ responses = [
     {
         "input": ["pick a random name", "random name", "random name generator"],
         "action": "randomNameGenerator"
-    }
+    },
 ]
 
 

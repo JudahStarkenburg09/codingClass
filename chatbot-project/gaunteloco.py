@@ -6,7 +6,10 @@ import os
 def guanteloco():
     runningMenu = True
 
+    caught = None
+
     def mouseGame():
+        global caught
         pygame.init()
         losses = 0
         caught = 0
@@ -155,7 +158,7 @@ def guanteloco():
                 print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
                 print("\n")
                 pygame.quit()
-                break
+                return "Nice score! You got " + str(caught) + '!'
             time.sleep(.03) #ALL ANIMATIONS SPEED
             pygame.display.update()
             pygame.display.flip()
@@ -167,6 +170,7 @@ def guanteloco():
 
 
     def arrowKeyGame():
+        global caught
         pygame.init()
         losses = 0
         caught = 0
@@ -317,8 +321,8 @@ def guanteloco():
                 print("GAME OVER! FINAL SCORE: " + str(caught))
                 print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
                 print("\n")
-                pygame.quit()
-                break
+                return "Nice score! You got " + str(caught) + '!'
+                
 
             time.sleep(.03) #ALL ANIMATIONS SPEED
             pygame.display.update()
@@ -330,7 +334,7 @@ def guanteloco():
 
 
 
-
+    
     while runningMenu:
         pygame.init()
         # Handle events
@@ -354,9 +358,12 @@ def guanteloco():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 # Check if the mouse is clicked on a button
                 if button1.collidepoint(event.pos):
-                    arrowKeyGame()
+                    return arrowKeyGame()
+                    
                 elif button2.collidepoint(event.pos):
-                    mouseGame()
+                    return mouseGame()
+                    
+                    
 
         # Check if the mouse is currently hovering over a button, and change its color accordingly
         if button1.collidepoint(pygame.mouse.get_pos()):
@@ -377,6 +384,8 @@ def guanteloco():
 
         # Update the display
         pygame.display.update()
+
+    
 
 
 
