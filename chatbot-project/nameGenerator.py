@@ -15,13 +15,13 @@ def randName():
             os.system('cls')
             print(random.choice(fromNames))
             pickingProgress += 1
-            if pickingProgress >= 30:
+            if pickingProgress >= 50:
                 os.system('cls')
                 picking = False
                 print(pickedName)
                 time.sleep(1)
                 return str("The Winner Is: " + str(pickedName) + "!")
-            time.sleep(0.1)
+            time.sleep(0.05)
         
     #Stage 1, input names
     while True:
