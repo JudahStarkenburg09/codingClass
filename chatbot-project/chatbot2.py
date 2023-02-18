@@ -48,6 +48,10 @@ Games (ex. pong, tic tac toe)
 > 
 """]
 
+def responseHello(regexMatches, talk):
+    helloResponseComplexList = [f"Hello {regexMatches[0]}, I'm Linus!", f"Hello {regexMatches[0]}, my name is Linus!", f"Hi {regexMatches[0]}, I'm Linus!"]
+    helloChoiceResponse = random.choice(helloResponseComplexList)
+    return helloChoiceResponse
 
 def tic_tac_toe():
     tictactoe1_2 = input(text_linus + "Would you like to play tic tac toe 1 player or 2 player? [1/2/quit]: ")
@@ -204,6 +208,7 @@ def mathing(matches):
                 print(text_linus + (rmatch[0] + '^' + rmatch[2] + ' = ' + str(float(rmatch[0]) ** (float(rmatch[2])))))
     return "Done!"
 
+
 responses = [
     {
         "input": ['hi','hello','sup',"wassup","hey","whats up",'hi linus','hello linus','sup linus',"wassup linus","hey linus","whats up linus"], #Never put capital letters or punctuation inside "input", Also make sure to add many options
@@ -298,6 +303,10 @@ responses = [
         "input": ["pick a random name", "random name", "random name generator"],
         "action": "randomNameGenerator"
     },
+    {
+        "regex": r'(?:hi|heregexMatchesllo|)\s*(?:im|me|i|my names|my name is)\s*(\w*\s*)',
+        "action": 'responseHello', 
+    },
 ]
 
 
@@ -312,9 +321,12 @@ def chatbot_response(talk, untalk):
             if regexMatches:
                 if "action" in response:
                     func = globals()[response['action']]
-                    return func(regexMatches)
+                    return func(regexMatches, talk)
                 elif "responses" in response:  
+                    
                     return random.choice(response["responses"])
+                    
+                
 
         elif talk in response['input']:
             if "action" in response:
