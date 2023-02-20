@@ -46,12 +46,21 @@ def hangManGame():
     print("Category Is " + categoryName + '\n' + "Begin Guessing Letters!")
 
     hangWord = random.choice(category)
+    print("THIS IS TEMPORARY BUT THE WORD IS: " + hangWord)
+
+    head = '   O'
+    rightArm = '  /'
+    chest = '|'
+    leftArm = '\\'
+    rightLeg = '  /'
+    leftLeg = ' \\'
 
 def print_stickman():
     print('   O')
     print('  /|\\')
     print('  / \\')
     print(' /   \\')
+
 
 
 
