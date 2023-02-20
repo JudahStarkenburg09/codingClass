@@ -115,7 +115,7 @@ def countryData(pattern):
 
 
 
-def playSong(pattern):
+def playSong(pattern, talk):
     patternSongPlaying = pattern[0][3]
     pygame.init()
     if (patternSongPlaying + '.mp3') in songList:
@@ -175,7 +175,7 @@ def songRequests():
     else:
         return "Canceled!"
 
-def SinCosTan(pattern):
+def SinCosTan(pattern, talk):
     operation = pattern[0][0]
     numberSCT = float(pattern[0][1])
     if operation == 'sin' or operation == 'sine':
@@ -193,7 +193,7 @@ def SinCosTan(pattern):
     
 
 
-def mathing(matches):
+def mathing(matches, talk):
     for rmatch in matches:
         match rmatch[1]:
             case '+' | 'plus':
@@ -275,6 +275,14 @@ responses = [
         "action": "playSong",
     },
     {
+        "input": ["stop", "stop playing", "stop song"],
+        "action": 'stopSong', #INCOMPLETE NO FUNCTION YET!!!!---------------------------------------
+    },
+    {
+        "input": ["pause", "spause playing", "pause song"],
+        "action": 'pauseSong' #INCOMPLETE NO FUNCTION YET!!!!------------------------------------------
+    },
+    {
         "regex": r'(\d*\.?\d+)\s*(\*|x|\/|\+|-|\^|\*\*|times|minus|plus|divide|divided by|to the power of|exponent)\s*(\d*\.?\d+)',
         "action": "mathing",
     },
@@ -304,7 +312,7 @@ responses = [
         "action": "randomNameGenerator"
     },
     {
-        "regex": r'(?:hi|heregexMatchesllo|)\s*(?:im|me|i|my names|my name is)\s*(\w*\s*)',
+        "regex": r'(?:hi|hello)?\s*(?:,|\.)*\s*(?:linus)?\s*(?:,|\.)*\s*(?:im|me|i|my names|my name is)\s*(\w*\s*)',
         "action": 'responseHello', 
     },
 ]
@@ -317,7 +325,7 @@ defaultResponse = ["I'm sorry, I don't understand.","I'm not sure I follow?","I 
 def chatbot_response(talk, untalk):
     for response in responses:
         if "regex" in response:
-            regexMatches = re.findall(response['regex'], untalk)
+            regexMatches = re.findall(response['regex'], untalk) 
             if regexMatches:
                 if "action" in response:
                     func = globals()[response['action']]
