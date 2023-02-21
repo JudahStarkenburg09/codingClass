@@ -37,7 +37,7 @@ def hangManGame():
     elif chooseRandOrOption == '2':
         categoryName = 'Home'
         category = wordsForHangGameAll[1]
-    elif chooseRandOrOption == '3':
+    elif chooseRandOrOption == 3:
         category = random.choice(wordsForHangGameAll)
         if category == wordsForHangGameAll[0]:
             randomCategoryChosen = "True"
