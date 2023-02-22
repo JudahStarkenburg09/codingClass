@@ -275,6 +275,10 @@ responses = [
         "action": 'guanteLocoGame'
     },
     {
+        "input": ['hangman', 'play hangman', 'hangman game', 'play hangman game'],
+        "action": 'playHangMan'
+    },
+    {
         "regex": r'(^play)\s*((the song)?)\s*([\w\s]*)',
         "action": "playSong",
     },
@@ -319,10 +323,6 @@ responses = [
         "regex": r'(?:hi|hello)?\s*(?:,|\.)*\s*(?:linus)?\s*(?:,|\.)*\s*(?:im|me|i|my names|my name is)\s*(\w*\s*)',
         "action": 'responseHello', 
     },
-    {
-        "input": ['hangman', 'play hangman', 'hangman game', 'play hangman game'],
-        "action": 'playHangMan'
-    }
 ]
 
 

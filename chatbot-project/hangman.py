@@ -31,6 +31,8 @@ stage0 = colored("""
                        ||
                        ||
                        ||
+                       ||
+                       ||
         ====================================
 """, 'red', attrs=['dark', 'bold'])
 
@@ -40,7 +42,7 @@ stage1 = colored("""
                ||      ||
               //       ||
    =======   //        ||
- // 0   O \\\\//         ||
+ // @   @ \\\\//         ||
  ||  ____ ||/          ||
   \\\\_____///           ||
                        ||
@@ -63,7 +65,7 @@ stage2 = colored("""
                ||      ||
               //       ||
    =======   //        ||
- // o   0 \\\\//         ||
+ // @   @ \\\\//         ||
  ||  ____ ||/          ||
   \\\\  ¯  ///           ||
      |||//             ||
@@ -74,7 +76,7 @@ stage2 = colored("""
      |||               ||
      |||               ||
                        ||
-                       ||
+                       || 
                        ||
                        ||
                        ||
@@ -87,7 +89,7 @@ stage3 = colored("""
                ||      ||
               //       ||
    =======   //        ||
- // Q   o \\\\//         ||
+ // @   @ \\\\//         ||
  ||  ____ ||/          ||
   \\\\      //           ||
      |||//             ||
@@ -112,7 +114,7 @@ stage4 = colored("""
                ||      ||
               //       ||
    =======   //        ||
- // o   o \\\\//         ||
+ // @   @ \\\\//         ||
  ||  ___  ||/          ||
   \\\\      //           ||
      |||//             ||
@@ -136,7 +138,7 @@ stage5 = colored("""
                ||      ||
               //       ||
    =======   //        ||
- // d   x \\\\//         ||
+ // @   @ \\\\//         ||
  ||   ___ ||/          ||
   \\\\      //           ||
      |||//             ||
@@ -177,7 +179,6 @@ stage6 = colored("""
                        ||
         ====================================
 """, 'red', attrs=['dark', 'bold'])
-
 
 
 
@@ -348,10 +349,17 @@ def hangManGame():
         elif livesUsed == 5:
             print(stage5)
 
+        elif guess == hangWord:
+                print(colored('You Win!', 'green', attrs=['dark', 'bold']) + '\n' + f'The Word Was {hangWord}')
+                print("\n")
+
+                print(colored(("Guessed letters: " + guessedLetters_str), 'red', attrs=['dark', 'bold']) + '\n')
+                return "Nice Job!"
+
         elif livesUsed == 6:
             print(stage6), print('\n')
             print(colored("You Lost!", 'red', attrs=['dark', 'bold']) + '\n')
             print(colored(("Guessed letters: " + guessedLetters_str), 'red', attrs=['dark', 'bold']) + '\n')
-            return "Better luck next time?"
+            return str("The Word Was " + colored(hangWord, 'yellow', attrs=['dark', 'bold']))
 
 
