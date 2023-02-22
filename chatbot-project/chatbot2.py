@@ -36,6 +36,7 @@ from countryData import CCCdatbase
 from nameGenerator import randName
 from gaunteloco import guanteloco
 import math
+from hangman import hangManGame
 os.system("cls")
 
 os.system('cls')
@@ -68,6 +69,9 @@ def randomNameGenerator():
 
 def guanteLocoGame():
     return guanteloco()
+
+def playHangMan():
+    return hangManGame()
 
 current_directory = os.getcwd()
 folder1 = 'data'
@@ -315,6 +319,10 @@ responses = [
         "regex": r'(?:hi|hello)?\s*(?:,|\.)*\s*(?:linus)?\s*(?:,|\.)*\s*(?:im|me|i|my names|my name is)\s*(\w*\s*)',
         "action": 'responseHello', 
     },
+    {
+        "input": ['hangman', 'play hangman', 'hangman game', 'play hangman game'],
+        "action": 'playHangMan'
+    }
 ]
 
 

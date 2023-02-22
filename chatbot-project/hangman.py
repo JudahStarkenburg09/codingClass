@@ -7,6 +7,181 @@ from wordsDatabase import someWords
 # current_directory = os.getcwd()
 # folder1 = 'data'
 # os.chdir(os.path.join(current_directory, folder1))
+
+from termcolor import colored
+
+
+stage0 = colored("""
+                +=======+
+               ||      ||
+               ||      ||
+               ||      ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+        ====================================
+""", 'red', attrs=['dark', 'bold'])
+
+
+stage1 = colored("""
+                +=======+
+               ||      ||
+              //       ||
+   =======   //        ||
+ // 0   O \\\\//         ||
+ ||  ____ ||/          ||
+  \\\\_____///           ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+        ====================================
+""", 'red', attrs=['dark', 'bold'])
+
+stage2 = colored("""
+                +=======+
+               ||      ||
+              //       ||
+   =======   //        ||
+ // o   0 \\\\//         ||
+ ||  ____ ||/          ||
+  \\\\  ¯  ///           ||
+     |||//             ||
+     |||               ||
+     |||               ||
+     |||               ||
+     |||               ||
+     |||               ||
+     |||               ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+        ====================================
+""", 'red', attrs=['dark', 'bold'])
+
+
+stage3 = colored("""
+                +=======+
+               ||      ||
+              //       ||
+   =======   //        ||
+ // Q   o \\\\//         ||
+ ||  ____ ||/          ||
+  \\\\      //           ||
+     |||//             ||
+    /|||               ||
+   //|||               ||
+ //  |||               ||
+||   |||               ||
+     |||               ||
+     |||               ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+        ====================================
+""", 'red', attrs=['dark', 'bold'])
+
+
+
+stage4 = colored("""
+                +=======+
+               ||      ||
+              //       ||
+   =======   //        ||
+ // o   o \\\\//         ||
+ ||  ___  ||/          ||
+  \\\\      //           ||
+     |||//             ||
+    /|||\\              ||
+   //|||\\\\             ||
+ //  |||  \\\\           ||
+||   |||   ||          ||
+     |||               ||
+     |||               ||
+                       ||
+                       ||
+                       ||
+                       ||
+                       ||
+        ====================================
+""", 'red', attrs=['dark', 'bold'])
+
+
+stage5 = colored("""
+                +=======+
+               ||      ||
+              //       ||
+   =======   //        ||
+ // d   x \\\\//         ||
+ ||   ___ ||/          ||
+  \\\\      //           ||
+     |||//             ||
+    /|||\\              ||
+   //|||\\\\             ||
+ //  |||  \\\\           ||
+||   |||   ||          ||
+     |||               ||
+     |||               ||
+    //                 ||
+  //                   ||
+//                     ||
+                       ||
+                       ||
+        ====================================
+""", 'red', attrs=['dark', 'bold'])
+
+
+stage6 = colored("""
+                +=======+
+               ||      ||
+              //       ||
+   =======   //        ||
+ // X   X \\\\//         ||
+ ||  ____ ||/          ||
+  \\\\/    \\//           ||
+     |||//             ||
+    /|||\\              ||
+   //|||\\\\             ||
+ //  |||  \\\\           ||
+||   |||   ||          ||
+     |||               ||
+     |||               ||
+    //\\\\               ||
+  //    \\\\             ||
+//        \\\\           ||
+                       ||
+                       ||
+        ====================================
+""", 'red', attrs=['dark', 'bold'])
+
+
+
+
+
 def hangManGame():
 
     livesUsed = 0
@@ -63,13 +238,14 @@ def hangManGame():
 2. Home
 3. Food
 4. Sports
-5. Random
+5. Movie Characters
+6. Random
 
 """)
     randomCategoryChosen = "False"
     chooseRandOrOption = input('Choose An Option [Number In List]: ').lower()
 
-    wordsForHangGameAll = [techWordsForHangGame, houseWordsForHangGame, foodWordsForHangGame, sportsWordsForHangGame]
+    wordsForHangGameAll = [techWordsForHangGame, houseWordsForHangGame, foodWordsForHangGame, sportsWordsForHangGame, movieCharacterWordsForHangGame]
 
     if chooseRandOrOption == '1' or 'tech' in chooseRandOrOption:
         categoryName = 'Technology'
@@ -83,7 +259,10 @@ def hangManGame():
     elif chooseRandOrOption == '4' or 'sport' in chooseRandOrOption:
         categoryName = 'Sports'
         category = wordsForHangGameAll[3]
-    elif chooseRandOrOption == '5' or 'random' in chooseRandOrOption:
+    elif chooseRandOrOption == '5' or 'characters' in chooseRandOrOption:
+        categoryName = 'Movie Characters'
+        category = wordsForHangGameAll[4]
+    elif chooseRandOrOption == '6' or 'random' in chooseRandOrOption:
         category = random.choice(wordsForHangGameAll)
         randomCategoryChosen = "True"
         if category == wordsForHangGameAll[0]:
@@ -94,6 +273,19 @@ def hangManGame():
             categoryName = 'Food'
         elif category == wordsForHangGameAll[3]:
             categoryName = 'Sports'
+    else:
+        category = random.choice(wordsForHangGameAll)
+        randomCategoryChosen = "True"
+        if category == wordsForHangGameAll[0]:
+            categoryName = 'Technology'
+        elif category == wordsForHangGameAll[1]:
+            categoryName = 'Home'
+        elif category == wordsForHangGameAll[2]:
+            categoryName = 'Food'
+        elif category == wordsForHangGameAll[3]:
+            categoryName = 'Sports'
+        elif category == wordsForHangGameAll[4]:
+            categoryName = 'Movie Characters'
 
 
     print('\n')
@@ -105,15 +297,11 @@ def hangManGame():
 
     hangWord = random.choice(category)
 
-    head = colored('   O', 'red', attrs=['dark', 'bold'])
-    rightArm = colored('  /', 'red', attrs=['dark', 'bold'])
-    chest = colored('|', 'red', attrs=['dark', 'bold'])
-    leftArm = colored('\\', 'red', attrs=['dark', 'bold'])
-    rightLeg = colored('  /', 'red', attrs=['dark', 'bold'])
-    leftLeg = colored(' \\', 'red', attrs=['dark', 'bold'])
 
     displayWord = "_" * len(hangWord)
     guessedLetters = []
+
+    print(stage0)
 
     while True:
         print('\n' + '\n')
@@ -138,45 +326,32 @@ def hangManGame():
                 hangWord = colored(hangWord, 'yellow', attrs=['dark', 'bold'])
                 print(colored('You Win!', 'green', attrs=['dark', 'bold']) + '\n' + f'The Word Was {hangWord}')
                 print("\n")
-                break
+
+                print(colored(("Guessed letters: " + guessedLetters_str), 'red', attrs=['dark', 'bold']) + '\n')
+                return "Nice Job!"
 
         if livesUsed == 0:
-            print('\n' + '\n' + '\n' + '\n')
+            print(stage0)
 
         elif livesUsed == 1:
-            print(head + '\n' + '\n' + '\n')
+            print(stage1)
 
         elif livesUsed == 2:
-            print(head + '\n' + rightArm + '\n' + '\n')
+            print(stage2)
 
         elif livesUsed == 3:
-            print(head + '\n' + rightArm + chest + '\n' + '\n')
+            print(stage3)
 
         elif livesUsed == 4:
-            print(head + '\n' + rightArm + chest + leftArm + '\n' + '\n')
+            print(stage4)
 
         elif livesUsed == 5:
-            print(head + '\n' + rightArm + chest + leftArm + '\n' + rightLeg + '\n')
+            print(stage5)
 
         elif livesUsed == 6:
-            print(head + '\n' + rightArm + chest + leftArm + '\n' + rightLeg + leftLeg + '\n')
+            print(stage6), print('\n')
             print(colored("You Lost!", 'red', attrs=['dark', 'bold']) + '\n')
-            
-            break
+            print(colored(("Guessed letters: " + guessedLetters_str), 'red', attrs=['dark', 'bold']) + '\n')
+            return "Better luck next time?"
 
-            
-
-    
-    
-
-
-
-
-
-
-
-    
-    
-
-hangManGame()
 
