@@ -1,108 +1,104 @@
 import pygame
-import os
-import sys
+import random
+
+# initialize pygame
 pygame.init()
 
-current_directory = os.getcwd()
-folder1 = 'data'
-os.chdir(os.path.join(current_directory, folder1))
+# create window
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Car Dodge Game")
 
-# Set up the screen
-SCREEN_WIDTH = 270
-SCREEN_HEIGHT = 800
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+# set up colors
+black = (0, 0, 0)
+white = (255, 255, 255)
+red = (255, 0, 0)
 
-# Load the road image
-roadImage = pygame.image.load("road.png").convert()
-car = pygame.image.load('carTop.png')
+# set up game variables
+player_size = 50
+player_pos = [screen_width // 2, screen_height - player_size * 2]
+player_speed = 10
 
-# Rotate the road image by 90 degrees
-roadImage = pygame.transform.rotate(roadImage, -90)
+car_size = 50
+car_speed = 5
+car_list = []
+for i in range(5):
+    car_pos = [random.randint(0, screen_width - car_size), -car_size]
+    car_list.append(car_pos)
 
-#resize car
-car = pygame.transform.scale(car, [70, 120])
-
-# Resize the road image to fit the screen height
-roadImage = pygame.transform.scale(roadImage, (roadImage.get_width(), SCREEN_HEIGHT))
-
-# Create a clock to control the frame rate
+# set up game loop
+game_over = False
 clock = pygame.time.Clock()
 
-# Set the initial position of the road image
-roadPos = 0
+# define functions
+def draw_player():
+    pygame.draw.rect(screen, white, (player_pos[0], player_pos[1], player_size, player_size))
 
-carPosx = 97
-carPosy = 400
-carXspeed = 2
-carYspeedBack = 1.2
-carYspeedUp = .5
-carSlowingSpeed = 0
-carSpeedingSpeed = 0
+def move_player(key):
+    if key == pygame.K_LEFT:
+        player_pos[0] -= player_speed
+    elif key == pygame.K_RIGHT:
+        player_pos[0] += player_speed
 
-spark = pygame.image.load('sparks.png')
-spark = pygame.transform.scale(spark, [40, 50])
+def draw_car(car_pos):
+    pygame.draw.rect(screen, red, (car_pos[0], car_pos[1], car_size, car_size))
 
+def move_cars():
+    global car_list
+    for i, car_pos in enumerate(car_list):
+        if car_pos[1] > screen_height:
+            car_list.pop(i)
+            new_car_pos = [random.randint(0, screen_width - car_size), -car_size]
+            car_list.append(new_car_pos)
+        else:
+            car_pos[1] += car_speed
 
+def check_collision():
+    global game_over
+    for car_pos in car_list:
+        if detect_collision(player_pos, car_pos):
+            game_over = True
 
-# Main game loop
-while True:
-    # Handle events
+def detect_collision(player_pos, car_pos):
+    player_x = player_pos[0]
+    player_y = player_pos[1]
+    car_x = car_pos[0]
+    car_y = car_pos[1]
+
+    if (car_x >= player_x and car_x < (player_x + player_size)) or (player_x >= car_x and player_x < (car_x + car_size)):
+        if (car_y >= player_y and car_y < (player_y + player_size)) or (player_y >= car_y and player_y < (car_y + car_size)):
+            return True
+    return False
+
+# game loop
+while not game_over:
+
+    # event handling
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
+            game_over = True
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                move_player(event.key)
 
+    # move cars
+    move_cars()
 
-    
+    # check for collision
+    check_collision()
 
-    # Scroll the road image
-    roadPos += 3
-    if roadPos > SCREEN_HEIGHT:
-        roadPos = 0
+    # draw objects
+    screen.fill(black)
+    draw_player()
+    for car_pos in car_list:
+        draw_car(car_pos)
 
+    # update display
+    pygame.display.update()
 
-    carPosy -= .08
-    carPosy -= carSpeedingSpeed
-    keys = pygame.key.get_pressed()
-    
-    # Check for player movement
-    if keys[pygame.K_DOWN]:
-        carPosy += carYspeedBack
-        carSlowingSpeed += .005
-        carPosy += carSlowingSpeed
-        carSpeedingSpeed = 0
-    if keys[pygame.K_UP]:
-        carPosy -= carYspeedUp
-        carSpeedingSpeed += 0.005
-        carPosy -= carSpeedingSpeed
-        carSlowingSpeed = 0
-    if keys[pygame.K_LEFT]:
-        carPosx -= carXspeed
-    if keys[pygame.K_RIGHT]:
-        carPosx += carXspeed
-
-
-    if carPosx < 10:
-        carPosx += carXspeed
-
-
-    if carPosx > 185:
-        screen.blit(spark, (carPosx + 20, carPosy - 10))
-        carPosx -= carXspeed
-
-
-    # Draw the road image
-    screen.blit(roadImage, (0, roadPos - SCREEN_HEIGHT))
-    screen.blit(roadImage, (0, roadPos))
-
-    screen.blit(car, (carPosx, carPosy))
-
-    
-
-    
-
-    # Update the screen
-    pygame.display.flip()
-
-    # Control the frame rate
+    # set frame rate
     clock.tick(60)
+
+# quit game
+pygame.quit()
