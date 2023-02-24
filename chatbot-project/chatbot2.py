@@ -45,9 +45,39 @@ abilities = ["""
 I can do many things, some things I can do are:
 > list songs
 Math (ex. 5*5, 8^3, 9/4)
-Games (ex. pong, tic tac toe)
+Games (ex. pong, tic tac toe, hangman, name generator, car game)
 > 
 """]
+
+listGames = ["""
+Hangman
+Tic Tac Toe
+Pong
+Name Generator
+Car Game
+"""]
+
+
+def stopSong():
+    if pygame.mixer.get_init() == None:
+        return "No songs to stop!"
+    else:
+        pygame.mixer.music.pause()
+        return "Song stopped"
+
+def pauseSong():
+    if pygame.mixer.get_init() == None:
+        return "No songs to pause!"
+    else:
+        pygame.mixer.music.pause()
+        return "Music paused!"
+    
+def resumeSong():
+    if pygame.mixer.get_init() == None:
+        return "No music to resume"
+    else:
+        pygame.mixer.music.unpause()
+        return "Song resumed"
 
 def responseHello(regexMatches, talk):
     helloResponseComplexList = [f"Hello {regexMatches[0]}, I'm Linus!", f"Hello {regexMatches[0]}, my name is Linus!", f"Hi {regexMatches[0]}, I'm Linus!"]
@@ -130,9 +160,18 @@ def playSong(pattern, talk):
         return "We don't have that song! Try asking 'song request'."
 
 def listTheSongs():
+    os.system('cls')
+    print("Songs you can play: ")
     for i, song in enumerate(songList, start=1):
         print(colored(f"{i}. ", 'red', attrs=['bold','dark']) + song[:-4])
-    return "Those are the songs you can play!"
+    return """
+Say 'play' + song, to play a song!
+Say 'pause', to pause the song!
+Say 'resume', to continue the song!
+say 'stop', to stop the song!
+
+
+"""
 
 def songRequests():
     songRequestY_N = input(text_linus + "Would you like to make a song request? [y/n]: ")
@@ -232,27 +271,27 @@ responses = [
     },
     {
         "input": ["what can you do", "what are your abilities", "what's your function", "what's your purpose"],
-        "responses": ["I can answer your questions and provide information on various topics.", "I'm trained to have conversations and generate text based on the input I receive.", "I can help with tasks such as language translation, summarization, and many others."]
+        "responses": abilities,
     },
     {
         "input": ["what do you like", "what's your favorite thing", "what do you enjoy"],
-        "responses": ["As a language model, I don't have personal preferences or emotions.", "I don't have likes or dislikes, I just respond based on the input I receive."]
+        "responses": ["As a chatbot, I don't have personal preferences or emotions.", "I don't have likes or dislikes, I just respond based on the input I receive."],
     },
     {
         "input": ["what is your favorite food", "whats your favorite food", "whats your favorite food to eat"],
-        "reponse": ["I have never tried any!"]
+        "reponse": ["I have never tried any!"],
     },
     {
         "input": ["what is your favorite number","whats your favorite number"],
-        "response": ["My favorite number is 56!"]
+        "response": ["My favorite number is 56!"],
     },
     {
         "input": ["bye", "goodbye", "see you later", "talk to you later"],
-        "responses": ["Goodbye!", "Bye!", "See you later!", "Take care!"]
+        "responses": ["Goodbye!", "Bye!", "See you later!", "Take care!"],
     },
     {
         "input" : ["linus"],
-        "response": ["Yes?", "That's my name!"]
+        "response": ["Yes?", "That's my name!"],
     },
     {
         "input": ["what can you do","what are your abilities", "what do you do","list what can you do","what features do you have"],
@@ -268,31 +307,31 @@ responses = [
     },
     {
         "input": ["play tic tac toe","ttt","tic tac toe","tictactoe", "play tictactoe", "play ttt"],
-        "action": "tic_tac_toe"
+        "action": "tic_tac_toe",
     },
     {
         "input": ["play guanteloco", "play baseball game", "play guanteloco game", "play baseball", "guanteloco", "baseball", "guanteloco game", "baseball game"],
-        "action": 'guanteLocoGame'
+        "action": 'guanteLocoGame',
     },
     {
         "input": ['hangman', 'play hangman', 'hangman game', 'play hangman game'],
-        "action": 'playHangMan'
+        "action": 'playHangMan',
     },
     {
-        "regex": r'(^play)\s*((the song)?)\s*([\w\s]*)',
-        "action": "playSong",
+        "input": ["pick a random name", "random name", "random name generator", "play name generator" "play name generator game"],
+        "action": "randomNameGenerator",
     },
     {
         "input": ["stop", "stop playing", "stop song"],
-        "action": 'stopSong', #INCOMPLETE NO FUNCTION YET!!!!---------------------------------------
+        "action": 'stopSong',
     },
     {
-        "input": ["pause", "spause playing", "pause song"],
-        "action": 'pauseSong' #INCOMPLETE NO FUNCTION YET!!!!------------------------------------------
+        "input": ["pause", "pause playing", "pause song"],
+        "action": 'pauseSong',
     },
     {
-        "regex": r'(\d*\.?\d+)\s*(\*|x|\/|\+|-|\^|\*\*|times|minus|plus|divide|divided by|to the power of|exponent)\s*(\d*\.?\d+)',
-        "action": "mathing",
+        "input": ["resume", "resume song", "resume playing", "continue song", "continue playing", "continue"],
+        "action": 'resumeSong',
     },
     {
         "input": ["list the songs you can play", "list songs", "song list", 'list your songs', "list all songs","list the songs", "songs list", "give me a list of the songs you can play", 'list the songs you can play'],
@@ -303,25 +342,33 @@ responses = [
         "action": "songRequests",
     },
     {
+        "input": ["list games", "games", "what games do you have", "what games are there", "list your games", "list the games you have", "list the games"],
+        "responses": listGames,
+    },
+    {
+        "regex": r'(\d*\.?\d+)\s*(\*|x|\/|\+|-|\^|\*\*|times|minus|plus|divide|divided by|to the power of|exponent)\s*(\d*\.?\d+)',
+        "action": "mathing",
+    },
+    {
         # "regex": r'(capital|currency)\s*(?:of)?\s*(?:the)?\s*(.*)',
         "regex": r'^(?:(?!country).)*(capital|currency)\s*(?:of)?\s*(?:the)?\s*(.*)',
-        "action": "countryData"
+        "action": "countryData",
     },
     {
         "regex": r'(?:what country)\s*(?:has)?\s*(?:the)?\s*(capital|currency)\s*([\w\d\s]*)',
-        "action": "countryDataReverse"
+        "action": "countryDataReverse",
     },
     {
         "regex": r'(sin|cos|tan|sin-1|cos-1|tan-1|sine|cosine|tangent|sine-1|cosine-1|tangent-1)\s*(?:of)?\s*(\d*\.?\d+)',
-        "action": "SinCosTan"
+        "action": "SinCosTan",
     },
     {
-        "input": ["pick a random name", "random name", "random name generator"],
-        "action": "randomNameGenerator"
-    },
-    {
-        "regex": r'(?:hi|hello)?\s*(?:,|\.)*\s*(?:linus)?\s*(?:,|\.)*\s*(?:im|me|i|my names|my name is)\s*(\w*\s*)',
+        "regex": r'^(?:hi|hello)?\s*(?:,|\.)*\s*(?:linus)?\s*(?:,|\.)*\s*(?:im|my names|my name is)\s*(\w*\s*)',
         "action": 'responseHello', 
+    },
+    {
+        "regex": r'(^play)\s*((the song)?(?:song)?)\s*([\w\s]*)',
+        "action": "playSong",
     },
 ]
 
