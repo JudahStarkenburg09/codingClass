@@ -1,94 +1,104 @@
 import pygame
 import random
-import os
 
-current_directory = os.getcwd()
-folder1 = 'data'
-os.chdir(os.path.join(current_directory, folder1))
-
+# initialize pygame
 pygame.init()
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
-BG_COLOR = (255, 255, 255)
+# create window
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Car Dodge Game")
 
-game_display = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption('Car Game')
+# set up colors
+black = (0, 0, 0)
+white = (255, 255, 255)
+red = (255, 0, 0)
 
+# set up game variables
+player_size = 50
+player_pos = [screen_width // 2, screen_height - player_size * 2]
+player_speed = 10
+
+car_size = 50
+car_speed = 5
+car_list = []
+for i in range(5):
+    car_pos = [random.randint(0, screen_width - car_size), -car_size]
+    car_list.append(car_pos)
+
+# set up game loop
+game_over = False
 clock = pygame.time.Clock()
 
-car_image = pygame.image.load('carTop.png')
-car_width = 64
-car_height = 128
+# define functions
+def draw_player():
+    pygame.draw.rect(screen, white, (player_pos[0], player_pos[1], player_size, player_size))
 
-car1_image = pygame.image.load('obstacleCar1.png')
-car2_image = pygame.image.load('obstacleCar2.png')
+def move_player(key):
+    if key == pygame.K_LEFT:
+        player_pos[0] -= player_speed
+    elif key == pygame.K_RIGHT:
+        player_pos[0] += player_speed
 
+def draw_car(car_pos):
+    pygame.draw.rect(screen, red, (car_pos[0], car_pos[1], car_size, car_size))
 
-def score(count):
-    font = pygame.font.SysFont(None, 25)
-    text = font.render("Score: " + str(count), True, (0,0,0))
-    game_display.blit(text,(0,0))
+def move_cars():
+    global car_list
+    for i, car_pos in enumerate(car_list):
+        if car_pos[1] > screen_height:
+            car_list.pop(i)
+            new_car_pos = [random.randint(0, screen_width - car_size), -car_size]
+            car_list.append(new_car_pos)
+        else:
+            car_pos[1] += car_speed
 
-def crash():
-    print("crash")
+def check_collision():
+    global game_over
+    for car_pos in car_list:
+        if detect_collision(player_pos, car_pos):
+            game_over = True
 
-def game_loop():
-    car_x = (SCREEN_WIDTH - car_width) / 2
-    car_y = SCREEN_HEIGHT - car_height
-    car_speed = 5
+def detect_collision(player_pos, car_pos):
+    player_x = player_pos[0]
+    player_y = player_pos[1]
+    car_x = car_pos[0]
+    car_y = car_pos[1]
 
-    obstacle_cars = []
-    for i in range(5):
-        obstacle_cars.append({
-            'image': random.choice([car1_image, car2_image]),
-            'x': random.randrange(0, SCREEN_WIDTH - car_width),
-            'y': random.randrange(-2000, -car_height),
-            'speed': random.randrange(4, 10)
-        })
+    if (car_x >= player_x and car_x < (player_x + player_size)) or (player_x >= car_x and player_x < (car_x + car_size)):
+        if (car_y >= player_y and car_y < (player_y + player_size)) or (player_y >= car_y and player_y < (car_y + car_size)):
+            return True
+    return False
 
-    score_count = 0
+# game loop
+while not game_over:
 
-    game_exit = False
-    while not game_exit:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+    # event handling
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            game_over = True
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                move_player(event.key)
 
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            car_x -= car_speed
-        elif keys[pygame.K_RIGHT]:
-            car_x += car_speed
-        elif keys[pygame.K_UP]:
-            car_speed += 0.2
-        elif keys[pygame.K_DOWN]:
-            car_speed -= 0.2
+    # move cars
+    move_cars()
 
-        game_display.fill(BG_COLOR)
+    # check for collision
+    check_collision()
 
-        for obstacle_car in obstacle_cars:
-            game_display.blit(obstacle_car['image'], (obstacle_car['x'], obstacle_car['y']))
-            obstacle_car['y'] += obstacle_car['speed']
+    # draw objects
+    screen.fill(black)
+    draw_player()
+    for car_pos in car_list:
+        draw_car(car_pos)
 
-            if obstacle_car['y'] > SCREEN_HEIGHT:
-                obstacle_car['y'] = random.randrange(-2000, -car_height)
-                obstacle_car['x'] = random.randrange(0, SCREEN_WIDTH - car_width)
-                obstacle_car['image'] = random.choice([car1_image, car2_image])
-                obstacle_car['speed'] = random.randrange(4, 10)
+    # update display
+    pygame.display.update()
 
-            if car_y < obstacle_car['y'] + car_height:
-                if car_x > obstacle_car['x'] and car_x < obstacle_car['x'] + car_width or car_x + car_width > obstacle_car['x'] and car_x + car_width < obstacle_car['x'] + car_width:
-                    crash()
-                    pygame.quit()
-                    quit()
+    # set frame rate
+    clock.tick(60)
 
-        game_display.blit(car_image, (car_x, car_y))
-        score(score_count)
-        score_count += 1
-
-        pygame.display.update()
-        clock.tick(60)
-
-game_loop()
+# quit game
+pygame.quit()
