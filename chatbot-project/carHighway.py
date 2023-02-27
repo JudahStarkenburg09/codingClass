@@ -25,7 +25,9 @@ roadImage = pygame.transform.rotate(roadImage, -90)
 obstacle1 = pygame.image.load('obstacleCar1.png')
 obstacle1 = pygame.transform.scale(obstacle1, [70, 120])
 obstacle1 = pygame.transform.rotate(obstacle1, 0)
-obstacle1R = obstacle1.get_rect()
+obstacle1posy = -200
+speedObstacle1 = 1
+obstacle1OnScreen = False
 
 obstacle2 = pygame.image.load('obstacleCar2.png')
 obstacle2 = pygame.transform.scale(obstacle2, [70, 120])
@@ -68,8 +70,10 @@ roadSpeed = 3.5
 spark = pygame.image.load('sparks.png')
 spark = pygame.transform.scale(spark, [100, 100])
 
-lanes = [10, 100, 190]
 
+
+lanes = [10, 100, 190]
+possibleObstacleSpeeds = [0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 2.8, 3, 3.2, 3.4]
 # Main game loop
 while True:
     # Handle events
@@ -78,12 +82,34 @@ while True:
             pygame.quit()
             sys.exit()
 
-    
+    obstacle1R = obstacle1.get_rect()
+
     # Draw the images
     screen.blit(roadImage, (0, roadPos - SCREEN_HEIGHT))
     screen.blit(roadImage, (0, roadPos))
     screen.blit(car, (carPosx, carPosy))
 
+
+
+
+    if obstacle1OnScreen == False:
+        obstacle1OnScreen = True
+    
+    if obstacle1OnScreen == True:
+        if obstacle1posy == -200:
+            laneChosen1 = random.choice(lanes)
+            speedObstacle1 = random.choice(possibleObstacleSpeeds)
+        screen.blit(obstacle1, (laneChosen1, obstacle1posy))
+        
+        obstacle1posy += roadSpeed - speedObstacle1
+
+    if obstacle1posy > 750:
+        obstacle1OnScreen = False
+        obstacle1posy = -200
+    
+    
+    if car.get_rect().colliderect(obstacle1R):
+        print('crash')
 
     # Scroll the road image
     roadPos += roadSpeed
@@ -103,7 +129,7 @@ while True:
         carXspeed -= .01
     if keys[pygame.K_UP]:
         roadSpeed += .01
-        if roadSpeed > 5:
+        if roadSpeed > 7:
             roadSpeed -= .01
         if carXspeed > 2.5:
             carXspeed -= .01
@@ -114,8 +140,6 @@ while True:
             car = pygame.transform.scale(car, [70, 120])
             car = pygame.transform.rotate(car, 4)
             carIsRotated = True
-        if carIsRotated is True and carPosx == 11:
-            ()
         carPosx -= carXspeed
             
     elif keys[pygame.K_RIGHT]:
