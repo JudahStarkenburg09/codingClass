@@ -1,6 +1,7 @@
 import pygame
 import os
 import sys
+import random
 pygame.init()
 
 current_directory = os.getcwd()
@@ -21,7 +22,30 @@ car = pygame.transform.rotate(car, 0)
 # Rotate the road image by 90 degrees
 roadImage = pygame.transform.rotate(roadImage, -90)
 
+obstacle1 = pygame.image.load('obstacleCar1.png')
+obstacle1 = pygame.transform.scale(obstacle1, [70, 120])
+obstacle1 = pygame.transform.rotate(obstacle1, 0)
+obstacle1R = obstacle1.get_rect()
 
+obstacle2 = pygame.image.load('obstacleCar2.png')
+obstacle2 = pygame.transform.scale(obstacle2, [70, 120])
+obstacle2 = pygame.transform.rotate(obstacle2, -90)
+obstacle2R = obstacle2.get_rect()
+
+obstacle3 = pygame.image.load('obstacleCar3.png')
+obstacle3 = pygame.transform.scale(obstacle3, [70, 120])
+obstacle3 = pygame.transform.rotate(obstacle3, 0)
+obstacle3R = obstacle3.get_rect()
+
+obstacle4 = pygame.image.load('obstacleCar4.png')
+obstacle4 = pygame.transform.scale(obstacle4, [70, 120])
+obstacle4 = pygame.transform.rotate(obstacle4, 0)
+obstacle4R = obstacle4.get_rect()
+
+obstacle5 = pygame.image.load('obstacleCar5.png')
+obstacle5 = pygame.transform.scale(obstacle5, [70, 120])
+obstacle5 = pygame.transform.rotate(obstacle5, 90)
+obstacle5R = obstacle5.get_rect()
 
 # Resize the road image to fit the screen height
 roadImage = pygame.transform.scale(roadImage, (roadImage.get_width(), SCREEN_HEIGHT))
@@ -32,7 +56,7 @@ clock = pygame.time.Clock()
 # Set the initial position of the road image
 roadPos = 0
 
-carPosx = 97
+carPosx = 100
 carPosy = 400
 carXspeed = 2
 carYspeedBack = 1.2
@@ -44,7 +68,7 @@ roadSpeed = 3.5
 spark = pygame.image.load('sparks.png')
 spark = pygame.transform.scale(spark, [100, 100])
 
-
+lanes = [10, 100, 190]
 
 # Main game loop
 while True:
@@ -60,8 +84,6 @@ while True:
     screen.blit(roadImage, (0, roadPos))
     screen.blit(car, (carPosx, carPosy))
 
-    if carIsRotated is not True:
-        ()
 
     # Scroll the road image
     roadPos += roadSpeed
