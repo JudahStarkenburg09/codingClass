@@ -56,9 +56,12 @@ speedObstacle2 = 1
 obstacle2OnScreen = False
 obstacle2R = obstacle2.get_rect()
 
-obstacle3 = pygame.image.load('obstacleCar3.png')
+obstacle3 = pygame.image.load('obstacleCar5.png')
+obstacle3 = pygame.transform.rotate(obstacle3, -90)
 obstacle3 = pygame.transform.scale(obstacle3, [70, 120])
-obstacle3 = pygame.transform.rotate(obstacle3, 0)
+obstacle3posy = -200
+speedObstacle3 = 1
+obstacle3OnScreen = False
 obstacle3R = obstacle3.get_rect()
 
 obstacle4 = pygame.image.load('obstacleCar4.png')
@@ -85,7 +88,9 @@ numb = 0
 driftTime = 0
 obstacles = ["obstacle1", "obstacle2"]
 lanes = [10, 100, 190]
-possibleObstacleSpeeds = [0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 2.8, 3, 3.2, 3.4]
+possibleObstacleSpeeds = [2.4, 2.6, 2.8, 3, 3.2, 3.4]
+dangerSpeed = 0
+boostCharge = 10
 # Main game loop
 while True:
     # Handle events
@@ -104,32 +109,8 @@ while True:
 
     carRect = pygame.Rect(carPosx, carPosy, car.get_width(), car.get_height())
 
-    #Obstacle Does Bad Driving:
-    if counting == False:
-        counting = True
-        currentCountPoint = 0
-        countTo = random.randint(1000, 2000)
-    if counting == True:
-        currentCountPoint += 1
-        print("counting to: " + countTo)
-        print("current: " + currentCountPoint)
-        if currentCountPoint == countTo:
 
-            #set to the amount of obstacles -v
-            selectedDrunk = random.randint(1,2)
-            #left = 1, right = 2
-            selectedDrift = random.randint(1,2)
-            if selectedDrunk == 1:
-                if selectedDrift == 1:
-                    drifting1 = True
-
-    if drifting1 == True:
-        driftTime += 1
-        laneChosen1 += 2
-    if driftTime == 10:
-        driftTime == 0
-        drifting1 = False
-
+    
 
 
 
@@ -142,13 +123,15 @@ while True:
             laneChosen1 = random.choice(lanes)
             speedObstacle1 = random.choice(possibleObstacleSpeeds)
         screen.blit(obstacle1, (laneChosen1, obstacle1posy))
-        obstacle1R = obstacle1.get_rect(left=(laneChosen1 + 15), top=(obstacle1posy + 15), width=(obstacle1.get_width() - 30), height=(obstacle1.get_height() - 30))
+        obstacle1R = obstacle1.get_rect(left=(laneChosen1 + 15), top=(obstacle1posy + 17), width=(obstacle1.get_width() - 30), height=(obstacle1.get_height() - 30))
         obstacle1R0 = obstacle1.get_rect(left=laneChosen1, top=obstacle1posy, width=obstacle1.get_width(), height=obstacle1.get_height())
         obstacle1posy += roadSpeed - speedObstacle1
 
     if obstacle1posy > 750:
         obstacle1OnScreen = False
         obstacle1posy = -200
+
+
 
     #obstacle2
     if obstacle2OnScreen == False:
@@ -159,13 +142,30 @@ while True:
             laneChosen2 = random.choice(lanes)
             speedObstacle2 = random.choice(possibleObstacleSpeeds)
         screen.blit(obstacle2, (laneChosen2, obstacle2posy))
-        obstacle2R = obstacle2.get_rect(left=(laneChosen2 + 15), top=(obstacle2posy + 15), width=(obstacle2.get_width() - 30), height=(obstacle2.get_height() - 30))
+        obstacle2R = obstacle2.get_rect(left=(laneChosen2 + 15), top=(obstacle2posy + 17), width=(obstacle2.get_width() - 30), height=(obstacle2.get_height() - 30))
         obstacle2R0 = obstacle2.get_rect(left=laneChosen2, top=obstacle2posy, width=obstacle2.get_width(), height=obstacle2.get_height())
         obstacle2posy += roadSpeed - speedObstacle2 
 
     if obstacle2posy > 750:
         obstacle2OnScreen = False
         obstacle2posy = -200
+    
+    #obstacle3
+    if obstacle3OnScreen == False:
+        obstacle3OnScreen = True
+    
+    if obstacle3OnScreen == True:
+        if obstacle3posy == -200:
+            laneChosen3 = random.choice(lanes)
+            speedObstacle3 = random.choice(possibleObstacleSpeeds)
+        screen.blit(obstacle3, (laneChosen3, obstacle3posy))
+        obstacle3R = obstacle3.get_rect(left=(laneChosen3 + 15), top=(obstacle3posy + 17), width=(obstacle3.get_width() - 30), height=(obstacle3.get_height() - 30))
+        obstacle3R0 = obstacle3.get_rect(left=laneChosen3, top=obstacle3posy, width=obstacle3.get_width(), height=obstacle3.get_height())
+        obstacle3posy += roadSpeed - speedObstacle3
+
+    if obstacle3posy > 750:
+        obstacle3OnScreen = False
+        obstacle3posy = -200
     
     
     if carRect.colliderect(obstacle1R):
@@ -176,17 +176,32 @@ while True:
         numb += 1 
         print('crash' + str(numb))
 
+    if carRect.colliderect(obstacle3R):
+        numb += 1 
+        print('crash' + str(numb))
+
     # Scroll the road image
     roadPos += roadSpeed
     if roadPos > SCREEN_HEIGHT:
         roadPos = 0
 
-
+    #collisions with other cars
     if obstacle1R0.colliderect(obstacle2R0):
         if obstacle1posy <= obstacle2posy:
             speedObstacle1 = speedObstacle2 + 2
         elif obstacle1posy >= obstacle2posy:
             speedObstacle1 = speedObstacle2 - 2
+    if obstacle2R0.colliderect(obstacle3R0):
+        if obstacle2posy <= obstacle3posy:
+            speedObstacle2 = speedObstacle3 + 2
+        elif obstacle2posy >= obstacle3posy:
+            speedObstacle2 = speedObstacle3 - 2
+    if obstacle1R0.colliderect(obstacle3R0):
+        if obstacle1posy <= obstacle3posy:
+            speedObstacle1 = speedObstacle3 + 2
+        elif obstacle1posy >= obstacle3posy:
+            speedObstacle1 = speedObstacle3 - 2
+
 
 
 
@@ -194,19 +209,35 @@ while True:
     
     # Check for player movement
     if keys[pygame.K_DOWN]:
-        roadSpeed -= .01
+        roadSpeed -= .07
         if roadSpeed < 2:
-            roadSpeed += .01
+            roadSpeed += .07
         if carXspeed < 1.5:
-            carXspeed += .01
+            carXspeed += .07
         carXspeed -= .01
     if keys[pygame.K_UP]:
-        roadSpeed += .01
+        roadSpeed += .03
         if roadSpeed > 7:
-            roadSpeed -= .01
+            roadSpeed -= .03
         if carXspeed > 2.5:
-            carXspeed -= .01
+            carXspeed -= .03
         carXspeed += .01
+        dangerSpeed += 0.001
+        print(dangerSpeed)
+        if dangerSpeed >= 1:
+            if boostCharge > 0:
+                roadSpeed = 9
+                print('boost charge active')
+            else:
+                dangerSpeed = 0
+                boostCharge = 10
+                roadSpeed = 7
+
+            boostCharge -= 0.01
+    else:
+        dangerSpeed = 0
+        if roadSpeed > 7:
+            roadSpeed -= 0.1
     if keys[pygame.K_LEFT]:
         if carIsRotated is not True:
             car = pygame.image.load('carTop.png')
