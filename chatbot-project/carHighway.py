@@ -110,10 +110,11 @@ while True:
         currentCountPoint = 0
         countTo = random.randint(1000, 2000)
     if counting == True:
-        print("counting to: " + str(countTo))
-        print("at: " + str(currentCountPoint))
         currentCountPoint += 1
+        print("counting to: " + countTo)
+        print("current: " + currentCountPoint)
         if currentCountPoint == countTo:
+
             #set to the amount of obstacles -v
             selectedDrunk = random.randint(1,2)
             #left = 1, right = 2
@@ -125,7 +126,6 @@ while True:
     if drifting1 == True:
         driftTime += 1
         laneChosen1 += 2
-        counting == False
     if driftTime == 10:
         driftTime == 0
         drifting1 = False
