@@ -34,7 +34,8 @@ roadImage = pygame.image.load("road.png").convert()
 car = pygame.image.load('carTop.png')
 car = pygame.transform.scale(car, [70, 120])
 car = pygame.transform.rotate(car, 0)
-
+maxSpeed = 5
+minSpeed = 3
 
 
 # Rotate the road image by 90 degrees
@@ -74,6 +75,14 @@ obstacle5 = pygame.transform.scale(obstacle5, [70, 120])
 obstacle5 = pygame.transform.rotate(obstacle5, 90)
 obstacle5R = obstacle5.get_rect()
 
+obstacle7 = pygame.image.load('obstacleCar4.png')
+obstacle7 = pygame.transform.rotate(obstacle7, 0)
+obstacle7 = pygame.transform.scale(obstacle7, [70, 120])
+obstacle7posy = -200
+speedObstacle7 = 1
+obstacle7OnScreen = False
+obstacle7R = obstacle7.get_rect()
+
 # Resize the road image to fit the screen height
 roadImage = pygame.transform.scale(roadImage, (roadImage.get_width(), SCREEN_HEIGHT))
 
@@ -91,6 +100,11 @@ lanes = [10, 100, 190]
 possibleObstacleSpeeds = [2.4, 2.6, 2.8, 3, 3.2, 3.4]
 dangerSpeed = 0
 boostCharge = 10
+level1 = 1000
+level2 = 1000
+level3 = 1000
+levelCountdown = level1
+onLevel = 'level1'
 # Main game loop
 while True:
     # Handle events
@@ -100,8 +114,6 @@ while True:
             sys.exit()
 
 
-    roadSpeed += 0.0001
-
     # Draw the images
     screen.blit(roadImage, (0, roadPos - SCREEN_HEIGHT))
     screen.blit(roadImage, (0, roadPos))
@@ -109,8 +121,21 @@ while True:
 
     carRect = pygame.Rect(carPosx, carPosy, car.get_width(), car.get_height())
 
-
-    
+    print(onLevel + ' --> ' + str(levelCountdown) + ', Current Speed Is ' + str(roadSpeed) + '. || Min Speed Is ' + str(minSpeed) + '. || Max Speed Is ' + str(maxSpeed))
+    if onLevel == 'level1':
+        level1 -= 1
+        levelCountdown = str(level1)
+        if level1 <= 0:
+            maxSpeed = 6
+            minSpeed = 4
+            onLevel = 'level2'
+    if onLevel == 'level2':
+        level2 -= 1
+        levelCountdown = str(level2)
+        if level2 <= 0:
+            maxSpeed = 7
+            minSpeed = 5
+            onLevel = 'level3'
 
 
 
@@ -166,6 +191,23 @@ while True:
     if obstacle3posy > 750:
         obstacle3OnScreen = False
         obstacle3posy = -200
+
+    #obstacle7
+    if obstacle7OnScreen == False:
+        obstacle7OnScreen = True
+    
+    if obstacle7OnScreen == True:
+        if obstacle7posy == -200:
+            laneChosen7 = random.choice(lanes)
+            speedobstacle7 = random.choice(possibleObstacleSpeeds)
+        screen.blit(obstacle7, (laneChosen7, obstacle7posy))
+        obstacle7R = obstacle7.get_rect(left=(laneChosen7 + 15), top=(obstacle7posy + 17), width=(obstacle7.get_width() - 30), height=(obstacle7.get_height() - 30))
+        obstacle7R0 = obstacle7.get_rect(left=laneChosen7, top=obstacle7posy, width=obstacle7.get_width(), height=obstacle7.get_height())
+        obstacle7posy += roadSpeed - speedobstacle7
+
+    if obstacle7posy > 750:
+        obstacle7OnScreen = False
+        obstacle7posy = -200
     
     
     if carRect.colliderect(obstacle1R):
@@ -203,40 +245,41 @@ while True:
             speedObstacle1 = speedObstacle3 - 2
 
 
-
-
+    if roadSpeed < minSpeed:
+        roadSpeed += .08
+    if roadSpeed > maxSpeed:
+        roadSpeed -= .03
     keys = pygame.key.get_pressed()
     
     # Check for player movement
     if keys[pygame.K_DOWN]:
         roadSpeed -= .07
-        if roadSpeed < 2:
-            roadSpeed += .07
+
         if carXspeed < 1.5:
             carXspeed += .07
         carXspeed -= .01
     if keys[pygame.K_UP]:
         roadSpeed += .03
-        if roadSpeed > 7:
-            roadSpeed -= .03
         if carXspeed > 2.5:
             carXspeed -= .03
         carXspeed += .01
         dangerSpeed += 0.001
         
+        
         if dangerSpeed >= 1:
             if boostCharge > 0:
-                roadSpeed = 9
-                print('boost charge active')
+                roadSpeed = maxSpeed + 2
+                #PUT HERE WHAT HAPPENS AT DANGERSPEED
             else:
                 dangerSpeed = 0
                 boostCharge = 10
-                roadSpeed = 7
+                if roadSpeed > maxSpeed:
+                    roadSpeed -= 0.1
 
             boostCharge -= 0.01
     else:
         dangerSpeed = 0
-        if roadSpeed > 7:
+        if roadSpeed > maxSpeed:
             roadSpeed -= 0.1
     if keys[pygame.K_LEFT]:
         if carIsRotated is not True:
