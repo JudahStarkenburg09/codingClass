@@ -243,6 +243,21 @@ while True:
             speedObstacle1 = speedObstacle3 + 2
         elif obstacle1posy >= obstacle3posy:
             speedObstacle1 = speedObstacle3 - 2
+    if obstacle1R0.colliderect(obstacle7R0):
+        if obstacle1posy <= obstacle7posy:
+            speedObstacle1 = speedObstacle7 + 2
+        elif obstacle1posy >= obstacle7posy:
+            speedObstacle1 = speedObstacle7 - 2
+    if obstacle2R0.colliderect(obstacle7R0):
+        if obstacle2posy <= obstacle7posy:
+            speedObstacle1 = speedObstacle7 + 2
+        elif obstacle2posy >= obstacle7posy:
+            speedObstacle2 = speedObstacle7 - 2
+    if obstacle3R0.colliderect(obstacle7R0):
+        if obstacle3posy <= obstacle7posy:
+            speedObstacle3 = speedObstacle7 + 2
+        elif obstacle3posy >= obstacle7posy:
+            speedObstacle3 = speedObstacle7 - 2
 
 
     if roadSpeed < minSpeed:
