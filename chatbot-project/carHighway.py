@@ -223,7 +223,7 @@ while True:
             carXspeed -= .03
         carXspeed += .01
         dangerSpeed += 0.001
-        print(dangerSpeed)
+        
         if dangerSpeed >= 1:
             if boostCharge > 0:
                 roadSpeed = 9
