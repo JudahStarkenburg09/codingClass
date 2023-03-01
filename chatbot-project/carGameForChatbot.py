@@ -1,3 +1,6 @@
+# current_directory = os.getcwd()
+# folder1 = 'data'
+# os.chdir(os.path.join(current_directory, folder1))
 def carGame():    
     import pygame
     import os
@@ -5,9 +8,6 @@ def carGame():
     import random
     pygame.init()
 
-    current_directory = os.getcwd()
-    folder1 = 'data'
-    os.chdir(os.path.join(current_directory, folder1))
 
     # Set the initial position of the road image
     roadPos = 0
@@ -123,7 +123,7 @@ def carGame():
 
         carRect = pygame.Rect(carPosx, carPosy, car.get_width(), car.get_height())
 
-        print(onLevel + ' --> ' + str(levelCountdown) + ', Current Speed Is ' + str(roadSpeed) + '. || Min Speed Is ' + str(minSpeed) + '. || Max Speed Is ' + str(maxSpeed))
+        # print(onLevel + ' --> ' + str(levelCountdown) + ', Current Speed Is ' + str(roadSpeed) + '. || Min Speed Is ' + str(minSpeed) + '. || Max Speed Is ' + str(maxSpeed)) #THIS LINE IS FOR TESTING
         if onLevel == 'level1':
             level1 -= 1
             levelCountdown = str(level1)
