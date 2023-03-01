@@ -338,6 +338,10 @@ responses = [
         "action": 'resumeSong',
     },
     {
+        "input": ["play", "play song"],
+        "action": 'resumeSong',
+    },
+    {
         "input": ["list the songs you can play", "list songs", "song list", 'list your songs', "list all songs","list the songs", "songs list", "give me a list of the songs you can play", 'list the songs you can play'],
         "action": "listTheSongs",
     },
