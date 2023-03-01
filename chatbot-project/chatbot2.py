@@ -37,6 +37,7 @@ from nameGenerator import randName
 from gaunteloco import guanteloco
 import math
 from hangman import hangManGame
+from carGameForChatbot import carGame
 os.system("cls")
 
 os.system('cls')
@@ -251,6 +252,9 @@ def mathing(matches, talk):
                 print(text_linus + (rmatch[0] + '^' + rmatch[2] + ' = ' + str(float(rmatch[0]) ** (float(rmatch[2])))))
     return "Done!"
 
+def carHighwayGame():
+    carGame()
+
 
 responses = [
     {
@@ -348,6 +352,10 @@ responses = [
     {
         "regex": r'(\d*\.?\d+)\s*(\*|x|\/|\+|-|\^|\*\*|times|minus|plus|divide|divided by|to the power of|exponent)\s*(\d*\.?\d+)',
         "action": "mathing",
+    },
+    {
+        "input": ['play car game', 'car game', 'play the car game', 'cargame'],
+        "action": 'carHighwayGame'
     },
     {
         # "regex": r'(capital|currency)\s*(?:of)?\s*(?:the)?\s*(.*)',
