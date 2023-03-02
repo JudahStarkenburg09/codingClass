@@ -79,6 +79,15 @@ def resumeSong():
     else:
         pygame.mixer.music.unpause()
         return "Song resumed"
+    
+
+def restartSong():
+    if pygame.mixer.get_init() == None:
+        return "No music to restart"
+    else:
+        pygame.mixer.music.stop()
+        pygame.mixer.music.play()
+        return "Song restarted"
 
 def responseHello(regexMatches, talk):
     helloResponseComplexList = [f"Hello {regexMatches[0]}, I'm Linus!", f"Hello {regexMatches[0]}, my name is Linus!", f"Hi {regexMatches[0]}, I'm Linus!"]
@@ -340,6 +349,14 @@ responses = [
     {
         "input": ["play", "play song"],
         "action": 'resumeSong',
+    },
+    {
+        "input": ["play", "play song"],
+        "action": 'resumeSong',
+    },
+    {
+        "input": ["restart", "restart song", "start over", "play again"],
+        "action": "restartSong",
     },
     {
         "input": ["list the songs you can play", "list songs", "song list", 'list your songs', "list all songs","list the songs", "songs list", "give me a list of the songs you can play", 'list the songs you can play'],
