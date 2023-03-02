@@ -38,6 +38,7 @@ from gaunteloco import guanteloco
 import math
 from hangman import hangManGame
 from carGameForChatbot import carGame
+from receiptProjectPDF import receiptPrank
 os.system("cls")
 
 os.system('cls')
@@ -88,6 +89,9 @@ def restartSong():
         pygame.mixer.music.stop()
         pygame.mixer.music.play()
         return "Song restarted"
+
+def fakeReceipt():
+    return receiptPrank()
 
 def responseHello(regexMatches, talk):
     helloResponseComplexList = [f"Hello {regexMatches[0]}, I'm Linus!", f"Hello {regexMatches[0]}, my name is Linus!", f"Hi {regexMatches[0]}, I'm Linus!"]
@@ -333,6 +337,10 @@ responses = [
     {
         "input": ["pick a random name", "random name", "random name generator", "play name generator" "play name generator game"],
         "action": "randomNameGenerator",
+    },
+    {
+        "input": ["testapplication"],
+        "action": "fakeReceipt",
     },
     {
         "input": ["stop", "stop playing", "stop song"],
