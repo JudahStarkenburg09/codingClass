@@ -222,6 +222,10 @@ while True:
         numb += 1 
         print('crash' + str(numb))
 
+    if carRect.colliderect(obstacle7R):
+        numb += 1 
+        print('crash' + str(numb))
+
     # Scroll the road image
     roadPos += roadSpeed
     if roadPos > SCREEN_HEIGHT:
@@ -243,21 +247,24 @@ while True:
             speedObstacle1 = speedObstacle3 + 2
         elif obstacle1posy >= obstacle3posy:
             speedObstacle1 = speedObstacle3 - 2
-    if obstacle1R0.colliderect(obstacle7R0):
+    if obstacle7R0.colliderect(obstacle1R0):
         if obstacle1posy <= obstacle7posy:
             speedObstacle1 = speedObstacle7 + 2
         elif obstacle1posy >= obstacle7posy:
             speedObstacle1 = speedObstacle7 - 2
-    if obstacle2R0.colliderect(obstacle7R0):
+    if obstacle7R0.colliderect(obstacle2R0):
         if obstacle2posy <= obstacle7posy:
-            speedObstacle1 = speedObstacle7 + 2
+            speedObstacle2 = speedObstacle7 + 2
         elif obstacle2posy >= obstacle7posy:
             speedObstacle2 = speedObstacle7 - 2
-    if obstacle3R0.colliderect(obstacle7R0):
+    if obstacle7R0.colliderect(obstacle3R0):
         if obstacle3posy <= obstacle7posy:
             speedObstacle3 = speedObstacle7 + 2
         elif obstacle3posy >= obstacle7posy:
             speedObstacle3 = speedObstacle7 - 2
+
+
+            
 
 
     if roadSpeed < minSpeed:
