@@ -39,6 +39,8 @@ import math
 from hangman import hangManGame
 from carGameForChatbot import carGame
 from receiptProjectPDF import receiptPrank
+from jokesDatabase import allJokes
+from roastDatabase import allRoasts
 os.system("cls")
 
 os.system('cls')
@@ -125,7 +127,7 @@ text_linus = colored('<Linus> ', 'green', attrs=['dark','bold'])
 
 songList = ["bang.mp3","just like you.mp3","karma.mp3","paid my dues.mp3","the good part.mp3"]
 
-def countryDataReverse(pattern):
+def countryDataReverse(pattern, talk):
     query = re.sub(r'[^\w\d]', '', pattern[0][1].lower())
     for country in CCCdatbase:
         if pattern[0][0] == 'capital':
@@ -144,7 +146,7 @@ def countryDataReverse(pattern):
                 return f"{country['currency']} is the currency of {countryName}."
     return "No matching countries!"
 
-def countryData(pattern):
+def countryData(pattern, talk):
     countryName = re.sub(r'[^\w\d]', '', pattern[0][1].lower())
     for country in CCCdatbase:
         if isinstance(country["country"],str):
@@ -231,6 +233,17 @@ def songRequests():
             return "Invalid email!"
     else:
         return "Canceled!"
+    
+def chooseJoke():
+    joke = random.choice(allJokes)
+    print(text_linus + joke["joke"])
+    time.sleep(3)
+    return joke["secondResponse"]
+
+def chooseRoast():
+    roast = random.choice(allRoasts)
+    return roast["roast"]
+
 
 def SinCosTan(pattern, talk):
     operation = pattern[0][0]
@@ -311,6 +324,10 @@ responses = [
         "response": ["Yes?", "That's my name!"],
     },
     {
+        "input": ['tell me a joke', 'joke', 'tell me another joke'],
+        "action": 'chooseJoke',
+    },
+    {
         "input": ["what can you do","what are your abilities", "what do you do","list what can you do","what features do you have"],
         "responses": abilities,
     },
@@ -337,6 +354,10 @@ responses = [
     {
         "input": ["pick a random name", "random name", "random name generator", "play name generator" "play name generator game"],
         "action": "randomNameGenerator",
+    },
+    {
+        "input": ["roast me", "give me a roast", "another roast", "roast"],
+        "action": 'chooseRoast',
     },
     {
         "input": ["testapplication"],
