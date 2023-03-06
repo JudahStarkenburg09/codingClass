@@ -8,7 +8,7 @@ from tkinter import messagebox
 
 
 current_directory = os.getcwd()
-folder1 = 'creds'
+folder1 = 'creds_PrivateDoNotSee'
 os.chdir(os.path.join(current_directory, folder1))
 
 # set up credentials
