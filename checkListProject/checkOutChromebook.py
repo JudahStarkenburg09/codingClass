@@ -5,6 +5,7 @@ import pygsheets
 from tkinter import simpledialog
 import os
 from tkinter import messagebox
+from datetime import datetime
 
 
 current_directory = os.getcwd()
@@ -122,8 +123,7 @@ def submit():
     chromebookNotes.delete("1.0", tk.END)
 
     
-    today = date.today()
-    today_date = today.strftime("%m/%d")
+
     chromebookDate.delete(0, tk.END)
     chromebookDate.insert(0, today_date)
     
@@ -140,6 +140,7 @@ def submit():
 def returnChromebook():
     all_data = worksheet.get_all_values()
     chromebooks = {row[1]: index+1 for index, row in enumerate(all_data[1:]) if row[5] == 'No'}
+    
 
     if not chromebooks:
         messagebox.showinfo("Success", "No Chromebooks Are Checked Out")
@@ -154,9 +155,18 @@ def returnChromebook():
                 cell = worksheet.cell((i+1, 6))  # get the cell at row i and column 6
                 cell.value = "Yes"  # update the cell value
                 cell.update()  # save the changes to the cell
-                dateReturn = worksheet.get_value((i+1, 4))
+                todayReturn = date.today()
+                nowTimeReturn = datetime.now()
+                today_dateReturn = todayReturn.strftime("%m/%d/%Y")
+                todayTimeReturn = nowTimeReturn.strftime("%H:%M:%S %p")
+                dateReturn = today_dateReturn
                 person = worksheet.get_value((i+1, 3))
                 messagebox.showinfo("Success", f"Chromebook {selected} returned on {dateReturn} (Month/Day), Person Who Checked Out This Chromebook Was {person}")
+                returnDate = f"""
+Date: {dateReturn}
+Time: {todayTimeReturn}                
+                """
+                worksheet.update_value((i+1, 7), returnDate)
             else:
                 messagebox.showwarning("Invalid Selection", "Invalid Chromebook selection.")
 
