@@ -110,6 +110,7 @@ def submit():
     dateOfChromebook = chromebookDate.get()
     notesOfChromebook = chromebookNotes.get('1.0', tk.END)
 
+
     if not userOfCheckOut or not timeOfCheckOut or not numberOfChromebook or not dateOfChromebook:
         messagebox.showwarning("Missing Fields", "Please fill out all required fields.")
         return
@@ -121,6 +122,10 @@ def submit():
     chromebookNotes.delete("1.0", tk.END)
 
     
+    today = date.today()
+    today_date = today.strftime("%m/%d")
+    chromebookDate.delete(0, tk.END)
+    chromebookDate.insert(0, today_date)
     
     worksheet.update_value(str(availableUserSpot), str(userOfCheckOut))
     worksheet.update_value(str(availableNumberSpot), str(numberOfChromebook))
