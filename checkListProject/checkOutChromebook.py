@@ -38,39 +38,39 @@ window.geometry("500x500+{}+{}".format(int(x), int(y)))
 window.title("Personal Chromebook Check In")
 window.config(bg='gray')
 
-label1 = tk.Label(window, text='User Of Chromebook:')
+label1 = tk.Label(window, text='User Of Chromebook*:')
 label1.config(bg='gray',fg='black')
 label1.place(x=20, y=20)
 
 checkOutTo1 = ttk.Entry(window, width=30)
 checkOutTo1.place(x=20,y=40)
 
-label2 = tk.Label(window, text='Chromebook Number:')
+label2 = tk.Label(window, text='Chromebook Number*:')
 label2.config(bg='gray',fg='black')
 label2.place(x=20, y=80)
 
 chromebookNumber = ttk.Entry(window, width=30)
 chromebookNumber.place(x=20,y=100)
 
-label3 = tk.Label(window, text='Period (1-7/Break/Lunch):')
+label3 = tk.Label(window, text='Period (1-7/Break/Lunch)*:')
 label3.config(bg='gray',fg='black')
 label3.place(x=20, y=140)
 
 chromebookTime = ttk.Entry(window, width=30)
 chromebookTime.place(x=20,y=160)
 
-label4 = tk.Label(window, text='Date (Month/Day):')
-label4.config(bg='gray',fg='black')
-label4.place(x=20, y=200)
+label4 = tk.Label(window, text="Date Is Automatically Set To Time Of Submit")
+label4.config(bg='light gray',fg='red')
+label4.place(x=20, y=450)
 
-
-chromebookDate = ttk.Entry(window, width=30)
-chromebookDate.place(x=20,y=220)
+label6 = tk.Label(window, text="Please Fill Out All Required Fields(*)")
+label6.config(bg='light gray',fg='red')
+label6.place(x=20, y=430)
 
 
 label5 = tk.Label(window, text='Extra Notes:')
 label5.config(bg='gray',fg='black')
-label5.place(x=300, y=10)
+label5.place(x=350, y=10)
 
 chromebookNotesFrame = ttk.Frame(window)
 chromebookNotesFrame.place(x=300, y=30)
@@ -87,10 +87,14 @@ chromebookNotesScrollbar.config(command=chromebookNotes.yview)
 
 
 today = date.today()
-today_date = today.strftime("%m/%d")
-chromebookDate.delete(0, tk.END)
-chromebookDate.insert(0, today_date)
-
+dateInsert = today.strftime("%m/%d")
+dateCheckout = today.strftime("%m/%d/%Y")
+timeCheckoutNow = datetime.now()
+timeCheckout = timeCheckoutNow.strftime("%H:%M:%S %p")
+today_date = f"""
+Date: {dateCheckout}
+Time: {timeCheckout}                
+                """
 
 
 def submit():
@@ -98,7 +102,7 @@ def submit():
         if worksheet.cell((row, 3)).value == '':
             availableUserSpot = (f'C{row}')
             break
-    
+
     
     availableNumberSpot = (f'B{row}')
     availableTimeSpot = (f'A{row}')
@@ -108,29 +112,24 @@ def submit():
     userOfCheckOut = checkOutTo1.get()
     timeOfCheckOut = chromebookTime.get()
     numberOfChromebook = chromebookNumber.get()
-    dateOfChromebook = chromebookDate.get()
     notesOfChromebook = chromebookNotes.get('1.0', tk.END)
 
 
-    if not userOfCheckOut or not timeOfCheckOut or not numberOfChromebook or not dateOfChromebook:
+    if not userOfCheckOut or not timeOfCheckOut or not numberOfChromebook:
         messagebox.showwarning("Missing Fields", "Please fill out all required fields.")
         return
     
     checkOutTo1.delete(0, tk.END)
     chromebookTime.delete(0, tk.END)
     chromebookNumber.delete(0, tk.END)
-    chromebookDate.delete(0, tk.END)
     chromebookNotes.delete("1.0", tk.END)
 
     
-
-    chromebookDate.delete(0, tk.END)
-    chromebookDate.insert(0, today_date)
     
     worksheet.update_value(str(availableUserSpot), str(userOfCheckOut))
     worksheet.update_value(str(availableNumberSpot), str(numberOfChromebook))
     worksheet.update_value(str(availableTimeSpot), str(timeOfCheckOut))
-    worksheet.update_value(str(availableDateSpot), str(dateOfChromebook))
+    worksheet.update_value(str(availableDateSpot), str(today_date))
     worksheet.update_value(str(availableNoteSpot), str(notesOfChromebook))
     worksheet.update_value(str(availableReturnSpot), 'No')
 
