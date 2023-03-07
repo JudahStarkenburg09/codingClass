@@ -1,40 +1,99 @@
 from tkinter import *
 import random
-root = Tk()
-root.geometry('300x400')
 
-canvas = Canvas(root, width=200, height=200)
+window = Tk()
+window.geometry('300x300')
+
+canvas = Canvas(window, width=250, height=250, bg="white")
 canvas.pack()
 
+# create the square shape
+square = canvas.create_rectangle(60, 60, 100, 100, fill="white")
 
-import random
+# define the checkmark line coordinates
+checkmark_coords = [(70, 80), (80, 90), (95, 70)]
 
-positions = [[10, 50, 60, 100], [100, 50, 150, 100]]
-rectangle1choice = random.choice(positions)
-positions.remove(rectangle1choice)  # remove the position of rectangle1 from the list
-rectangle2choice = random.choice(positions)
+# create a boolean variable to keep track of whether the checkbox is checked
+checked = False
+
+# create a function to handle checkbox clicks
+def on_checkbox_click(event):
+    global checked
+    if not checked:
+        # draw the checkmark line on top of the square
+        canvas.create_line(*checkmark_coords, width=3, fill="black")
+        checked = True
+    else:
+        # delete the checkmark line
+        canvas.delete("all")
+        canvas.create_rectangle(60, 60, 100, 100, fill="white", width=2)
+        checked = False
+
+# bind the click event to the square
+canvas.tag_bind(square, "<Button-1>", on_checkbox_click)
+
+window.mainloop()
 
 
-pos1x1, pos1y1, pos1x2, pos1y2 = rectangle1choice
-pos2x1, pos2y1, pos2x2, pos2y2 = rectangle2choice
 
 
-# Draw a rectangle on the canvas
-rectangle1 = canvas.create_rectangle(pos1x1, pos1y1, pos1x2, pos1y2, fill="red")
+def captcha():
+    window.destroy()
+    root = Tk()
+    root.geometry('400x400')
 
-# Draw a rectangle on the canvas
-rectangle2 = canvas.create_rectangle(pos2x1, pos2y1, pos2x2, pos2y2, fill="blue")
+    canvas = Canvas(root, width=300, height=300)
+    canvas.pack()
 
-def on_click(event):
-    # Check if the mouse click was inside the red
-    if (event.x >= pos1x1 and event.y >= pos1y1 and event.x <= pos1x2 and event.y <= pos1y2):
-        print("Hello")
-    # Check if the mouse click was inside the blue
-    elif (event.x >= pos2x1 and event.y >= pos2y1 and event.x <= pos2x2 and event.y <= pos2y2):
-        print("Hello")
+    shapes = ["square", "triangle", "circle"]
+    colors = ["red", "green", "blue", "yellow", "orange", "cyan", "pink", "purple", "gray"]
+    listOfCombos = []
 
-# Bind the click event to the rectangle
-canvas.tag_bind(rectangle1, "<Button-1>", on_click)
-canvas.tag_bind(rectangle2, "<Button-1>", on_click)
 
-root.mainloop()
+
+
+    positions = []
+    for i in range(3):
+        for j in range(3):
+            x1 = i * 100 + 10
+            y1 = j * 100 + 10
+            x2 = x1 + 80
+            y2 = y1 + 80
+            positions.append([x1, y1, x2, y2])
+
+    for i in range(9):
+        shape_choice = random.choice(shapes)
+        square_choice = random.choice(positions)
+        positions.remove(square_choice)
+        color_choice = random.choice(colors)
+        colors.remove(color_choice)
+        if shape_choice == "square":
+            shape = canvas.create_rectangle(square_choice[0], square_choice[1], square_choice[2], square_choice[3], fill=color_choice)
+        elif shape_choice == "triangle":
+            x1, y1 = square_choice[0] + 40, square_choice[1] + 10
+            x2, y2 = square_choice[2] - 10, square_choice[3] - 10
+            x3, y3 = square_choice[0] + 10, square_choice[3] - 10
+            shape = canvas.create_polygon(x1, y1, x2, y2, x3, y3, fill=color_choice)
+        elif shape_choice == "circle":
+            shape = canvas.create_oval(square_choice[0], square_choice[1], square_choice[2], square_choice[3], fill=color_choice, outline="")
+        canvas.tag_bind(shape, "<Button-1>", lambda event, shape=shape_choice, color=color_choice: on_click(event, shape, color))
+        listOfCombos.append(f"{color_choice} {shape_choice}")
+
+
+    clickOn = random.choice(listOfCombos)
+    text_label = Label(root, text=f"To Verify You Are Human, Click a {clickOn}")
+    text_label.pack(side=BOTTOM)
+
+    def on_click(event, shape, color):
+        print(f"You clicked on a {color} {shape}.")
+        clicked = f"{color} {shape}"
+        if clickOn == clicked:
+            print("Human Verified")
+        else:
+            print("FALSE")
+
+    root.mainloop()
+
+
+
+window.mainloop()
