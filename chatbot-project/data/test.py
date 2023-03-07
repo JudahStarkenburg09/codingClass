@@ -3,6 +3,10 @@ import time
 import random
 import os
 
+current_directory = os.getcwd()
+folder1 = 'data'
+os.chdir(os.path.join(current_directory, folder1))
+
 runningMenu = True
 
 caught = None
