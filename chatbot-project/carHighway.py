@@ -8,6 +8,13 @@ current_directory = os.getcwd()
 folder1 = 'data'
 os.chdir(os.path.join(current_directory, folder1))
 
+def crash():
+    print('crash')
+
+
+
+
+
 # Set the initial position of the road image
 roadPos = 0
 
@@ -35,7 +42,7 @@ car = pygame.image.load('carTop.png')
 car = pygame.transform.scale(car, [70, 120])
 car = pygame.transform.rotate(car, 0)
 maxSpeed = 5
-minSpeed = 3
+minSpeed = 2.6
 
 
 # Rotate the road image by 90 degrees
@@ -89,13 +96,13 @@ roadImage = pygame.transform.scale(roadImage, (roadImage.get_width(), SCREEN_HEI
 # Create a clock to control the frame rate
 clock = pygame.time.Clock()
 
-
+font = pygame.font.Font(None, 30)
 counting = False
 drifting1 = False
 currentCountPoint = 0
 numb = 0
 driftTime = 0
-obstacles = ["obstacle1", "obstacle2"]
+obstacles = ["obstacle1", "obstacle2", "obstacle3"]
 lanes = [10, 100, 190]
 possibleObstacleSpeeds = [2.4, 2.6, 2.8, 3, 3.2, 3.4]
 dangerSpeed = 0
@@ -105,6 +112,8 @@ level2 = 1000
 level3 = 1000
 levelCountdown = level1
 onLevel = 'level1'
+score = 0
+scoreWait = 0
 # Main game loop
 while True:
     # Handle events
@@ -112,8 +121,12 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-
-
+    #how fast score counts
+    scoreWait = scoreWait + (roadSpeed/5)
+    if scoreWait >= 30:
+        scoreWait = 0
+        score = score + 1
+    scoreText = font.render(str(score), True, (255, 255, 255))
     # Draw the images
     screen.blit(roadImage, (0, roadPos - SCREEN_HEIGHT))
     screen.blit(roadImage, (0, roadPos))
@@ -121,21 +134,28 @@ while True:
 
     carRect = pygame.Rect(carPosx, carPosy, car.get_width(), car.get_height())
 
-    print(onLevel + ' --> ' + str(levelCountdown) + ', Current Speed Is ' + str(roadSpeed) + '. || Min Speed Is ' + str(minSpeed) + '. || Max Speed Is ' + str(maxSpeed))
+    # print(onLevel + ' --> ' + str(levelCountdown) + ', Current Speed Is ' + str(roadSpeed) + '. || Min Speed Is ' + str(minSpeed) + '. || Max Speed Is ' + str(maxSpeed))
     if onLevel == 'level1':
         level1 -= 1
         levelCountdown = str(level1)
         if level1 <= 0:
+            roadSpeed += 1
             maxSpeed = 6
-            minSpeed = 4
+            minSpeed = 3
             onLevel = 'level2'
     if onLevel == 'level2':
         level2 -= 1
         levelCountdown = str(level2)
         if level2 <= 0:
+            roadSpeed += 1
             maxSpeed = 7
-            minSpeed = 5
+            minSpeed = 3.4
             onLevel = 'level3'
+    if onLevel == 'level3':
+        level3 = 'Last Level (Infinite)'
+        levelCountdown = str(level3)
+        minSpeed += 0.0001
+        maxSpeed += 0.0001
 
 
 
@@ -192,39 +212,16 @@ while True:
         obstacle3OnScreen = False
         obstacle3posy = -200
 
-    #obstacle7
-    if obstacle7OnScreen == False:
-        obstacle7OnScreen = True
-    
-    if obstacle7OnScreen == True:
-        if obstacle7posy == -200:
-            laneChosen7 = random.choice(lanes)
-            speedobstacle7 = random.choice(possibleObstacleSpeeds)
-        screen.blit(obstacle7, (laneChosen7, obstacle7posy))
-        obstacle7R = obstacle7.get_rect(left=(laneChosen7 + 15), top=(obstacle7posy + 17), width=(obstacle7.get_width() - 30), height=(obstacle7.get_height() - 30))
-        obstacle7R0 = obstacle7.get_rect(left=laneChosen7, top=obstacle7posy, width=obstacle7.get_width(), height=obstacle7.get_height())
-        obstacle7posy += roadSpeed - speedobstacle7
-
-    if obstacle7posy > 750:
-        obstacle7OnScreen = False
-        obstacle7posy = -200
     
     
     if carRect.colliderect(obstacle1R):
-        numb += 1
-        print('crash' + str(numb))
+        crash()
 
     if carRect.colliderect(obstacle2R):
-        numb += 1 
-        print('crash' + str(numb))
+        crash()
 
     if carRect.colliderect(obstacle3R):
-        numb += 1 
-        print('crash' + str(numb))
-
-    if carRect.colliderect(obstacle7R):
-        numb += 1 
-        print('crash' + str(numb))
+        crash()
 
     # Scroll the road image
     roadPos += roadSpeed
@@ -247,30 +244,15 @@ while True:
             speedObstacle1 = speedObstacle3 + 2
         elif obstacle1posy >= obstacle3posy:
             speedObstacle1 = speedObstacle3 - 2
-    if obstacle7R0.colliderect(obstacle1R0):
-        if obstacle1posy <= obstacle7posy:
-            speedObstacle1 = speedObstacle7 + 2
-        elif obstacle1posy >= obstacle7posy:
-            speedObstacle1 = speedObstacle7 - 2
-    if obstacle7R0.colliderect(obstacle2R0):
-        if obstacle2posy <= obstacle7posy:
-            speedObstacle2 = speedObstacle7 + 2
-        elif obstacle2posy >= obstacle7posy:
-            speedObstacle2 = speedObstacle7 - 2
-    if obstacle7R0.colliderect(obstacle3R0):
-        if obstacle3posy <= obstacle7posy:
-            speedObstacle3 = speedObstacle7 + 2
-        elif obstacle3posy >= obstacle7posy:
-            speedObstacle3 = speedObstacle7 - 2
 
 
             
 
 
     if roadSpeed < minSpeed:
-        roadSpeed += .08
+        roadSpeed = minSpeed
     if roadSpeed > maxSpeed:
-        roadSpeed -= .03
+        roadSpeed = maxSpeed
     keys = pygame.key.get_pressed()
     
     # Check for player movement
@@ -336,6 +318,7 @@ while True:
 
 
 
+    screen.blit(scoreText, (220, 10))
     
 
     

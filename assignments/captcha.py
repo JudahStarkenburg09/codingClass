@@ -2,9 +2,13 @@ from tkinter import *
 import random
 import time
 wronged = False
-
+failCount = 0
 notRobot = False
-
+import os
+def returnOriginalPage():
+    global tk
+    os.system('cls')
+    print('PUT RETURN PAGE HERE')
 
 def runNextFunction():
     #COMPLETE CAPTCHA HERE:
@@ -16,18 +20,35 @@ def runNextFunction():
     success.pack()
     tk.mainloop()
 
+def failCaptchaReturn():
+    #RETURN TO OTHER ORIGINAL PAGE:
+    global tk
+    tk = Tk()
+    tk.title('Fail')
+    tk.geometry('300x50')
+    fail = Label(tk, text="Fail! Too Many Attempts! Please Try Again Later!")
+    fail.pack()
+    button = Button(tk, text='Back', command=returnOriginalPage)
+    button.pack()
+    os.system('cls')
+    tk.mainloop()
+    os.system('cls')
+
 def on_window_close():
     global notRobot
     global wronged
-    notRobot = True
     window.destroy()
+    notRobot = True
+
 
 
 def captcha():
+    global failCount
     window.destroy()
     root = Tk()
     root.title('Captcha')
     root.geometry('400x400')
+    root.protocol("WM_DELETE_WINDOW", on_window_close)
 
     canvas = Canvas(root, width=300, height=300)
     canvas.pack()
@@ -73,6 +94,7 @@ def captcha():
 
     def on_click(event, shape, color):
         global wronged
+        global failCount
         global notRobot
         # print(f"You clicked on a {color} {shape}.")
         clicked = f"{color} {shape}"
@@ -81,6 +103,7 @@ def captcha():
             root.destroy()
             runNextFunction()
         else:
+            failCount = failCount + 1
             wronged = True
             root.destroy()
             
@@ -102,6 +125,10 @@ while notRobot == False:
         textLabel4 = Label(window, text="Wrong!")
         textLabel4.config(bg='light gray', fg='red')
         textLabel4.place(x=125, y=10)
+    if failCount == 3:
+        notRobot = True
+        window.destroy()
+        failCaptchaReturn()
 
         
     textLabel = Label(window, text="I Am Not A Robot")
