@@ -8,8 +8,11 @@ current_directory = os.getcwd()
 folder1 = 'data'
 os.chdir(os.path.join(current_directory, folder1))
 
+gameRun = True
 def crash():
-    print('crash')
+    global gameRun
+    
+    gameRun = False
 
 
 
@@ -322,9 +325,9 @@ while True:
     
 
     
-
     # Update the screen
-    pygame.display.flip()
+    if gameRun == True:
+       pygame.display.flip()
 
     # Control the frame rate
     clock.tick(60)
