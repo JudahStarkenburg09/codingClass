@@ -8,11 +8,43 @@ current_directory = os.getcwd()
 folder1 = 'data'
 os.chdir(os.path.join(current_directory, folder1))
 
+def lose():
+    screen.blit(roadImage, (0, roadPos - SCREEN_HEIGHT))
+    screen.blit(roadImage, (0, roadPos))
+    screen.blit(car, (carPosx, carPosy))
+    screen.blit(obstacle3, (laneChosen3, obstacle3posy))
+    screen.blit(obstacle1, (laneChosen1, obstacle1posy))
+    screen.blit(obstacle2, (laneChosen2, obstacle2posy))
+    pygame.display.update()  # update the screen 
+    pygame.display.flip()
+    input('')
+
+
+
 gameRun = True
 def crash():
     global gameRun
-    
     gameRun = False
+    for i in range(7):
+        screen.blit(roadImage, (0, roadPos - SCREEN_HEIGHT))
+        screen.blit(roadImage, (0, roadPos))
+        screen.blit(car, (carPosx, carPosy))
+        screen.blit(obstacle3, (laneChosen3, obstacle3posy))
+        screen.blit(obstacle1, (laneChosen1, obstacle1posy))
+        screen.blit(obstacle2, (laneChosen2, obstacle2posy))
+
+        animatedImage = pygame.image.load((images[i])["image"])
+        screen.blit(animatedImage, ((images[i]))["location"])
+        
+        pygame.display.update()  # update the screen 
+        pygame.display.flip()
+        pygame.time.delay(70)  # pause for 70 milliseconds (0.07 seconds)
+
+
+
+    
+    lose()
+    
 
 
 
@@ -118,12 +150,49 @@ onLevel = 'level1'
 score = 0
 scoreWait = 0
 # Main game loop
-while True:
+while True and gameRun == True:
     # Handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+    animateLocation = [carPosx - 50, carPosy - 20]
+
+    images = [
+        {
+            "image": "explosion1.png",
+            "location": ((animateLocation[0]+24), (animateLocation[1]-43))
+        },
+        {
+            "image": "explosion2.png",
+            "location": (animateLocation[0]-5, animateLocation[1]-2)
+        },
+        {
+            "image": "explosion3.png",
+            "location": (animateLocation[0]-15, animateLocation[1]-5)
+        },
+        {
+            "image": "explosion4.png",
+            "location": (animateLocation[0]-15, animateLocation[1]-45)
+        },
+        {
+            "image": "explosion5.png",
+            "location": (animateLocation[0]-15, animateLocation[1]-35)
+        },
+        {
+            "image": "explosion6.png",
+            "location": (animateLocation[0], animateLocation[1])
+        },
+        {
+            "image": "explosion7.png",
+            "location": (animateLocation[0]-10, animateLocation[1])
+        },
+    ]
+
+
+
+
+
     #how fast score counts
     scoreWait = scoreWait + (roadSpeed/5)
     if scoreWait >= 30:
@@ -326,8 +395,7 @@ while True:
 
     
     # Update the screen
-    if gameRun == True:
-       pygame.display.flip()
+    pygame.display.flip()
 
     # Control the frame rate
     clock.tick(60)
