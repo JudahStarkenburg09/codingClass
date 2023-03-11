@@ -23,18 +23,17 @@ def menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                sys.exit()
         screen.blit(roadImage, (0, roadPos))
         screen.blit(car, (carPosx, carPosy))
         screen.blit(obstacle3, (laneChosen3, obstacle3posy))
         screen.blit(obstacle1, (laneChosen1, obstacle1posy))
         screen.blit(obstacle2, (laneChosen2, obstacle2posy))
-        screen.blit(scoreText, (200, 10))
-        scoreBGX, scoreBGY = 64, 28  # Update the dimensions of the surface
-        rect_surface = pygame.Surface((scoreBGX, scoreBGY), pygame.SRCALPHA)
+        scoreBGWidth, scoreBGHeight = 64, 28  # Update the dimensions of the surface
+        rect_surface = pygame.Surface((scoreBGWidth, scoreBGHeight), pygame.SRCALPHA)
         rect_surface.set_alpha(200)
-        pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, scoreBGX, scoreBGY)) 
+        pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, scoreBGWidth, scoreBGHeight)) 
         screen.blit(rect_surface, (195, 5))  # Update the position where the surface is blitted
+        screen.blit(scoreText, (200, 10))
 
         menuX, menuY = 230, 350  # Update the dimensions of the surface
         rect_surface = pygame.Surface((menuX, menuY), pygame.SRCALPHA)
@@ -51,11 +50,12 @@ def menu():
         screen.blit(text1, (70, 200))
         screen.blit(text2, scoreXY)
 
+        # Set up the first button
+        pygame.draw.rect(screen, (100, 100, 200), (100, 300, 80, 40))  # x, y, width, height
+        label1 = font.render("Play With Arrow Keys", True, (255, 255, 255))  # text, antialiasing, color
+
         pygame.display.update()  # update the screen 
         pygame.display.flip()    
-        # Set up the first button
-        button1 = pygame.Rect(300, 200, 400, 100)  # x, y, width, height
-        label1 = font.render("Play With Arrow Keys", True, (255, 255, 255))  # text, antialiasing, color
 
         clock.tick(60)
 
@@ -67,10 +67,10 @@ def lose():
             sys.exit()
     screen.blit(roadImage, (0, roadPos - SCREEN_HEIGHT))
 
-    scoreBGX, scoreBGY = 64, 28  # Update the dimensions of the surface
-    rect_surface = pygame.Surface((scoreBGX, scoreBGY), pygame.SRCALPHA)
+    scoreBGWidth, scoreBGHeight = 64, 28  # Update the dimensions of the surface
+    rect_surface = pygame.Surface((scoreBGWidth, scoreBGHeight), pygame.SRCALPHA)
     rect_surface.set_alpha(200)
-    pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, scoreBGX, scoreBGY))  # Draw a rectangle at (0, 0) with dimensions of the surface
+    pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, scoreBGWidth, scoreBGHeight))  # Draw a rectangle at (0, 0) with dimensions of the surface
     screen.blit(rect_surface, (195, 5))  # Update the position where the surface is blitted
     
     screen.blit(roadImage, (0, roadPos))
@@ -103,10 +103,10 @@ def crash():
         screen.blit(obstacle2, (laneChosen2, obstacle2posy))
         screen.blit(scoreText, (200, 10))
 
-        scoreBGX, scoreBGY = 64, 28  # Update the dimensions of the surface
-        rect_surface = pygame.Surface((scoreBGX, scoreBGY), pygame.SRCALPHA)
+        scoreBGWidth, scoreBGHeight = 64, 28  # Update the dimensions of the surface
+        rect_surface = pygame.Surface((scoreBGWidth, scoreBGHeight), pygame.SRCALPHA)
         rect_surface.set_alpha(200)
-        pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, scoreBGX, scoreBGY))  # Draw a rectangle at (0, 0) with dimensions of the surface
+        pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, scoreBGWidth, scoreBGHeight))  # Draw a rectangle at (0, 0) with dimensions of the surface
         screen.blit(rect_surface, (195, 5))  # Update the position where the surface is blitted
 
         animatedImage = pygame.image.load((images[i])["image"])
@@ -431,10 +431,10 @@ while True and gameRun == True:
 
 
 
-    scoreBGX, scoreBGY = 64, 28  # Update the dimensions of the surface
-    rect_surface = pygame.Surface((scoreBGX, scoreBGY), pygame.SRCALPHA)
+    scoreBGWidth, scoreBGHeight = 64, 28  # Update the dimensions of the surface
+    rect_surface = pygame.Surface((scoreBGWidth, scoreBGHeight), pygame.SRCALPHA)
     rect_surface.set_alpha(200)
-    pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, scoreBGX, scoreBGY))  # Draw a rectangle at (0, 0) with dimensions of the surface
+    pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, scoreBGWidth, scoreBGHeight))  # Draw a rectangle at (0, 0) with dimensions of the surface
     screen.blit(rect_surface, (195, 5))  # Update the position where the surface is blitted
 
     screen.blit(scoreText, (200, 10))
