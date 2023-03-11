@@ -4,20 +4,85 @@ import sys
 import random
 pygame.init()
 
+
+
+
+
 current_directory = os.getcwd()
 folder1 = 'data'
 os.chdir(os.path.join(current_directory, folder1))
 
+
+
+
+def playAgain():
+    ''
+
+def menu():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        screen.blit(roadImage, (0, roadPos))
+        screen.blit(car, (carPosx, carPosy))
+        screen.blit(obstacle3, (laneChosen3, obstacle3posy))
+        screen.blit(obstacle1, (laneChosen1, obstacle1posy))
+        screen.blit(obstacle2, (laneChosen2, obstacle2posy))
+        screen.blit(scoreText, (200, 10))
+        scoreBGX, scoreBGY = 64, 28  # Update the dimensions of the surface
+        rect_surface = pygame.Surface((scoreBGX, scoreBGY), pygame.SRCALPHA)
+        rect_surface.set_alpha(200)
+        pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, scoreBGX, scoreBGY)) 
+        screen.blit(rect_surface, (195, 5))  # Update the position where the surface is blitted
+
+        menuX, menuY = 230, 350  # Update the dimensions of the surface
+        rect_surface = pygame.Surface((menuX, menuY), pygame.SRCALPHA)
+        rect_surface.set_alpha(200)
+        pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, menuX, menuY))  # Draw a rectangle at (0, 0) with dimensions of the surface
+        screen.blit(rect_surface, (20, 80))  # Update the position where the surface is blitted
+        scoreXY = (130, 230)
+
+        text1 = font.render(f'Final Score Is', True, (255, 255, 255))
+        text2 = font.render(f'{score}', True, (255, 255, 255))
+        text2_width = text2.get_width()  # Get the width of the second text surface
+        if int(len(str(text2))) > 1:
+            scoreXY = (130 - text2_width // 2, 230)  # Center the second text surface in the rectangle
+        screen.blit(text1, (70, 200))
+        screen.blit(text2, scoreXY)
+
+        pygame.display.update()  # update the screen 
+        pygame.display.flip()    
+        # Set up the first button
+        button1 = pygame.Rect(300, 200, 400, 100)  # x, y, width, height
+        label1 = font.render("Play With Arrow Keys", True, (255, 255, 255))  # text, antialiasing, color
+
+        clock.tick(60)
+
+
 def lose():
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
     screen.blit(roadImage, (0, roadPos - SCREEN_HEIGHT))
+
+    scoreBGX, scoreBGY = 64, 28  # Update the dimensions of the surface
+    rect_surface = pygame.Surface((scoreBGX, scoreBGY), pygame.SRCALPHA)
+    rect_surface.set_alpha(200)
+    pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, scoreBGX, scoreBGY))  # Draw a rectangle at (0, 0) with dimensions of the surface
+    screen.blit(rect_surface, (195, 5))  # Update the position where the surface is blitted
+    
     screen.blit(roadImage, (0, roadPos))
     screen.blit(car, (carPosx, carPosy))
     screen.blit(obstacle3, (laneChosen3, obstacle3posy))
     screen.blit(obstacle1, (laneChosen1, obstacle1posy))
     screen.blit(obstacle2, (laneChosen2, obstacle2posy))
+    screen.blit(scoreText, (200, 10))
     pygame.display.update()  # update the screen 
     pygame.display.flip()
-    input('')
+    clock.tick(2000)
+    menu()
 
 
 
@@ -26,12 +91,23 @@ def crash():
     global gameRun
     gameRun = False
     for i in range(7):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
         screen.blit(roadImage, (0, roadPos - SCREEN_HEIGHT))
         screen.blit(roadImage, (0, roadPos))
         screen.blit(car, (carPosx, carPosy))
         screen.blit(obstacle3, (laneChosen3, obstacle3posy))
         screen.blit(obstacle1, (laneChosen1, obstacle1posy))
         screen.blit(obstacle2, (laneChosen2, obstacle2posy))
+        screen.blit(scoreText, (200, 10))
+
+        scoreBGX, scoreBGY = 64, 28  # Update the dimensions of the surface
+        rect_surface = pygame.Surface((scoreBGX, scoreBGY), pygame.SRCALPHA)
+        rect_surface.set_alpha(200)
+        pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, scoreBGX, scoreBGY))  # Draw a rectangle at (0, 0) with dimensions of the surface
+        screen.blit(rect_surface, (195, 5))  # Update the position where the surface is blitted
 
         animatedImage = pygame.image.load((images[i])["image"])
         screen.blit(animatedImage, ((images[i]))["location"])
@@ -99,7 +175,7 @@ speedObstacle2 = 1
 obstacle2OnScreen = False
 obstacle2R = obstacle2.get_rect()
 
-obstacle3 = pygame.image.load('obstacleCar5.png')
+obstacle3 = pygame.image.load('obstacleCar3.png')
 obstacle3 = pygame.transform.rotate(obstacle3, -90)
 obstacle3 = pygame.transform.scale(obstacle3, [70, 120])
 obstacle3posy = -200
@@ -107,23 +183,6 @@ speedObstacle3 = 1
 obstacle3OnScreen = False
 obstacle3R = obstacle3.get_rect()
 
-obstacle4 = pygame.image.load('obstacleCar4.png')
-obstacle4 = pygame.transform.scale(obstacle4, [70, 120])
-obstacle4 = pygame.transform.rotate(obstacle4, 0)
-obstacle4R = obstacle4.get_rect()
-
-obstacle5 = pygame.image.load('obstacleCar5.png')
-obstacle5 = pygame.transform.scale(obstacle5, [70, 120])
-obstacle5 = pygame.transform.rotate(obstacle5, 90)
-obstacle5R = obstacle5.get_rect()
-
-obstacle7 = pygame.image.load('obstacleCar4.png')
-obstacle7 = pygame.transform.rotate(obstacle7, 0)
-obstacle7 = pygame.transform.scale(obstacle7, [70, 120])
-obstacle7posy = -200
-speedObstacle7 = 1
-obstacle7OnScreen = False
-obstacle7R = obstacle7.get_rect()
 
 # Resize the road image to fit the screen height
 roadImage = pygame.transform.scale(roadImage, (roadImage.get_width(), SCREEN_HEIGHT))
@@ -147,7 +206,9 @@ level2 = 1000
 level3 = 1000
 levelCountdown = level1
 onLevel = 'level1'
+
 score = 0
+
 scoreWait = 0
 # Main game loop
 while True and gameRun == True:
@@ -211,7 +272,6 @@ while True and gameRun == True:
         level1 -= 1
         levelCountdown = str(level1)
         if level1 <= 0:
-            roadSpeed += 1
             maxSpeed = 6
             minSpeed = 3
             onLevel = 'level2'
@@ -219,15 +279,14 @@ while True and gameRun == True:
         level2 -= 1
         levelCountdown = str(level2)
         if level2 <= 0:
-            roadSpeed += 1
             maxSpeed = 7
             minSpeed = 3.4
             onLevel = 'level3'
     if onLevel == 'level3':
         level3 = 'Last Level (Infinite)'
         levelCountdown = str(level3)
-        minSpeed += 0.0001
-        maxSpeed += 0.0001
+        minSpeed += 0.00037037037037037035
+        maxSpeed += 0.00037037037037037035
 
 
 
@@ -339,24 +398,6 @@ while True and gameRun == True:
         if carXspeed > 2.5:
             carXspeed -= .03
         carXspeed += .01
-        dangerSpeed += 0.001
-        
-        
-        if dangerSpeed >= 1:
-            if boostCharge > 0:
-                roadSpeed = maxSpeed + 2
-                #PUT HERE WHAT HAPPENS AT DANGERSPEED
-            else:
-                dangerSpeed = 0
-                boostCharge = 10
-                if roadSpeed > maxSpeed:
-                    roadSpeed -= 0.1
-
-            boostCharge -= 0.01
-    else:
-        dangerSpeed = 0
-        if roadSpeed > maxSpeed:
-            roadSpeed -= 0.1
     if keys[pygame.K_LEFT]:
         if carIsRotated is not True:
             car = pygame.image.load('carTop.png')
@@ -390,7 +431,13 @@ while True and gameRun == True:
 
 
 
-    screen.blit(scoreText, (220, 10))
+    scoreBGX, scoreBGY = 64, 28  # Update the dimensions of the surface
+    rect_surface = pygame.Surface((scoreBGX, scoreBGY), pygame.SRCALPHA)
+    rect_surface.set_alpha(200)
+    pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, scoreBGX, scoreBGY))  # Draw a rectangle at (0, 0) with dimensions of the surface
+    screen.blit(rect_surface, (195, 5))  # Update the position where the surface is blitted
+
+    screen.blit(scoreText, (200, 10))
     
 
     
