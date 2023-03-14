@@ -6,15 +6,25 @@ from tkinter import simpledialog
 import os
 from tkinter import messagebox
 from datetime import datetime
+import json
 
 
-current_directory = os.getcwd()
-folder1 = 'creds_PrivateDoNotSee'
-os.chdir(os.path.join(current_directory, folder1))
+
+creds = json.dumps({
+    "type": "service_account",
+    "project_id": "sodium-lodge-376703",
+    "private_key_id": "8f5ab782026cdfd09476ddcdfd850444abbfb96a",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCxu0PrA/Iz8bio\nW1PkobDRygCDQx4m4L84V515W+9XC4tjlV4ZDzy+cVE0kgXRTM+ON+FkI2Ni93Lf\nBeQ6oWN24LFJBLwvH746aQ54bbZhjNN36VxazeQ3GQ2In3SzEchxNUIRRJWPdCaB\n0fxzi12ovUq/TGEt/p4KsFPgfZ9/FI0lxg1hQxIpW4JXy970Vixu4AquRn57Bsg3\n8C6LlYAtgvM4DxAnvWxhUe2Xseb5UYQWzqykyOsGmnihbJ+p45sphTZQq9fLADvK\n7OOCWmx2ImHSA4/rJ06RJNVO5wCh9jK8s43dffBqDVShbWHCR9avj+m9Cui7jLfq\nYqDrFya/AgMBAAECggEAB/ct28NfvWpV2TS1jkBAAVwcF4Ah5X+I34dBAB9fj3pK\nqQokaucx4IahK2bc58tfFpJXZKYMG2fMtVD5aqq8k7MNrwlTEIqGEtcZtlXwdGP4\n+WkQSrVfgWHvYXsICw/KeNr4hY6aNe42Ofb/0gMn9maToYoOq00wMr9CFUoHsEbj\nbjKC/ouzvry0Cwbht2+Re8US+WArYwHqMUVuR3cKSubSC3Xw5uBlOBvTUjJlJgvf\nHrFEwWsrdD5psMVDl/tLYH3Jt+xTfBnLUffUM0Dj6o64oV9YIOpIG+DoiAqzPP82\n5BJD6DNLLTLsrUBkmCH532InwCjfB/iMidODGkUKOQKBgQDs9XWIOc1i9LdJUILn\nmqAbM2u5HFjEFmkNLw2L83Pzj/rq1Rfi8b62pYi7rjn6QFs9IRo1NQ9kyaTFK9Jc\naeMYgdQ0bRx1VWFtgZr46Kqevyu21swPktgM2Vhto5PSy4tI5U92rgAuGx4GnXNy\n9hAuqRlpgDan6gqRNsO/EiMAZwKBgQDAA2z/9BFGIpzHMnlTN8xSuqCWx/MSxEfE\nt3lOMRdutbAS/see4zOaFqvECmou5kw6LYLRvhXbyEixLmg9DGISO7SSCUFuQHhI\nB6Nco1x3dyodIQmIqmhO7JQV6ZEJQAY9snpusLElFOg5YzaKSZ9QNgArbBbcNZjp\nBWzMAYRP6QKBgDrQ1mKAzm0QhuoItOVd6P23bracxZ+uXFbsZfVl8VL0Wvis+efX\nz1mwjtbe8P8fuEXdEI9CY1bGAkL6lJVhpv+vQgfdSWIKVkuDDv9XaPpMQ0J34GDB\nNyVBUYStRITfBuyKFoZDvEG1c2d672wKjYu3Z1pbe7WEDylqKX4kt1FjAoGBAJmQ\no9Y4nrAW8oglh/7UO2dWtySgGXlC3Zsoma29eV4jlQQ8G+6pCxYLV6hcI/wKV6CX\n0W5pthWmouyBjwB0LOMkORAqste4W/pPkYl/ZW5uMZJGX9ebYfztHKpBuKtLNzKU\n0XJBgguEIw3ymSYUJ4QBDDWuJsJLY1XJ7u9hry4xAoGBAKc/MqsRwz7v+YdKD1FD\nwfR1yi0lEHJMXQ07gR300LzZj0hvlVCBf1izHrpsE1MC3JM03qpFvRU2kVq8srxr\nRo/j0kzWnU+fhgqFg8n4C2DSRdQOqjh5LAtsrrshol/5KSopgxH1Lo2l5mY+YiER\ndZhFt2BA2WrF48ccP0rKWjRm\n-----END PRIVATE KEY-----\n",
+    "client_email": "computerlabcheckout@sodium-lodge-376703.iam.gserviceaccount.com",
+    "client_id": "117271474767672050840",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/computerlabcheckout%40sodium-lodge-376703.iam.gserviceaccount.com"
+})
 
 # set up credentials
-creds_file = 'credentials.json'
-gc = pygsheets.authorize(service_file=creds_file)
+gc = pygsheets.authorize(service_account_json=creds)
 
 # open the Google Sheets document by its URL
 sheet_url = 'https://docs.google.com/spreadsheets/d/1Bl0qatKOkC2_boYVE3W0VW01COOucE777mlZywRwg7E/edit#gid=0'
