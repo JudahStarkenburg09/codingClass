@@ -14,13 +14,6 @@ if not nltk.downloader.Downloader().is_installed('wordnet'):
         os.system('cls')
         print(progressBar[i])
         time.sleep(0.33333)
-
-    
-    
-
-
-
-
 from nltk.corpus import wordnet
 import re
 import sys
@@ -29,6 +22,8 @@ from email.message import EmailMessage
 import ssl
 import smtplib
 import time
+
+
 from pong import pongGame
 from TicTacToe1p import tic_tac_toe1p
 from TicTacToe2p import tic_tac_toe2p
@@ -41,6 +36,8 @@ from carGameForChatbot import carGame
 from receiptProjectPDF import receiptPrank
 from jokesDatabase import allJokes
 from roastDatabase import allRoasts
+
+
 os.system("cls")
 
 os.system('cls')

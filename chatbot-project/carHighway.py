@@ -2,10 +2,29 @@ import pygame
 import os
 import sys
 import random
+import json
+
+
+
+credentialsForLinusCo = [
+    {
+    "type": "service_account",
+    "project_id": "linus-co",
+    "private_key_id": "0b022dbad08459c7dcf87f4867011c90ed2b3bc1",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDCwjyOd8haRZEK\nGQCPDRnGAl2z2H085F1nOirCYvT9wd1uA8l5NO4hTedxV6glpiV6GdpjNoeR85Ab\n100LmfDxJyeOdCKlWoXKvT0iQb0IC2V7qtkCQigzP/mAR2FeELM0Rlbgfog2O1qy\nVTdZ/8WrYj1xkgRrcCbZTM3UVa+CTwX552kynwV5l55XUAZ38tlm841Q/tdLGiYm\nJOB/B7lqh4Rcl0Cyj69ppQG9mmIlhFntB3GgF0cgwsrtAbHWM4rIArNS5oZ2d6EE\npwkcQ4h5LoWBbtiGOXlKtNVU9IlfYDTaNjtoDXrs9U0k3NkQVv6ulVZMR/aHXePQ\nwMx+0MLbAgMBAAECggEAOuqKaijHNbO8xBq7Jgs3BET79qdjf3Ov48XfYI2SAl/O\nrfS8UovWC8Im5Q044ybHSJAglgnNajQNoLZ5aqyHjFQlbb0pK+9d8O5dW4sadaAI\n86fD3SCJS7OrNQii5lNT+tjaeDAe4ZUEA1WvGG087XMbFkuvRZcYUX0f+P9wyBC7\no9h9cPCvcpnLEZv0fNYqa7rgWeHV8iLoSB/gR3svMk1giT/DNxAVzhMpuldEKmbx\nYrS5cc+N+a/zQS/rym6ZfeVnsycGaJ9gvHe0nPgRlzF3izJX6wigjJlxa8WP26Rg\nofhC3Xv8u0Bk3Squ96A9/BH6MoJ5qg+qRDiW/2VFLQKBgQDkMGl+YJW3UPcCGS3f\nHdYYgMSiBNFB2/JUYdbd0J4N86W24jsX2iyEeNTDf+zC02XtRdl5kxJHFv5s2Tqp\nat6LmLy3nDKUMZ0I0Afw9xXCqifvtco1gtt+WwQAGtwSl/b3wZFWjYPh8t9c3Hhv\nNorbEh4v6X26WcJFqUJ/OVvqzQKBgQDafsiyfw7VWBkBfFcBBgDzAGsALjLrO5WS\nVuMiM/S8o24F+cc+popl6s2SoAi28uL1OM6iABtcdsA6z52fTJagXE6/7WQ/pWyK\nsCAY5FQ9HkoTmfg0vz7q8OeWu7uCsDDqoasP19wqMIsRYI0cyluNWvxdzqWwoxHz\nn+mJ5yU0RwKBgQDI4nHMxvymsIlz+HSwqlSTp7DzrWgHIbl5XdTJ2+F5CNkHYqyB\nOBne2Xz9Sv5FGdPuiYKGC9qYaP69FpQVF7cpj+H7hm/klLTZUELdeLhYcnHMDu8g\nIr5Ww4uHCB5b5BqQTIFFgDntTWIkHxeLWKnvaEjZByYfSuvDZdnbpMRttQKBgAXR\nVGS0T1/M3bWVavejAkl2HGM/16k9x+jCmX+ipISVUWulT/HSG2NFUj3yNukwJGzl\nG1Ni71eR7eJi/s5sCqKwcoRXvNCZBf/XWrNu+PM7qDtHYT1+Th2RVolD7GU5bcQB\nk/1zAPC6pClNSdSXasKjxo503yKJ5QN4oY5DclEnAoGBAKE7k7cQgKuGstcL+Gpa\nXG+1+5pKqewcBfhjzTjpFXRDYHJA27IqvI/9liQvLb8N9XMgpMIv8L2xTwCObPOD\nA16HRwqPkfXFZZu0nzGaJMza9ihptdrzp81dnSGJ+wvHWtlVadwHJxwth3hDxq2E\n/bhN9SDdHIRbU4Os2d5O+AvE\n-----END PRIVATE KEY-----\n",
+    "client_email": "linus-cooperation@linus-co.iam.gserviceaccount.com",
+    "client_id": "113135078032571665296",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/linus-cooperation%40linus-co.iam.gserviceaccount.com"
+    }
+]
+
+
+credsDataLinus = json.load(credentialsForLinusCo)
+
 pygame.init()
-
-
-
 
 
 current_directory = os.getcwd()
@@ -16,13 +35,18 @@ os.chdir(os.path.join(current_directory, folder1))
 
 
 def playAgain():
-    ''
+    print("playing Again")
 
 def menu():
+    button_rect = pygame.Rect(70, 260, 130, 50)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                # Check if the button was clicked
+                if button_rect.collidepoint(event.pos):
+                    playAgain()
         screen.blit(roadImage, (0, roadPos))
         screen.blit(car, (carPosx, carPosy))
         screen.blit(obstacle3, (laneChosen3, obstacle3posy))
@@ -51,8 +75,15 @@ def menu():
         screen.blit(text2, scoreXY)
 
         # Set up the first button
-        pygame.draw.rect(screen, (100, 100, 200), (100, 300, 80, 40))  # x, y, width, height
-        label1 = font.render("Play With Arrow Keys", True, (255, 255, 255))  # text, antialiasing, color
+        # Draw the button
+        pygame.draw.rect(screen, (50, 50, 255), button_rect)
+
+        # Add text to the button
+        text = font.render("Play Again", True, (245, 255, 245))
+        text_rect = text.get_rect(center=button_rect.center)
+        screen.blit(text, text_rect)
+
+
 
         pygame.display.update()  # update the screen 
         pygame.display.flip()    
@@ -294,6 +325,9 @@ while True and gameRun == True:
     if obstacle1OnScreen == False:
         obstacle1OnScreen = True
     
+    if obstacle1posy < -200:
+        speedObstacle1 = roadSpeed - .4
+
     if obstacle1OnScreen == True:
         if obstacle1posy == -200:
             laneChosen1 = random.choice(lanes)
@@ -306,12 +340,16 @@ while True and gameRun == True:
     if obstacle1posy > 750:
         obstacle1OnScreen = False
         obstacle1posy = -200
+    
 
 
 
     #obstacle2
     if obstacle2OnScreen == False:
         obstacle2OnScreen = True
+
+    if obstacle2posy < -200:
+        speedObstacle2 = roadSpeed - .4
     
     if obstacle2OnScreen == True:
         if obstacle2posy == -200:
@@ -329,6 +367,9 @@ while True and gameRun == True:
     #obstacle3
     if obstacle3OnScreen == False:
         obstacle3OnScreen = True
+
+    if obstacle3posy < -200:
+        speedObstacle3 = roadSpeed - .4
     
     if obstacle3OnScreen == True:
         if obstacle3posy == -200:
