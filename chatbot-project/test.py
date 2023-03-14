@@ -25,4 +25,25 @@ sh = gc.open_by_url(sheet_url)
 # select a worksheet by its index (starting from 0)
 worksheet = sh[0]
 
-worksheet.update_value('H3', '100')
+#--------------------------------------------------------------------
+#TODO #TODO #TODO #TODO #TODO #TODO #TODO #TODO #TODO #TODO
+Score = 103 #ERASE THIS LINE
+user = 'Judah' #ERASE THIS LINE
+
+
+# update the high score if necessary
+newHighScore = None
+
+if int(worksheet.cell('H3').value) < Score:
+    newHighScore = Score
+
+if newHighScore:
+    ScoreCell = worksheet.cell('H3')
+    ScoreCell.value = str(newHighScore)
+    ScoreCell.color = (0.929, 0.490, 0.490) # Red color
+    ScoreCell.update()
+    
+    UserCell = worksheet.cell('J3')
+    UserCell.value = str(user)
+    UserCell.color = (0.929, 0.694, 0.490) # Orange color
+    UserCell.update()
