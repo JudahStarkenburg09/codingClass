@@ -5,6 +5,12 @@ import random
 import pygsheets
 import json
 
+current_directory = os.getcwd()
+folder1 = 'data'
+os.chdir(os.path.join(current_directory, folder1))  
+
+
+
 newHighScore = None
 # add credentials to the account
 creds = json.dumps({
@@ -209,13 +215,8 @@ while gameTrue == True:
         lose()
 
 
-
-
-
-
-
     # Main game loop
-    while gameRun == True:
+    while True and gameRun == True:
         # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
