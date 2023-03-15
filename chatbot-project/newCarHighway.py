@@ -133,6 +133,7 @@ while gameTrue == True:
         levelCountdown = level1
         onLevel = 'level1'
         numb = 0
+        
 
     def menu():
         button_rect = pygame.Rect(70, 260, 130, 50)
@@ -177,17 +178,17 @@ while gameTrue == True:
             screen.blit(text, text_rect)
             pygame.display.update()  # update the screen 
             pygame.display.flip()    
-            if int(worksheet.cell('H3').value) < score:
-                newHighscore = score
-                scoreCell = worksheet.cell('H3')
-                scoreCell.value = str(newHighscore)
-                scoreCell.color = (0.929, 0.490, 0.490) # Red color
-                scoreCell.update()
+            # if int(worksheet.cell('H3').value) < score:
+            #     newHighscore = score
+            #     scoreCell = worksheet.cell('H3')
+            #     scoreCell.value = str(newHighscore)
+            #     scoreCell.color = (0.929, 0.490, 0.490) # Red color
+            #     scoreCell.update()
                 
-                UserCell = worksheet.cell('J3')
-                UserCell.value = str(user)
-                UserCell.color = (0.929, 0.694, 0.490) # Orange color
-                UserCell.update()
+            #     UserCell = worksheet.cell('J3')
+            #     UserCell.value = str(user)
+            #     UserCell.color = (0.929, 0.694, 0.490) # Orange color
+            #     UserCell.update()
             clock.tick(60)
     def lose():
         for event in pygame.event.get():
@@ -213,7 +214,7 @@ while gameTrue == True:
         menu()
     def crash():
         global gameRun
-        gameRun = False 
+        # gameRun = False 
         for i in range(7):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
