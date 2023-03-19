@@ -10,7 +10,7 @@ last_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 backSub = cv2.createBackgroundSubtractorMOG2()
 
 # Set the threshold value to 90% of the maximum pixel value
-threshold_value = int(0.9 * 255)
+threshold_value = int(0.99 * 255)
 
 while True:
     _, frame = cap.read()
