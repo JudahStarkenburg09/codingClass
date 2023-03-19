@@ -59,8 +59,13 @@ while True:
     # Update the previous frame
     last_gray = gray
 
-    # Exit on ESC key press
-    if cv2.waitKey(1) == 27:
+    # Exit if window is closed
+    if not cap.isOpened():
+        break
+
+    # Exit on ESC key press or if window is closed
+    key = cv2.waitKey(1)
+    if key == 27 or cv2.getWindowProperty('frame', cv2.WND_PROP_VISIBLE) < 1:
         break
 
 # Clean up

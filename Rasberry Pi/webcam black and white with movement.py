@@ -46,21 +46,26 @@ while True:
         # Draw the rectangle on the overlay image
         cv2.rectangle(overlay, (x, y), (x + w, y + h), color, -1)
 
-    # Apply the color overlay to the original frame
+    # Apply the color overlay to the gray frame
     alpha = 0.5
-    frame = cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0)
+    gray_overlay = cv2.addWeighted(overlay, alpha, gray, 1 - alpha, 0)
 
     # Mirror the frame horizontally
-    frame = cv2.flip(frame, 1)
+    gray_overlay = cv2.flip(gray_overlay, 1)
 
     # Show the resulting frame
-    cv2.imshow('frame', frame)
+    cv2.imshow('frame', gray_overlay)
 
     # Update the previous frame
     last_gray = gray
 
-    # Exit on ESC key press
-    if cv2.waitKey(1) == 27:
+    # Exit if window is closed
+    if not cap.isOpened():
+        break
+
+    # Exit on ESC key press or if window is closed
+    key = cv2.waitKey(1)
+    if key == 27 or cv2.getWindowProperty('frame', cv2.WND_PROP_VISIBLE) < 1:
         break
 
 # Clean up
