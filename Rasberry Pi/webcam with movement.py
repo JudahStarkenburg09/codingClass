@@ -15,7 +15,7 @@ while True:
     frame_diff = cv2.absdiff(last_gray, gray)
 
     # Apply a threshold to the difference frame to identify movement
-    threshold = 20
+    threshold = 7
     _, frame_diff_thresh = cv2.threshold(frame_diff, threshold, 255, cv2.THRESH_BINARY)
 
     # Blur the thresholded frame to reduce noise
