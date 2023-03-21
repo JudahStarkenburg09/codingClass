@@ -6,8 +6,7 @@ cap = cv2.VideoCapture(0)
 # Create a background subtractor object
 backSub = cv2.createBackgroundSubtractorMOG2()
 
-# Set the threshold value to 90% of the maximum pixel value
-threshold_value = int(0.999999 * 255)
+threshold_value = int(0.50 * 255)
 
 while True:
     # Read frame from webcam

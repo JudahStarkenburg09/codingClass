@@ -16,7 +16,7 @@ while True:
     overlay = frame.copy()
     h, w = overlay.shape[:2]
     cv2.rectangle(overlay, (0, 0), (w, h), (0, 255, 0), -1)
-    alpha = 0.2
+    alpha = 0.6
 
     # Merge the grayscale frame and the overlay with transparency
     gray = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
