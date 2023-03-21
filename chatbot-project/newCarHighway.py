@@ -167,6 +167,16 @@ def initVariables():
     score = 0
     scoreWait = 0
     gameRun = True
+    if int(worksheet.cell('H3').value) < score:
+        newHighscore = score
+        scoreCell = worksheet.cell('H3')
+        scoreCell.value = str(newHighscore)
+        scoreCell.color = (0.929, 0.490, 0.490) # Red color
+        scoreCell.update()
+        UserCell = worksheet.cell('J3')
+        UserCell.value = str(user)
+        UserCell.color = (0.929, 0.694, 0.490) # Orange color
+        UserCell.update()
     
     
 
@@ -213,17 +223,7 @@ def menu():
         screen.blit(text, text_rect)
         pygame.display.update()  # update the screen 
         pygame.display.flip()    
-        # if int(worksheet.cell('H3').value) < score:
-        #     newHighscore = score
-        #     scoreCell = worksheet.cell('H3')
-        #     scoreCell.value = str(newHighscore)
-        #     scoreCell.color = (0.929, 0.490, 0.490) # Red color
-        #     scoreCell.update()
-            
-        #     UserCell = worksheet.cell('J3')
-        #     UserCell.value = str(user)
-        #     UserCell.color = (0.929, 0.694, 0.490) # Orange color
-        #     UserCell.update()
+
         clock.tick(60)
 def lose():
     for event in pygame.event.get():
