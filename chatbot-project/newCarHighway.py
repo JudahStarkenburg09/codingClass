@@ -9,6 +9,7 @@ user ='judah'
 current_directory = os.getcwd()
 folder1 = 'data'
 os.chdir(os.path.join(current_directory, folder1))  
+errorTest = 0
 
 pygame.init()
 
@@ -36,6 +37,7 @@ sh = gc.open_by_url(sheet_url)
 worksheet = sh[0]
 
 roadPos = 0
+gameJustStarted = True
 carPosx = 100
 carPosy = 400
 carXspeed = 2
@@ -105,11 +107,18 @@ onLevel = 'level1'
 score = 0
 scoreWait = 0
 gameRun = True
+errorWithGame = False
 
+
+
+# notificationBox = pygame.
+# textOnNotification = 
 
 #region Functions ----------
 def initVariables():
-    global score, roadSpeed, maxSpeed, minSpeed, level1, level2, level3, levelCountdown, numb, onLevel, roadPos, carPosx, carPosy, carIsRotated, gameRun, obstacle3OnScreen, obstacle2OnScreen, obstacle1OnScreen, laneChosen1, laneChosen3, laneChosen2, images, scoreText, scoreWait, car, carPosx, carPosy, obstacle1posy, obstacle2posy, obstacle3posy, speedObstacle1, speedObstacle2, speedObstacle3, carXspeed
+    global score, roadSpeed, maxSpeed, minSpeed, level1, level2, level3, levelCountdown, numb, onLevel, roadPos, carPosx, carPosy, carIsRotated, gameRun, obstacle3OnScreen, obstacle2OnScreen, obstacle1OnScreen, laneChosen1, laneChosen3, laneChosen2, images, scoreText, scoreWait, car, carPosx, carPosy, obstacle1posy, obstacle2posy, obstacle3posy, speedObstacle1, speedObstacle2, speedObstacle3, carXspeed, errorWithGame
+    errorWithGame = False
+    gameJustStarted = True
     roadPos = 0
     carPosx = 100
     carPosy = 400
@@ -181,7 +190,7 @@ def initVariables():
     
 
 def menu():
-    button_rect = pygame.Rect(70, 260, 130, 50)
+    button_rect = pygame.Rect(70, 270, 130, 50)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -210,10 +219,30 @@ def menu():
         text1 = font.render(f'Final Score Is', True, (255, 255, 255))
         text2 = font.render(f'{score}', True, (255, 255, 255))
         text2_width = text2.get_width()  # Get the width of the second text surface
+        highestScore = int(worksheet.cell('H3').value)
+        highestScoreUser = str(worksheet.cell('J3').value)
+        if int(worksheet.cell('H3').value) < score:
+            highestScore = score
+            highestScoreUser = user
+
+
+
+        text3a = font.render(f"Highest Score Ever:", True, (255, 255, 255))
+        text3b = font.render(str(highestScore), True, (255, 255, 255))
+        text4a = font.render(f"Scored by:", True, (255, 255, 255))
+        text4b = font.render(str(highestScoreUser), True, (255, 255, 255))
+
+
+
+
         if int(len(str(text2))) > 1:
-            scoreXY = (130 - text2_width // 2, 230)  # Center the second text surface in the rectangle
-        screen.blit(text1, (70, 200))
+            scoreXY = (130 - text2_width // 2, 120)  # Center the second text surface in the rectangle
+        screen.blit(text1, (70, 90))
         screen.blit(text2, scoreXY)
+        screen.blit(text3a, (40, 150))
+        screen.blit(text3b, (115, 180))
+        screen.blit(text4a, (70, 210))
+        screen.blit(text4b, (100, 240))
         # Set up the first button
         # Draw the button
         pygame.draw.rect(screen, (50, 50, 255), button_rect)
@@ -280,7 +309,8 @@ def crash():
 
 # while gameTrue == True:
 def animate():
-    global score, roadSpeed, maxSpeed, minSpeed, level1, level2, level3, levelCountdown, numb, onLevel, roadPos, carPosx, carPosy, carIsRotated, gameRun, obstacle3OnScreen, obstacle2OnScreen, obstacle1OnScreen, laneChosen1, laneChosen3, laneChosen2, images, scoreText, scoreWait, car, carPosx, carPosy, obstacle1posy, obstacle2posy, obstacle3posy, speedObstacle1, speedObstacle2, speedObstacle3, carXspeed
+    global score, roadSpeed, maxSpeed, minSpeed, level1, level2, level3, levelCountdown, numb, onLevel, roadPos, carPosx, carPosy, carIsRotated, gameRun, obstacle3OnScreen, obstacle2OnScreen, obstacle1OnScreen, laneChosen1, laneChosen3, laneChosen2, images, scoreText, scoreWait, car, carPosx, carPosy, obstacle1posy, obstacle2posy, obstacle3posy, speedObstacle1, speedObstacle2, speedObstacle3, carXspeed, errorWithGame
+    global errorTest, gameJustStarted
     # Handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -422,6 +452,18 @@ def animate():
         roadSpeed = minSpeed
     if roadSpeed > maxSpeed:
         roadSpeed = maxSpeed
+    
+    if speedObstacle1 == speedObstacle2 and speedObstacle2 == speedObstacle3 and gameJustStarted == True:
+        errorWithGame = True
+        print("Error Fixed!")
+        return False
+    
+    # if errorTest == 0:
+    #     print("Successfully Ran Error Test")
+    #     errorWithGame = True
+    #     errorTest += 1
+    #     return False
+
     keys = pygame.key.get_pressed()
     # Check for player movement
     if keys[pygame.K_DOWN]:
@@ -488,6 +530,8 @@ def animate():
     # Control the frame rate
     clock.tick(60)
 
+    gameJustStarted = False
+
     #keep going the game
     return True
 
@@ -501,9 +545,12 @@ def playGame():
     isContinue = True
     while isContinue:
         isContinue = animate()
-    crash()
-    lose()
-    return menu()
+    if errorWithGame == True:
+        playGame()
+    if errorWithGame != True:
+        crash()
+        lose()
+        return menu()
 
 
 playAgain = True
