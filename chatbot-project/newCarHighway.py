@@ -164,9 +164,6 @@ def initVariables():
     level3 = 1000
     levelCountdown = level1
     onLevel = 'level1'
-    score = 0
-    scoreWait = 0
-    gameRun = True
     if int(worksheet.cell('H3').value) < score:
         newHighscore = score
         scoreCell = worksheet.cell('H3')
@@ -177,6 +174,9 @@ def initVariables():
         UserCell.value = str(user)
         UserCell.color = (0.929, 0.694, 0.490) # Orange color
         UserCell.update()
+    score = 0
+    scoreWait = 0
+    gameRun = True
     
     
 
