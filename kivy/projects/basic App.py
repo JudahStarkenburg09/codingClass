@@ -16,6 +16,7 @@ class gridLayout(GridLayout):
         self.add_widget(self.textLabel1) #self.add the text label
 
         self.inputBox1 = TextInput(multiline = False, font_size = 20) #create a input box
+        # self.inputBox1.foreground_color((100, 0, 0))
         self.add_widget(self.inputBox1) #add the input box
         
         self.button1 = Button(text="This is a button!", font_size = 20) #create a button
