@@ -8,6 +8,8 @@ import tkinter as tk
 from tkinter import messagebox
 playAgain = True
 
+accelerating = 0
+
 def login_menu():
     global playAgain
     # Create the main window
@@ -377,7 +379,7 @@ def crash():
 # while gameTrue == True:
 def animate():
     global score, roadSpeed, maxSpeed, minSpeed, level1, level2, level3, levelCountdown, numb, onLevel, roadPos, carPosx, carPosy, carIsRotated, gameRun, obstacle3OnScreen, obstacle2OnScreen, obstacle1OnScreen, laneChosen1, laneChosen3, laneChosen2, images, scoreText, scoreWait, car, carPosx, carPosy, obstacle1posy, obstacle2posy, obstacle3posy, speedObstacle1, speedObstacle2, speedObstacle3, carXspeed, errorWithGame
-    global errorTest, gameJustStarted
+    global errorTest, gameJustStarted, accelerating
     # Handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -428,7 +430,7 @@ def animate():
     screen.blit(car, (carPosx, carPosy))
 
     carRect = pygame.Rect(carPosx, carPosy, car.get_width(), car.get_height())
-    # print(onLevel + ' --> ' + str(levelCountdown) + ', Current Speed Is ' + str(roadSpeed) + '. || Min Speed Is ' + str(minSpeed) + '. || Max Speed Is ' + str(maxSpeed))
+    # print(onLevel + ' --> ' + str(levelCountdown) + ', Current Speed Is ' + str(roadSpeed) + '. || Min Speed Is ' + str(minSpeed) + '. || Max Speed Is ' + str(maxSpeed)) #this line is used for testing
     if onLevel == 'level1':
         level1 -= 1
         levelCountdown = str(level1)
@@ -517,10 +519,20 @@ def animate():
             speedObstacle1 = speedObstacle3 + 2
         elif obstacle1posy >= obstacle3posy:
             speedObstacle1 = speedObstacle3 - 2
+    
     if roadSpeed < minSpeed:
         roadSpeed = minSpeed
     if roadSpeed > maxSpeed:
         roadSpeed = maxSpeed
+    
+    # if accelerating < roadSpeed:
+    #     pygame.mixer.music.load('accelerate.mp3')
+    #     if pygame.mixer.music.get_busy() != True: #TODO Add sounds, this is a good start right here
+    #         pygame.mixer.music.play()
+    # else:
+    #     pygame.mixer.music.stop()
+        
+    # accelerating = roadSpeed
     
     if speedObstacle1 == speedObstacle2 and speedObstacle2 == speedObstacle3 and gameJustStarted == True:
         errorWithGame = True
