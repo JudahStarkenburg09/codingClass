@@ -4,8 +4,53 @@ import sys
 import random
 import pygsheets
 import json
+import tkinter as tk
+from tkinter import messagebox
 
-user ='judah'
+def login_menu():
+    # Create the main window
+    window = tk.Tk()
+    window.title("Login Menu")
+
+    # Create the username label
+    username_label = tk.Label(window, text="Use the same username every time if you have played this game before!")
+    username_label.pack()
+
+    # Create the username input box
+    username_var = tk.StringVar()   
+    username_entry = tk.Entry(window, textvariable=username_var)
+    username_entry.pack()
+
+    # Define the submit function
+    def submit():
+        global user
+        if len(username_var.get()) > 8:
+            tk.messagebox.showerror("Error", "Username must be 8 characters or less")
+        else:
+            user = username_var.get()
+            window.destroy()
+
+    # Create the submit button and bind it to the Enter key
+    submit_button = tk.Button(window, text="Submit", command=submit)
+    submit_button.pack()
+    window.bind('<Return>', lambda event: submit())
+
+    # Handle window close event
+    def on_closing():
+        if messagebox.askokcancel("Quit", "Are you sure you want to quit?"):
+            window.destroy()
+            exit()
+
+    window.protocol("WM_DELETE_WINDOW", on_closing)
+
+    # Start the main event loop
+    window.mainloop()
+
+
+
+
+
+
 current_directory = os.getcwd()
 folder1 = 'data'
 os.chdir(os.path.join(current_directory, folder1))  
@@ -35,6 +80,8 @@ sheet_url = 'https://docs.google.com/spreadsheets/d/1nWb4ZTeLfldXi_7kQ--qB65GLoX
 sh = gc.open_by_url(sheet_url)
 
 worksheet = sh[0]
+
+login_menu()
 
 roadPos = 0
 gameJustStarted = True
@@ -116,7 +163,7 @@ errorWithGame = False
 
 #region Functions ----------
 def initVariables():
-    global score, roadSpeed, maxSpeed, minSpeed, level1, level2, level3, levelCountdown, numb, onLevel, roadPos, carPosx, carPosy, carIsRotated, gameRun, obstacle3OnScreen, obstacle2OnScreen, obstacle1OnScreen, laneChosen1, laneChosen3, laneChosen2, images, scoreText, scoreWait, car, carPosx, carPosy, obstacle1posy, obstacle2posy, obstacle3posy, speedObstacle1, speedObstacle2, speedObstacle3, carXspeed, errorWithGame
+    global score, roadSpeed, maxSpeed, minSpeed, level1, level2, level3, levelCountdown, numb, onLevel, roadPos, carPosx, carPosy, carIsRotated, gameRun, obstacle3OnScreen, obstacle2OnScreen, obstacle1OnScreen, laneChosen1, laneChosen3, laneChosen2, images, scoreText, scoreWait, car, carPosx, carPosy, obstacle1posy, obstacle2posy, obstacle3posy, speedObstacle1, speedObstacle2, speedObstacle3, carXspeed, errorWithGame, gameJustStarted
     errorWithGame = False
     gameJustStarted = True
     roadPos = 0
@@ -173,16 +220,6 @@ def initVariables():
     level3 = 1000
     levelCountdown = level1
     onLevel = 'level1'
-    if int(worksheet.cell('H3').value) < score:
-        newHighscore = score
-        scoreCell = worksheet.cell('H3')
-        scoreCell.value = str(newHighscore)
-        scoreCell.color = (0.929, 0.490, 0.490) # Red color
-        scoreCell.update()
-        UserCell = worksheet.cell('J3')
-        UserCell.value = str(user)
-        UserCell.color = (0.929, 0.694, 0.490) # Orange color
-        UserCell.update()
     score = 0
     scoreWait = 0
     gameRun = True
@@ -215,34 +252,48 @@ def menu():
         rect_surface.set_alpha(200)
         pygame.draw.rect(rect_surface, (0, 0, 0), (0, 0, menuX, menuY))  # Draw a rectangle at (0, 0) with dimensions of the surface
         screen.blit(rect_surface, (20, 80))  # Update the position where the surface is blitted
-        scoreXY = (130, 230)
+        scoreXY = (130, 120)
         text1 = font.render(f'Final Score Is', True, (255, 255, 255))
-        text2 = font.render(f'{score}', True, (255, 255, 255))
+        text2 = font.render(f'{score}', True, (50, 255, 0))
         text2_width = text2.get_width()  # Get the width of the second text surface
+        nameUserXY = (130, 240)
+
         highestScore = int(worksheet.cell('H3').value)
         highestScoreUser = str(worksheet.cell('J3').value)
+
         if int(worksheet.cell('H3').value) < score:
             highestScore = score
             highestScoreUser = user
 
+            newHighscore = score
+            scoreCell = worksheet.cell('H3')
+            scoreCell.value = str(newHighscore)
+            scoreCell.color = (0.929, 0.490, 0.490) # Red color
+            scoreCell.update()
+            UserCell = worksheet.cell('J3')
+            UserCell.value = str(user)
+            UserCell.color = (0.929, 0.694, 0.490) # Orange color
+            UserCell.update()
+
 
 
         text3a = font.render(f"Highest Score Ever:", True, (255, 255, 255))
-        text3b = font.render(str(highestScore), True, (255, 255, 255))
+        text3b = font.render(str(highestScore), True, (255, 0, 0))
         text4a = font.render(f"Scored by:", True, (255, 255, 255))
-        text4b = font.render(str(highestScoreUser), True, (255, 255, 255))
+        text4b = font.render(str(highestScoreUser), True, (255, 0, 0))
 
-
-
+        text4b_width = text4b.get_width()  # Get the width of the second text surface
 
         if int(len(str(text2))) > 1:
             scoreXY = (130 - text2_width // 2, 120)  # Center the second text surface in the rectangle
+        if int(len(str(text4b))) > 1:
+            nameUserXY = (130 - text4b_width // 2, 240)  # Center the second text surface in the rectangle
         screen.blit(text1, (70, 90))
         screen.blit(text2, scoreXY)
         screen.blit(text3a, (40, 150))
-        screen.blit(text3b, (115, 180))
-        screen.blit(text4a, (70, 210))
-        screen.blit(text4b, (100, 240))
+        screen.blit(text3b, (119, 180))
+        screen.blit(text4a, (85, 210))
+        screen.blit(text4b, (nameUserXY))
         # Set up the first button
         # Draw the button
         pygame.draw.rect(screen, (50, 50, 255), button_rect)
@@ -455,7 +506,7 @@ def animate():
     
     if speedObstacle1 == speedObstacle2 and speedObstacle2 == speedObstacle3 and gameJustStarted == True:
         errorWithGame = True
-        print("Error Fixed!")
+        print("A Bug Has Been Fixed!")
         return False
     
     # if errorTest == 0:
@@ -551,6 +602,7 @@ def playGame():
         crash()
         lose()
         return menu()
+
 
 
 playAgain = True
