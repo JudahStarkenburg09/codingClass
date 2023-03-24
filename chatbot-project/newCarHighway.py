@@ -6,6 +6,7 @@ import pygsheets
 import json
 import tkinter as tk
 from tkinter import messagebox
+playAgain = True
 
 def login_menu():
     global playAgain
@@ -32,7 +33,9 @@ def login_menu():
         if len(username_var.get()) > 8:
             tk.messagebox.showerror("Error", "Username must be 8 characters or less")
         else:
+            global playAgain
             user = username_var.get()
+            playAgain = True
             window.destroy()
 
     # Create the submit button and bind it to the Enter key
@@ -620,7 +623,7 @@ def playGame():
 
 
 
-playAgain = True
+
 while playAgain:
     playAgain = playGame()
     
