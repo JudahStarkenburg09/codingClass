@@ -8,9 +8,14 @@ import tkinter as tk
 from tkinter import messagebox
 
 def login_menu():
+    global playAgain
     # Create the main window
     window = tk.Tk()
     window.title("Login Menu")
+    icon = tk.PhotoImage(file="CarHighwayLogo.ico")
+
+    # Set the iconphoto attribute of the window to the photo image object
+    window.iconphoto(False, icon)
 
     # Create the username label
     username_label = tk.Label(window, text="Use the same username every time if you have played this game before!")
@@ -38,7 +43,9 @@ def login_menu():
     # Handle window close event
     def on_closing():
         if messagebox.askokcancel("Quit", "Are you sure you want to quit?"):
+            global playAgain
             window.destroy()
+            playAgain = False
             exit()
 
     window.protocol("WM_DELETE_WINDOW", on_closing)
@@ -236,6 +243,8 @@ def menu():
                 # Check if the button was clicked
                 if button_rect.collidepoint(event.pos):
                     return True
+        pygame.display.set_caption("Car Highway Game")
+        pygame.display.set_icon(pygame.image.load("CarHighwayLogo.ico"))
         screen.blit(roadImage, (0, roadPos))
         screen.blit(car, (carPosx, carPosy))
         screen.blit(obstacle3, (laneChosen3, obstacle3posy))
@@ -310,6 +319,8 @@ def lose():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+    pygame.display.set_caption("Car Highway Game")
+    pygame.display.set_icon(pygame.image.load("CarHighwayLogo.ico"))
     screen.blit(roadImage, (0, roadPos - SCREEN_HEIGHT))
     scoreBGWidth, scoreBGHeight = 64, 28  # Update the dimensions of the surface
     rect_surface = pygame.Surface((scoreBGWidth, scoreBGHeight), pygame.SRCALPHA)
@@ -328,6 +339,8 @@ def lose():
     clock.tick(2000)
 def crash():
     global gameRun
+    pygame.display.set_caption("Car Highway Game")
+    pygame.display.set_icon(pygame.image.load("CarHighwayLogo.ico"))
     # gameRun = False 
     for i in range(7):
         for event in pygame.event.get():
@@ -368,6 +381,8 @@ def animate():
             pygame.quit()
             sys.exit()
     animateLocation = [carPosx - 50, carPosy - 20]
+    pygame.display.set_caption("Car Highway Game")
+    pygame.display.set_icon(pygame.image.load("CarHighwayLogo.ico"))
     images = [
         {
             "image": "explosion1.png",
