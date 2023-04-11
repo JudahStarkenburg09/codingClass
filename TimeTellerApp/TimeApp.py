@@ -31,7 +31,7 @@ def findAllOutcomes():
 
 def insertText():
     for v in range(3):
-        for h in range(3)
+        for h in range(3):
             Y, m, d, H = random.randrange(1,70), random.randrange(1,11), random.randrange(1,28), random.randrange(1,23)
 
 
