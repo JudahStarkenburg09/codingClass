@@ -20,7 +20,6 @@ def findAllOutcomes():
         # increase vertical direction to make 3x3 grid
         for horizontal in range(3):
             # increase horizontal direction to make 3x3 grid
-            y, m, d, h = random.randrange(1,70), random.randrange(1,11), random.randrange(1,28), random.randrange(1,23)
             gridPosx, gridPosy = (160, 190) #GRID POSITION
             distanceBetweenCellsX, distanceBetweenCellsY = (250, 250) #DISTANCE BETWEEN GRID CELLS
             
@@ -29,6 +28,12 @@ def findAllOutcomes():
             canvas.create_image(x, y, image=photo)
             
     canvas.create_rectangle(295, 350, 505, 540, fill='gray', outline='gray')
+
+def insertText():
+    for v in range(3):
+        for h in range(3)
+            Y, m, d, H = random.randrange(1,70), random.randrange(1,11), random.randrange(1,28), random.randrange(1,23)
+
 
 canvas = Canvas(window, width=5000, height=5000)
 canvas.config(bg='gray')
@@ -41,6 +46,10 @@ resized_image = image.resize((330, 196))
 # Create the PhotoImage object from the resized image
 photo = ImageTk.PhotoImage(resized_image)
 
+
 findAllOutcomes()
+resized_image2 = image.resize((450,267))
+photo2 = ImageTk.PhotoImage(resized_image2)
+canvas.create_image(415, 440, image=photo2)
 
 window.mainloop()
