@@ -61,6 +61,7 @@ def printNumbers():
 
 
 startTime = time.time()
+Tries = 0
 while True:
     listOf9Numbers = []
     for i in range(9):
