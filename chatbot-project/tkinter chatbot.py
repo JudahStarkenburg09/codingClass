@@ -208,7 +208,7 @@ responses = [
     {
         "input": ["roast me", "give me a roast", "another roast", "roast"],
         "action": 'chooseRoast',
-    },
+    },  
     # {
     #     "input": ["stop", "stop playing", "stop song"],
     #     "action": 'stopSong',
@@ -282,33 +282,41 @@ def chatbot_response(talk, untalk):
         
     return random.choice(defaultResponse)
         
-
+def send_jokePt2(response):
+    history_text.yview(tk.END)
+    history_text.insert('end', f'{response[1]} \n \n', ('response'))
+    history_text.configure(state='disabled')
+    return
 
 
 def send_message():
-    global message, response
+    global response
     message = input_text.get()
     untalk = message.lower()
     talk = re.sub(r'[^\w\d]', '', untalk)
+    history_text.yview(tk.END)
     response = chatbot_response(talk, untalk)
-
-    if "action" in response and response["action"] == chooseJoke:
-        respondWith = chooseJoke()
-        history_text.insert('end', 'Linus: ')
-        history_text.insert('end', f'{respondWith[0]} \n', ('response'))
-        time.sleep(2)
-        history_text.insert('end', f'{respondWith[1]} \n \n', ('response'))
-    else:
-        if untalk.lower() == "!end":
-            return
+    if '[' in str(response):
         history_text.configure(state='normal')
         history_text.insert('end', 'You: ')
         history_text.insert('end', message + '\n', ('user'))
         history_text.insert('end', 'Linus: ')
+        history_text.insert('end', f'{response[0]}...   ', ('response'))
+        history_text.yview(tk.END)
+        history_text.after(2000, lambda: send_jokePt2(response))
+        
+        input_text.delete(0, tk.END)
+    else:
+        history_text.configure(state='normal')
+        history_text.insert('end', 'You: ')
+        history_text.insert('end', message + '\n', ('user'))
+        history_text.yview(tk.END)
+        history_text.insert('end', 'Linus: ')
         history_text.insert('end', f'{response} \n \n', ('response'))
         history_text.configure(state='disabled')
         input_text.delete(0, tk.END)
-
+    history_text.yview(tk.END)
+        
 
 
 
