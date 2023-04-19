@@ -6,6 +6,84 @@ import os
 import pygame
 import math
 import time
+from email.message import EmailMessage
+import ssl
+import smtplib
+
+allRoasts = [
+    {
+        "roast": "I'd call you a tool, but that would be an insult to useful things."
+    },
+    {
+        "roast": "If you were any more inbred, you'd be a sandwich."
+    },
+    {
+        "roast": "I'd tell you to go outside and get some fresh air, but I don't want you to breath."
+    },
+    {
+        "roast": "Your birth certificate is an apology letter from the hospital."
+    },
+    {
+        "roast": "The only thing you're faster than is a freaking glacier."
+    },
+    {
+        "roast": "I'd roast you, but my mom said I'm not allowed to burn trash."
+    },
+    {
+        "roast": "I'm not insulting you, I'm describing you."
+    },
+    {
+        "roast": "You're so ugly, when you were born, the doctor slapped your mother."
+    },
+    {
+        "roast": "You're the reason the gene pool needs a lifeguard."
+    },
+    {
+        "roast": "I'm surprised you haven't tripped over that massive ego of yours yet."
+    },
+    {
+        "roast": "You're like a dictionary, you add meaning to my life, but only a little bit."
+    },
+    {
+        "roast": "I'd roast you, but you look like you've already been burned enough."
+    },
+    {
+        "roast": "I'm sorry, I didn't mean to make you cry. I meant to make you ugly-cry."
+    },
+    {
+        "roast": "You're the human equivalent of a participation award."
+    },
+    {
+        "roast": "I bet your parents change the subject when their friends ask about you."
+    },
+    {
+        "roast": "I'm not saying I hate you, but I would unplug your life support to charge my phone."
+    },
+    {
+        "roast": "You're like the top piece of bread in a loaf, everybody touches you but nobody wants you."
+    },
+    {
+        "roast": "Your face looks like it was on fire and someone put it out with a fork."
+    },
+    {
+        "roast": "You're about as useful as a screen door on a submarine."
+    },
+    {
+        "roast": "Your face is so oily, I'm surprised America hasn't declared war on it yet."
+    },
+    {
+        "roast": "I'd insult you, but I don't want to give you any material for your next rap battle."
+    },
+    {
+        "roast": "You're the reason they invented double doors."
+    },
+    {
+        "roast": "If your IQ was any lower, we'd have to water you twice a week."
+    },
+    {
+        "roast": "Your face looks like you've been using it as a punching bag."
+    }
+]
 
 allJokes = [
     {
@@ -106,6 +184,38 @@ allJokes = [
     }
 ]
 
+def newQuestionAsked(question):
+    email_sender = 'linuschatbot@gmail.com'
+    #code, do not share
+    email_password = 'wtockzyhzehlrigl'
+    #reciever (also forwarded to jstark09@nca.edu.ni, using filters in judahstarkenburg@gmail.com account)
+    email_reciever = 'judahstarkenburg@gmail.com'
+
+    
+    #check if its a valid email adress, if it is, send it with body text and info
+    subject = '<Linus> New Possible Question To Add!'
+    body = ("""
+    ----------------------
+    Someone Has Asked: 
+    """ + question + """
+    ----------------------
+    And There Was No Response!
+    """)
+
+    em = EmailMessage()
+    em['From'] = email_sender
+    em['To'] = email_reciever
+    em['Subject'] = subject
+    em.set_content(body)
+
+    thecontext = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=thecontext) as smtp:
+        smtp.login(email_sender, email_password)
+        smtp.sendmail(email_sender, email_reciever, em.as_string())
+
+    return
+
 
 # create a new window
 window = tk.Tk()
@@ -151,6 +261,9 @@ def mathing(matches, talk):
                 respondWith = (rmatch[0] + '^' + rmatch[2] + ' = ' + str(float(rmatch[0]) ** (float(rmatch[2]))))
     return respondWith
 
+def chooseRoast():
+    roast = random.choice(allRoasts)
+    return roast["roast"]
 
 def chooseJoke():
     joke = random.choice(allJokes)
@@ -160,6 +273,10 @@ responses = [
     {
         "input": ['hi','hello','sup',"wassup","hey","whats up",'hi linus','hello linus','sup linus',"wassup linus","hey linus","whats up linus"], #Never put capital letters or punctuation inside "input", Also make sure to add many options
         "responses": ["Hello!", "Hi there!", "Hey!", "Hi!"], #Use correct grammer, with multiple responses. Try not to add many questions, but if you do, than make sure to add a new "input" with what the user would answer with
+    },
+    {
+        "input": ['yes', 'ya'],
+        "responses": ['good']
     },
     {
         "input": ["how are you", "how are you linus", "are you okay", "how do you do", "how are you feeling", "how are you doing", "how are you doing today","how are you feeling today"],
@@ -175,7 +292,7 @@ responses = [
     },
     {
         "input": ["what can you do", "what are your abilities", "what's your function", "what's your purpose"],
-        "responses": ["I can do math, play songs, tell jokes, and even roast you!"]
+        "responses": ["I can do math, tell jokes, and even roast you!"]
     },
     {
         "input": ["what do you like", "what's your favorite thing", "what do you enjoy"],
@@ -183,22 +300,26 @@ responses = [
     },
     {
         "input": ["what is your favorite food", "whats your favorite food", "whats your favorite food to eat"],
-        "reponse": ["I have never tried any!"],
+        "reponses": ["I have never tried any!"],
     },
     {
         "input": ["what is your favorite number","whats your favorite number"],
-        "response": ["My favorite number is 56!"],
+        "responses": ["My favorite number is 56!"],
     },
     {
         "input": ["bye", "goodbye", "see you later", "talk to you later"],
         "responses": ["Goodbye!", "Bye!", "See you later!", "Take care!"],
     },
     {
-        "input" : ["linus"],
-        "response": ["Yes?", "That's my name!"],
+        "input": ['ha', 'ah', 'haha', 'ahah', 'hahaha', 'ahahaha'],
+        "responses": ["Very funny, isn't it?"]
     },
     {
-        "input": ['tell me a joke', 'joke', 'tell me another joke'],
+        "input" : ["linus"],
+        "responses": ["Yes?", "That's my name!"],
+    },
+    {
+        "input": ['tell me a joke', 'joke', 'tell me another joke', "tell joke", "another joke", "tell me a joke please", "another joke please"],
         "action": 'chooseJoke',
     },
     {
@@ -206,7 +327,7 @@ responses = [
         "responses": ["You can call me Linus","My name is Linus", "I'm Linus!","I'm Linus, how are you?"],
     },
     {
-        "input": ["roast me", "give me a roast", "another roast", "roast"],
+        "input": ["roast me", "give me a roast", "another roast", "roast", "roast me again"],
         "action": 'chooseRoast',
     },  
     # {
@@ -279,7 +400,8 @@ def chatbot_response(talk, untalk):
                 return func()
             else:
                 return random.choice(response["responses"])
-        
+    
+    newQuestionAsked(message)
     return random.choice(defaultResponse)
         
 def send_jokePt2(response):
@@ -290,7 +412,7 @@ def send_jokePt2(response):
 
 
 def send_message():
-    global response
+    global response, message, respondWith
     message = input_text.get()
     untalk = message.lower()
     talk = re.sub(r'[^\w\d]', '', untalk)
