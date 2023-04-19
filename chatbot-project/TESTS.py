@@ -1,12 +1,20 @@
+import translate
 
+# Define the function to handle user input
+def handle_user_input(input_text):
+    # Detect the language of the input
+    language = translate.detect(input_text)
 
-class Person:
-    def __init__(self, age, name1, name2):
-        self.age = age
-        self.name1 = name1
-        self.name2 = name2
+    # Translate the input to English if it's not already in English
+    if language != 'en':
+        translation = translate.translate(input_text, dest='en')
+        input_text = translation.text
 
-        print("Age: " + str(age) + ", Name: " + name1 + " " + name2)
+    return input_text, language
 
-
-user = Person(14, "Judah", "Starkenburg")
+# Example usage
+input_text = "hola"
+output_text, language = handle_user_input(input_text)
+print(f"Input text: {input_text}")
+print(f"Detected language: {language}")
+print(f"Translated text: {output_text}")
