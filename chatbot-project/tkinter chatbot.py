@@ -329,7 +329,7 @@ responses = [
     {
         "input": ["roast me", "give me a roast", "another roast", "roast", "roast me again"],
         "action": 'chooseRoast',
-    },  
+    },
     # {
     #     "input": ["stop", "stop playing", "stop song"],
     #     "action": 'stopSong',
