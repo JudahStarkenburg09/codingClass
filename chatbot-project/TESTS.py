@@ -1,5 +1,6 @@
 from mtranslate import translate
 from langdetect import detect
+import langid
 
 languagesPrefixes= [
   {
@@ -444,27 +445,34 @@ languagesPrefixes= [
   }
 ]
 
-# define a function to handle user input
+# Define a function to handle user input
 def handle_user_input(input_text):
-    # detect the language of the input text
-    prefix = detect(input_text)
+    # Check if the input text contains any English words
+    if all(langid.classify(word)[0] == 'en' for word in input_text.split()):
+        return 'English', 'en'
+    elif all(langid.classify(word)[0] == 'es' for word in input_text.split()):
+        return 'Spanish', 'es'
+    elif all(langid.classify(word)[0] == 'fr' for word in input_text.split()):
+        return 'French', 'fr'
+    else:
+        # Detect the language of the input text
+        lang, confidence = langid.classify(input_text)
+        return lang, lang[:2]
+        
 
-    for l in languagesPrefixes:
-        if l["prefix"] == prefix:
-            language = l["name"]
-
-    return language, prefix
-
-# take user input and handle it
+# Take user input and handle it
 while True:
+    
     input_text = input("Enter text to translate: ")
     language, prefix = handle_user_input(input_text)
+    
     if prefix != 'en':
         englishText = translate(input_text, 'en')
     else:
         englishText = input_text
+    for l in languagesPrefixes:
+      if l["prefix"] == prefix:
+          language = l["name"]
+    
     print(f"Language was: {language}, and In English is:")
     print(englishText)
-
-
-
