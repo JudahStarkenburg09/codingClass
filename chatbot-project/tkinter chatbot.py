@@ -417,6 +417,13 @@ def send_message():
     untalk = message.lower()
     talk = re.sub(r'[^\w\d]', '', untalk)
     history_text.yview(tk.END)
+
+    prefix = detect(untalk)
+    for l in languagesPrefixes:
+        if l["prefix"] == prefix:
+            language = l["name"]
+    
+
     response = chatbot_response(talk, untalk)
     if '[' in str(response):
         history_text.configure(state='normal')
