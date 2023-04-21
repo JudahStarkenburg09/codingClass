@@ -1,17 +1,24 @@
-import pygsheets
+import tkinter as tk
 
-# set up credentials
-creds_file = 'sodium-lodge-376703-8f5ab782026c.json'
-gc = pygsheets.authorize(service_file=creds_file)
+def on_select(value):
+    dropdown_label.config(text=value)
+    
+def submit():
+    print("Selected option:", dropdown_label.cget("text"))
+    
+root = tk.Tk()
 
-# open the Google Sheets document by its URL
-sheet_url = 'https://docs.google.com/spreadsheets/d/1Bl0qatKOkC2_boYVE3W0VW01COOucE777mlZywRwg7E/edit#gid=0'
-sh = gc.open_by_url(sheet_url)
+dropdown_label = tk.Label(root, text="Unset", font=("Arial", 12))
+dropdown_label.pack(pady=10)
 
-# select a worksheet by its index (starting from 0)
-worksheet = sh[0]
+options = ["Unset", "1st period", "2nd period", "3rd period", "4th period", "5th period", "6th period", "7th period", "Lunch", "Break"]
+dropdown_var = tk.StringVar(value=options[0])
 
-for row in range(1, worksheet.rows):
-    if worksheet.cell((row, 3)).value == '':
-        availableUserSpot = (f'{row}, 3')
-        break
+dropdown = tk.OptionMenu(root, dropdown_var, *options, command=on_select)
+dropdown.config(font=("Arial", 12))
+dropdown.pack()
+
+submit_button = tk.Button(root, text="Submit", command=submit, font=("Arial", 12))
+submit_button.pack(pady=10)
+
+root.mainloop()
