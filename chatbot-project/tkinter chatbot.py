@@ -867,7 +867,7 @@ def send_message():
     for l in languagesPrefixes:
         if l["prefix"] == prefix:
             language = l["name"]
-    
+
 
     response = chatbot_response(talk, untalk)
     if '[' in str(response):

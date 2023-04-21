@@ -10,18 +10,14 @@ responses = [
 ]
 
 
-
-
+'pointHere#51'
 
 
 for line in fileinput.input('test2.py', inplace=1):
-    if line.startswith('responses = ['):
+    if line.startswith("'pointHere#51'"):
         processing_foo1s = True
     else:
         if processing_foo1s:
-            line = ("""    {
-        "input": ["how are you"],
-        "response": ["I'm good, thank you!"]
-    },\n""") + line
+            line = ("""print('Adding line')     \n""") + line
             processing_foo1s = False
     print(line, end="")
