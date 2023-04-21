@@ -189,7 +189,7 @@ Time: {todayTimeReturn}
 
 submitButton = tk.Button(window, text='     Submit      ', command=submit)
 submitButton.config(bg='yellow',fg='dark blue')
-submitButton.place(x=20,y=400)
+submitButton.place(x=20,y=400)  
 
 
 def bind_enter(event):
