@@ -62,12 +62,27 @@ label2.place(x=20, y=80)
 chromebookNumber = ttk.Entry(window, width=30)
 chromebookNumber.place(x=20,y=100)
 
-label3 = tk.Label(window, text='Period (1-7/Break/Lunch)*:')
-label3.config(bg='gray',fg='black')
-label3.place(x=20, y=140)
+chromebooksInStock = worksheet.get_value('H2')
+# print(str(chromebooksInStock))
 
-chromebookTime = ttk.Entry(window, width=30)
-chromebookTime.place(x=20,y=160)
+def on_select(value):
+    global chromebookTime
+    value = value
+    chromebookTime = value
+
+    
+    
+
+
+
+options = ["Unset", "1st period", "2nd period", "3rd period", "4th period", "5th period", "6th period", "7th period", "Lunch", "Break"]
+dropdown_var = tk.StringVar(value=options[0])
+
+dropdown = tk.OptionMenu(window, dropdown_var, *options, command=on_select)
+dropdown.config(font=("Arial", 10))
+dropdown.place(x=20, y=150)
+
+
 
 label4 = tk.Label(window, text="Date Is Automatically Set To Time Of Submit")
 label4.config(bg='light gray',fg='red')
@@ -108,11 +123,13 @@ Time: {timeCheckout}
 
 
 def submit():
+    global chromebookTime, dropdown_var, value
     for row in range(1, worksheet.rows):
         if worksheet.cell((row, 3)).value == '':
             availableUserSpot = (f'C{row}')
             break
-
+    
+    chromebookTime = dropdown_var.get()
     
     availableNumberSpot = (f'B{row}')
     availableTimeSpot = (f'A{row}')
@@ -120,17 +137,37 @@ def submit():
     availableNoteSpot = (f'E{row}')
     availableReturnSpot = (f'F{row}')
     userOfCheckOut = checkOutTo1.get()
-    timeOfCheckOut = chromebookTime.get()
+    periodOfCheckOut = chromebookTime
     numberOfChromebook = chromebookNumber.get()
     notesOfChromebook = chromebookNotes.get('1.0', tk.END)
 
-
-    if not userOfCheckOut or not timeOfCheckOut or not numberOfChromebook:
+    # print(f"""
+    # User: {userOfCheckOut}
+    # Period: {periodOfCheckOut}
+    # Number: {numberOfChromebook}
+    # Notes?: {notesOfChromebook}
+    # """)
+    
+    failedOnce = False
+    if not userOfCheckOut or not numberOfChromebook or periodOfCheckOut == "Unset":
         messagebox.showwarning("Missing Fields", "Please fill out all required fields.")
+        failedOnce = True
         return
     
+
+    try:
+        numberOfChromebook = int(numberOfChromebook)
+    except ValueError:
+        messagebox.showwarning("Fail", "Chrombook Number Must Be A Number")
+        return
+
+    if int(numberOfChromebook) < 0 or int(numberOfChromebook) > int(chromebooksInStock) and not failedOnce:
+        messagebox.showwarning("Fail", f"Chrombook Number Must Be Between 0 and {chromebooksInStock}")
+        return
+    failedOnce = False
+
     checkOutTo1.delete(0, tk.END)
-    chromebookTime.delete(0, tk.END)
+    dropdown_var = tk.StringVar(value=options[0])
     chromebookNumber.delete(0, tk.END)
     chromebookNotes.delete("1.0", tk.END)
 
@@ -138,7 +175,7 @@ def submit():
     
     worksheet.update_value(str(availableUserSpot), str(userOfCheckOut))
     worksheet.update_value(str(availableNumberSpot), str(numberOfChromebook))
-    worksheet.update_value(str(availableTimeSpot), str(timeOfCheckOut))
+    worksheet.update_value(str(availableTimeSpot), str(periodOfCheckOut))
     worksheet.update_value(str(availableDateSpot), str(today_date))
     worksheet.update_value(str(availableNoteSpot), str(notesOfChromebook))
     worksheet.update_value(str(availableReturnSpot), 'No')
