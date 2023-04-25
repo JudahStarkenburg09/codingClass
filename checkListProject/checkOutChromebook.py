@@ -7,7 +7,7 @@ import os
 from tkinter import messagebox
 from datetime import datetime
 import json
-
+import time
 
 
 creds = json.dumps({
@@ -75,7 +75,7 @@ def on_select(value):
 
 
 
-options = ["Unset", "1st period", "2nd period", "3rd period", "4th period", "5th period", "6th period", "7th period", "Lunch", "Break"]
+options = ["Unset*", "1st period", "2nd period", "3rd period", "4th period", "5th period", "6th period", "7th period", "Lunch", "Break"]
 dropdown_var = tk.StringVar(value=options[0])
 
 dropdown = tk.OptionMenu(window, dropdown_var, *options, command=on_select)
@@ -97,17 +97,56 @@ label5 = tk.Label(window, text='Extra Notes:')
 label5.config(bg='gray',fg='black')
 label5.place(x=350, y=10)
 
-chromebookNotesFrame = ttk.Frame(window)
-chromebookNotesFrame.place(x=300, y=30)
 
-chromebookNotesScrollbar = ttk.Scrollbar(chromebookNotesFrame)
-chromebookNotesScrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+# Create the text widget
+chromebookNotes = tk.Text(window, height=3, width=20)
 
-chromebookNotes = tk.Text(chromebookNotesFrame, height=3, width=20, yscrollcommand=chromebookNotesScrollbar.set)
-chromebookNotes.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+# Create the suggestions dropdown menu
+suggestions = []
 
-chromebookNotesScrollbar.config(command=chromebookNotes.yview)
+for s_ in range(2,10):
+    insideNote = worksheet.get_value(f'I{s_}')
+    suggestions.append(insideNote)
 
+
+notesSuggestionMenu = tk.Listbox(window, height=5)
+for s in suggestions:
+    notesSuggestionMenu.insert(tk.END, s)
+
+def on_key_press(event):
+    global suggestions
+    
+    notesTyped = event.widget.get("1.0", "end-1c")
+
+    if len(notesTyped) < 3:
+        return
+
+    notesSuggestionMenu.delete(0, tk.END)
+    for s in suggestions:
+        if notesTyped in s:
+            notesSuggestionMenu.insert(tk.END, s)
+    if notesSuggestionMenu.size() > 0:
+        notesSuggestionMenu.place(x=chromebookNotes.winfo_x(), y=chromebookNotes.winfo_y() + chromebookNotes.winfo_height())
+    else:
+        notesSuggestionMenu.place_forget()
+
+def on_focus_out(event):
+    # Hide the dropdown menu when the notes section loses focus
+    chromebookNotes.after(100, lambda: notesSuggestionMenu.place_forget())
+
+def on_suggestion_select(event):
+    global chromebookNotes, notesSuggestionMenu
+    selectedText = notesSuggestionMenu.get(notesSuggestionMenu.curselection())
+    chromebookNotes.delete("end-1c linestart", "end")
+    chromebookNotes.insert("end-1c", selectedText)
+    notesSuggestionMenu.place_forget()
+
+notesSuggestionMenu.bind("<<ListboxSelect>>", on_suggestion_select)
+
+chromebookNotes.bind("<FocusOut>", on_focus_out)
+chromebookNotes.bind("<KeyRelease>", on_key_press)
+
+chromebookNotes.place(x=300,y=30)
 
 
 
@@ -123,8 +162,8 @@ Time: {timeCheckout}
 
 
 def submit():
-    global chromebookTime, dropdown_var, value
-    for row in range(1, worksheet.rows):
+    global chromebookTime, dropdown_var, value, dropdown
+    for row in range(2, worksheet.rows):
         if worksheet.cell((row, 3)).value == '':
             availableUserSpot = (f'C{row}')
             break
@@ -149,7 +188,7 @@ def submit():
     # """)
     
     failedOnce = False
-    if not userOfCheckOut or not numberOfChromebook or periodOfCheckOut == "Unset":
+    if not userOfCheckOut or not numberOfChromebook or periodOfCheckOut == "Unset*":
         messagebox.showwarning("Missing Fields", "Please fill out all required fields.")
         failedOnce = True
         return
@@ -167,7 +206,17 @@ def submit():
     failedOnce = False
 
     checkOutTo1.delete(0, tk.END)
+
+    dropdown.destroy()
+    
+    options = ["Unset*", "1st period", "2nd period", "3rd period", "4th period", "5th period", "6th period", "7th period", "Lunch", "Break"]
     dropdown_var = tk.StringVar(value=options[0])
+    dropdown = tk.OptionMenu(window, dropdown_var, *options, command=on_select)
+    dropdown.config(font=("Arial", 10))
+    dropdown.place(x=20, y=150)
+
+
+
     chromebookNumber.delete(0, tk.END)
     chromebookNotes.delete("1.0", tk.END)
 
