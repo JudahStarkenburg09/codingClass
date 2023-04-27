@@ -167,6 +167,9 @@ def submit():
         if worksheet.cell((row, 3)).value == '':
             availableUserSpot = (f'C{row}')
             break
+
+    
+
     
     chromebookTime = dropdown_var.get()
     
@@ -221,7 +224,6 @@ def submit():
     chromebookNotes.delete("1.0", tk.END)
 
     
-    
     worksheet.update_value(str(availableUserSpot), str(userOfCheckOut))
     worksheet.update_value(str(availableNumberSpot), str(numberOfChromebook))
     worksheet.update_value(str(availableTimeSpot), str(periodOfCheckOut))
@@ -235,7 +237,7 @@ def submit():
 def returnChromebook():
     all_data = worksheet.get_all_values()
     chromebooks = {row[1]: index+1 for index, row in enumerate(all_data[1:]) if row[5] == 'No'}
-    
+
 
     if not chromebooks:
         messagebox.showinfo("Success", "No Chromebooks Are Checked Out")
