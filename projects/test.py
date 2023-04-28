@@ -1,38 +1,23 @@
 import tkinter as tk
+whitish = '#B6B6B6' #Order from lightest to darkest
+light_gray = '#8A8A8A'
+lighterish_gray = '#4D4D4D'
+lightish_gray = '#3F3F3F'
+darkGray = '#343434'
+hotPinkRed = '#FF69B4'
+font = ("Arial", 15)
 
-
-darkGray = '#404040'
-light_gray = '#BEBEBE'
-extra_light_gray = '#F0F0F0'
-
-
+# Create a Tkinter window
 root = tk.Tk()
-root.geometry('300x200')
+root.geometry("500x400")
+root.config(bg=darkGray)
 
-canvas = tk.Canvas(root, width=300, height=200)
+# Create a canvas to draw on
+canvas = tk.Canvas(root, width=2000, height=2000)
+canvas.config(bg=darkGray)
 canvas.pack()
 
-# Create entry box with initial text and color
-username_entry = tk.Entry(canvas, width=30, fg=light_gray, insertbackground=light_gray)
-username_entry.insert(0, 'Username')
-username_entry.configure({"background": extra_light_gray})
-
-# Define functions to handle focus and unfocus events
-def on_entry_click(event):
-    if username_entry.get() == 'Username':
-        username_entry.delete(0, "end") # Delete all the text in the entry
-        username_entry.configure(fg=light_gray)
-
-def on_entry_unfocus(event):
-    if username_entry.get() == '':
-        username_entry.configure(fg=extra_light_gray)
-        username_entry.insert(0, 'Username')
-
-# Bind focus and unfocus events to entry box
-username_entry.bind('<FocusIn>', on_entry_click)
-username_entry.bind('<FocusOut>', on_entry_unfocus)
-
-# Place entry box on canvas
-canvas.create_window(150, 100, window=username_entry)
+rect1 = canvas.create_rectangle(50, 100, 200, 150, fill=lightish_gray, outline=lighterish_gray, width=.5)
+canvas.create_arc(100, 134, 150, 200, start=90, extent=-180, fill=None, outline=light_gray, style="arc", width=1.5)
 
 root.mainloop()
