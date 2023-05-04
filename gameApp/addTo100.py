@@ -59,9 +59,7 @@ def on_key_press(event):
     number = event.char
     if disableGame == False:
         if number.isdigit() and int(number) in range(1, 10):
-            print(f"Player {player}: {number}")
             total = total + int(number)
-            print(f"Total: {total}")
             if total >= 50:
                 canvas.delete(goalORwinText)
                 if player == 1:
@@ -73,6 +71,10 @@ def on_key_press(event):
                 gray_rect_id_OVER = canvas.create_polygon(200, 0, 400, 0, 400, 200, 200, 200, fill="#000000", outline="", stipple="gray75")
                 gray_rect_id_OVER = canvas.create_polygon(0, 0, 200, 0, 200, 200, 0, 200, fill="#000000", outline="", stipple="gray75")
                 canvas.delete(turnText)
+                canvas.delete(totalText)
+                totalText = canvas.create_text(200, 320, text=f"{total}", font=("Arial", 40))
+                return
+                
 
 
 

@@ -8,18 +8,19 @@ root.geometry("500x500")
 canvas = tk.Canvas(root, width=200, height=200)
 canvas.pack()
 
-# region User Symbol
+# region eye Symbol
 # Create a cicle
-circle = canvas.create_oval(66.7, 66.7, 133.3, 133.3, fill="gray", outline="gray", tags=('userSymbol'))
+# Create a cicle
+circle = canvas.create_oval(27.2, 17.2, 42.8, 32.8, fill="black", outline="black", tags=('eyeShowPassword'))
 # Create a half circle, Create a line to close off the bottom
-half_circle = canvas.create_arc(50, 134, 150, 234, start=0, extent=180, fill="white", outline="gray", style="arc", width=4, tags=('userSymbol'))
+half_circle = canvas.create_arc(0, 0, 70, 60, start=0, extent=180, fill="black", outline="black", style="arc", width=4, tags=('eyeShowPassword'))
+rectToBindEye = canvas.create_rectangle(-5, -5, 75, 40, fill=None, outline=None, tags=('eyeShowPassword'))
 #                                   X   Y   X    Y                        
-line1 = canvas.create_line(48, 184, 152, 184, width=4, fill="gray", tags=('userSymbol'))
 #                               X   Y    X    Y
 # endregion
 
-canvas.scale('userSymbol', 0, 0, .3, .3)  # shrink the size of the symbol
-canvas.move('userSymbol', 50, 50)  # move the symbol with x, y directional pixel
+canvas.scale('eyeShowPassword', 0, 0, 1, 1)  # shrink the size of the symbol
+canvas.move('eyeShowPassword', 50, 50)  # move the symbol with x, y directional pixel
 
 
 

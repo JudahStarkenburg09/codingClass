@@ -33,10 +33,13 @@ line1 = canvas.create_line(48, 184, 152, 184, width=1.5, fill=light_gray, tags=(
 #                           X   Y    X    Y
 
 
+
 # endregion
 
 canvas.scale('userSymbol', 0, 0, .18, .18)  # shrink the size of the symbol
 canvas.move('userSymbol', 33, 101)
+
+
 
 # region Lock Symbol
 
@@ -90,15 +93,42 @@ password_entry = tk.Entry(canvas, width=37, fg=light_gray, font=font, bd=0, inse
 password_entry.insert(0, 'Password')
 password_entry.configure({"background": lightish_gray})
 
+def toggle_password_visibility():
+    
+    global hide_password
+    if hide_password:
+        # Show the password
+        password_entry.config(show='*')
+        hide_password = False
+    else:
+        # Hide the password
+        password_entry.config(show='')
+        hide_password = True
+
 # Define functions to handle focus and unfocus events
 def on_entry_click2(event):
+    global hide_password
     if password_entry.get() == 'Password':
         password_entry.delete(0, "end") # Delete all the text in the entry
         password_entry.configure(fg=whitish)
+        hide_password = True
+        password_entry.lower()
+        password_entry.lower()
+        password_entry.lower()
+        password_entry.lower()
+        toggle_password_visibility()
 def on_entry_unfocus2(event):
+    global hide_password
     if len(password_entry.get()) == 0:
         password_entry.configure(fg=light_gray)
         password_entry.insert(0, 'Password')
+        hide_password = False
+        password_entry.lift()
+        password_entry.lift()
+        password_entry.lift()
+        password_entry.lift()
+        toggle_password_visibility()
+
 
 
 # Bind focus and unfocus events to entry box
@@ -118,6 +148,28 @@ canvas.bind('<Button-1>', remove_focus)
 # button = tk.Button(text='Login', command=lambda: print("clicked"), bg=lightish_gray, fg=whitish, activebackground=lighterish_gray, activeforeground=whitish, padx=10, pady=5, highlightthickness=0, font=('Arial', 10, 'bold'), relief='solid', bd=1, borderwidth=1, highlightbackground='black')
 
 # canvas.create_window(250, 200, window=button)
+
+
+
+hide_password = False
+
+# region eye Symbol
+
+# Create a circle
+circle = canvas.create_oval(27.2, 17.2, 42.8, 32.8, fill="black", outline="black", tags=('eyeShowPassword'))
+# Create a half circle, Create a line to close off the bottom
+half_circle = canvas.create_arc(0, 0, 70, 60, start=0, extent=180, fill="black", outline="black", style="arc", width=4, tags=('eyeShowPassword'))
+rectToBindEye = canvas.create_rectangle(-5, -5, 75, 40, fill=None, outline=None, width=0,tags=('eyeShowPassword'))
+# endregion
+
+canvas.scale('eyeShowPassword', 0, 0, 0.3, 0.3)  # shrink the size of the symbol
+canvas.move('eyeShowPassword', 450, 180)  # move the symbol with x, y directional pixel
+canvas.tag_raise('eyeShowPassword')  # Raise the entire 'eyeShowPassword' tag above all other objects on the canvas
+
+
+
+canvas.tag_bind(rectToBindEye, "<Button-1>", lambda event: toggle_password_visibility())
+
 
 
 root.mainloop()

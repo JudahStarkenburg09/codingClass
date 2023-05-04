@@ -10,7 +10,7 @@ canvas = tk.Canvas(root, width=200, height=200)
 canvas.pack()
 
 
-coord1, coord2, coord3, coord4 = 64.3, 64.3, 135.7, 135.7 # ORIGINAL COORDINATES
+coord1, coord2, coord3, coord4 = 10, 10, 60, 60 # ORIGINAL COORDINATES
 
 
 
@@ -22,7 +22,7 @@ w = x2 - x1  # width of the original circle
 h = y2 - y1  # height of the original circle
 
 
-percent = 50 # PERCENAGE TO CHANGE SMALLER
+percent = 70 # PERCENAGE TO CHANGE SMALLER
 
 
 N = (100-percent)/100
