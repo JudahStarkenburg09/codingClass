@@ -112,10 +112,7 @@ def on_entry_click2(event):
         password_entry.delete(0, "end") # Delete all the text in the entry
         password_entry.configure(fg=whitish)
         hide_password = True
-        password_entry.lower()
-        password_entry.lower()
-        password_entry.lower()
-        password_entry.lower()
+
         toggle_password_visibility()
 def on_entry_unfocus2(event):
     global hide_password
@@ -123,10 +120,7 @@ def on_entry_unfocus2(event):
         password_entry.configure(fg=light_gray)
         password_entry.insert(0, 'Password')
         hide_password = False
-        password_entry.lift()
-        password_entry.lift()
-        password_entry.lift()
-        password_entry.lift()
+
         toggle_password_visibility()
 
 
@@ -164,7 +158,8 @@ rectToBindEye = canvas.create_rectangle(-5, -5, 75, 40, fill=None, outline=None,
 
 canvas.scale('eyeShowPassword', 0, 0, 0.3, 0.3)  # shrink the size of the symbol
 canvas.move('eyeShowPassword', 450, 180)  # move the symbol with x, y directional pixel
-canvas.tag_raise('eyeShowPassword')  # Raise the entire 'eyeShowPassword' tag above all other objects on the canvas
+
+
 
 
 
