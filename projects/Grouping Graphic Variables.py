@@ -1,28 +1,33 @@
 import tkinter as tk
 
+# Define the function to be executed when the button is clicked
+def clicked(event):
+    print("Button clicked!")
+
 # Create a Tkinter window
 root = tk.Tk()
-root.geometry("500x500")
+root.geometry("700x500")
 
 # Create a canvas to draw on
-canvas = tk.Canvas(root, width=200, height=200)
+canvas = tk.Canvas(root, width=700, height=500)
 canvas.pack()
 
-# region eye Symbol
-# Create a cicle
-# Create a cicle
-circle = canvas.create_oval(27.2, 17.2, 42.8, 32.8, fill="black", outline="black", tags=('eyeShowPassword'))
-# Create a half circle, Create a line to close off the bottom
-half_circle = canvas.create_arc(0, 0, 70, 60, start=0, extent=180, fill="black", outline="black", style="arc", width=4, tags=('eyeShowPassword'))
-rectToBindEye = canvas.create_rectangle(-5, -5, 75, 40, fill=None, outline=None, tags=('eyeShowPassword'))
-#                                   X   Y   X    Y                        
-#                               X   Y    X    Y
-# endregion
-
-canvas.scale('eyeShowPassword', 0, 0, 1, 1)  # shrink the size of the symbol
-canvas.move('eyeShowPassword', 50, 50)  # move the symbol with x, y directional pixel
 
 
+# Create the button symbol using create methods
+canvas_bg_color = canvas.cget('background')
+
+leftCircleSubmitBind = canvas.create_arc(150, 100, 230, 150, start=90, extent=180, width=0, outline=canvas_bg_color, tags=('submit'), fill=canvas_bg_color) #set fill to bg color
+rightCircleSubmitBind = canvas.create_arc(460, 100, 540, 150, start=90, extent=-180, width=0, outline=canvas_bg_color, tags=('submit'), fill=canvas_bg_color) #set fill to bg color
+
+rectBaseSubmit = canvas.create_rectangle(190, 100, 500, 150, fill=None, outline=None, width=0, tags=('submit'))
+rectBaseTop = canvas.create_line(190, 100, 500, 100, width=1.5, fill='#E73E8F', tags=('submit'))
+rectBaseBottom = canvas.create_line(190, 150, 500, 150, width=1.5, fill='#E73E8F', tags=('submit'))
+leftCircleSubmit = canvas.create_arc(150, 100, 230, 150, start=90, extent=180, style="arc", width=1.5, outline='#E73E8F', tags=('submit'))
+rightCircleSubmit = canvas.create_arc(460, 100, 540, 150, start=90, extent=-180, style="arc", width=1.5, outline='#E73E8F', tags=('submit'))
+
+# Bind the clicked function to the left mouse button click event on the button symbol
+canvas.tag_bind('submit', '<Button-1>', clicked)
 
 
 

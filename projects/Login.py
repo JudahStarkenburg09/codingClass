@@ -89,7 +89,7 @@ username_entry.bind('<FocusOut>', on_entry_unfocus1)
 canvas.create_window(280, 125, window=username_entry)
 
 # Create entry box with initial text and color
-password_entry = tk.Entry(canvas, width=37, fg=light_gray, font=font, bd=0, insertbackground=lighterish_gray) #border=.5,)
+password_entry = tk.Entry(canvas, width=34, fg=light_gray, font=font, bd=0, insertbackground=lighterish_gray) #border=.5,)
 password_entry.insert(0, 'Password')
 password_entry.configure({"background": lightish_gray})
 
@@ -130,7 +130,7 @@ password_entry.bind('<FocusIn>', on_entry_click2)
 password_entry.bind('<FocusOut>', on_entry_unfocus2)
 
 # Place entry box on canvas
-canvas.create_window(280, 175, window=password_entry)
+canvas.create_window(265, 175, window=password_entry)
 
 # Define function to remove focus from canvas
 def remove_focus(event):
@@ -150,14 +150,14 @@ hide_password = False
 # region eye Symbol
 
 # Create a circle
-circle = canvas.create_oval(27.2, 17.2, 42.8, 32.8, fill="black", outline="black", tags=('eyeShowPassword'))
+circle = canvas.create_oval(27.2, 17.2, 42.8, 32.8, fill=light_gray, outline=light_gray, tags=('eyeShowPassword'))
 # Create a half circle, Create a line to close off the bottom
-half_circle = canvas.create_arc(0, 0, 70, 60, start=0, extent=180, fill="black", outline="black", style="arc", width=4, tags=('eyeShowPassword'))
+half_circle = canvas.create_arc(0, 0, 70, 60, start=0, extent=180, fill=light_gray, outline=light_gray, style="arc", width=2, tags=('eyeShowPassword'))
 rectToBindEye = canvas.create_rectangle(-5, -5, 75, 40, fill=None, outline=None, width=0,tags=('eyeShowPassword'))
 # endregion
 
 canvas.scale('eyeShowPassword', 0, 0, 0.3, 0.3)  # shrink the size of the symbol
-canvas.move('eyeShowPassword', 450, 180)  # move the symbol with x, y directional pixel
+canvas.move('eyeShowPassword', 460, 170)  # move the symbol with x, y directional pixel
 
 
 
