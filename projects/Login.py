@@ -11,6 +11,7 @@ font = ("Arial", 15)
 root = tk.Tk()
 root.geometry("500x400")
 root.config(bg=darkGray)
+root.title("Login")
 
 # Create a canvas to draw on
 canvas = tk.Canvas(root, width=2000, height=2000)
@@ -124,6 +125,7 @@ def on_entry_unfocus2(event):
         toggle_password_visibility()
 
 
+loginTopText = canvas.create_text(170, 50, text="Login to your account", fill='#818181', font=("Helvetica", 18))
 
 # Bind focus and unfocus events to entry box
 password_entry.bind('<FocusIn>', on_entry_click2)
@@ -143,6 +145,58 @@ canvas.bind('<Button-1>', remove_focus)
 
 # canvas.create_window(250, 200, window=button)
 
+# region button
+# Create the button symbol using create methods
+canvas_bg_color = canvas.cget('background')
+
+leftCircleSubmitBind = canvas.create_arc(150, 100, 230, 150, start=90, extent=180, width=0, outline=canvas_bg_color, tags=('submit'), fill=canvas_bg_color) #set fill to bg color
+rightCircleSubmitBind = canvas.create_arc(460, 100, 540, 150, start=90, extent=-180, width=0, outline=canvas_bg_color, tags=('submit'), fill=canvas_bg_color) #set fill to bg color
+
+rectBaseSubmit = canvas.create_rectangle(190, 100, 500, 150, fill=None, outline=None, width=0, tags=('submit'))
+rectBaseTop = canvas.create_line(190, 100, 500, 100, width=2, fill='#818181', tags=('submit'))
+rectBaseBottom = canvas.create_line(190, 150, 500, 150, width=2, fill='#818181', tags=('submit'))
+leftCircleSubmit = canvas.create_arc(150, 100, 230, 150, start=90, extent=180, style="arc", width=2, outline='#818181', tags=('submit'))
+rightCircleSubmit = canvas.create_arc(460, 100, 540, 150, start=90, extent=-180, style="arc", width=2, outline='#818181', tags=('submit'))
+loginText = canvas.create_text(340, 125, text="Log In", fill='#818181', font=("Helvetica", 18), tags='submit')
+# endregion button
+
+
+def on_mouse_move(event):
+    x = event.x
+    y = event.y
+    
+    # print(f"Mouse position: ({x}, {y})")
+
+canvas.bind("<Motion>", on_mouse_move)
+
+import re
+def click(event):
+    username = username_entry.get()
+    password = password_entry.get()
+    print(f"Clicked, User = {username}")
+    expression = r'(.*).....$'  # Match any characters before the last 5 characters
+    masked_password = re.sub(expression, r'\1*****', password)  # Substitute last 5 characters with '*'
+    print(f"Masked Password = {masked_password}")
+    if password.lower() == str('password'):
+        print("Password: GOOD")
+        print(f"'{password.lower()}' = 'password'?")
+        if any(char.isdigit() for char in password):
+            print("Int: GOOD")
+            if len(password) >= 8:
+                print("Length: GOOD")
+            else:
+                print("Length: BAD")
+        else:
+            print("Int: BAD")
+    else:
+        print("Please fill out all the required fields")
+    
+
+# Bind the clicked function to the left mouse button click event on the button symbol
+canvas.tag_bind('submit', '<Button-1>', click)
+
+canvas.scale('submit', 0, 0, .6, .85)
+canvas.move('submit', -25, 200)
 
 
 hide_password = False
