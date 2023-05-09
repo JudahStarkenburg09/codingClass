@@ -177,7 +177,7 @@ def click(event):
     expression = r'(.*).....$'  # Match any characters before the last 5 characters
     masked_password = re.sub(expression, r'\1*****', password)  # Substitute last 5 characters with '*'
     print(f"Masked Password = {masked_password}")
-    if password.lower() == str('password'):
+    if password.lower() != str('password'):
         print("Password: GOOD")
         print(f"'{password.lower()}' = 'password'?")
         if any(char.isdigit() for char in password):
