@@ -7,6 +7,34 @@ darkGray = '#343434'
 hotPinkRed = '#FF69B4'
 font = ("Arial", 15)
 
+
+def appMain(user, password, hiddenPassword):
+    global canvas, rect1, rect2, username_entry, password_entry, loginTopText, root
+    canvas.delete(rect1)
+    canvas.delete(rect2)
+    username_entry.destroy()
+    password_entry.destroy()
+    canvas.delete(loginTopText)
+    canvas.delete("lockSymbol")
+    canvas.delete("submit")
+    canvas.delete("userSymbol")
+    canvas.delete("eyeShowPassword")
+
+    # Create a canvas to draw on
+    canvas = tk.Canvas(root, width=700, height=500)
+    canvas.pack()
+
+    left_rectangle = canvas.create_rectangle(50, 100, 75, 150, fill=light_gray, outline="",tags="home")
+    right_rectangle = canvas.create_rectangle(95, 100, 120, 150, fill=light_gray, outline="", tags="home")
+
+    # Create the roof triangle of the home symbol
+    roof_triangle = canvas.create_polygon(30, 100, 85, 30, 140, 100, fill=light_gray, outline="", tags="home")
+    canvas.scale("home", 1, 1, 0.5, 0.4)
+    rect1bar = canvas.create_rectangle(0, 0, 50, 500, fill=lightish_gray, outline="")
+    rect2bar = canvas.create_rectangle(0, 0, 500, 50, fill=lightish_gray, outline="")
+
+
+
 # Create a Tkinter window
 root = tk.Tk()
 root.geometry("500x400")
@@ -170,26 +198,25 @@ def on_mouse_move(event):
 canvas.bind("<Motion>", on_mouse_move)
 
 import re
+from tkinter import messagebox
 def click(event):
     username = username_entry.get()
     password = password_entry.get()
-    print(f"Clicked, User = {username}")
     expression = r'(.*).....$'  # Match any characters before the last 5 characters
     masked_password = re.sub(expression, r'\1*****', password)  # Substitute last 5 characters with '*'
-    print(f"Masked Password = {masked_password}")
     if password.lower() != str('password'):
-        print("Password: GOOD")
-        print(f"'{password.lower()}' = 'password'?")
         if any(char.isdigit() for char in password):
-            print("Int: GOOD")
             if len(password) >= 8:
-                print("Length: GOOD")
+                appMain(username, password, masked_password)
+
+
+
             else:
-                print("Length: BAD")
+                messagebox.showwarning("Error", "Your password must be at least 8 characters long!")
         else:
-            print("Int: BAD")
+            messagebox.showwarning("Error", "Your password must have at least one number!")
     else:
-        print("Please fill out all the required fields")
+        messagebox.showwarning("Error", "Please fill out all the required fields!")
     
 
 # Bind the clicked function to the left mouse button click event on the button symbol
