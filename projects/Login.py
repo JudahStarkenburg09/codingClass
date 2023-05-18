@@ -1,5 +1,6 @@
 import tkinter as tk
-whitish = '#B6B6B6' #Order from lightest to darkest
+
+whitish = '#B6B6B6'  # Order from lightest to darkest
 light_gray = '#8A8A8A'
 lighterish_gray = '#4D4D4D'
 lightish_gray = '#3F3F3F'
@@ -7,61 +8,44 @@ darkGray = '#343434'
 hotPinkRed = '#FF69B4'
 font = ("Arial", 15)
 
+import tkinter as tk
 
-def appHome(user, password, hiddenPassword):
-    global canvas, rect1, rect2, username_entry, password_entry, loginTopText, root
-    global rect1bar, rect2bar, left_rectangle, right_rectangle, roof_triangle
-    global top_line, left_line, circle, half_circle, line1, line1Ico, line2Ico, line3Ico, rectIco
-    global menuIcoUnderscoreFalse, userIcoUnderscoreFalse, homeIcoUnderscoreTrue, welcomeText
-    canvas.delete("all")
+whitish = '#B6B6B6'  # Order from lightest to darkest
+light_gray = '#8A8A8A'
+lighterish_gray = '#4D4D4D'
+lightish_gray = '#3F3F3F'
+darkGray = '#343434'
+hotPinkRed = '#FF69B4'
+font = ("Arial", 15)
 
-    rect1bar = canvas.create_rectangle(0, 0, 50, 500, fill=lightish_gray, outline="")
-    rect2bar = canvas.create_rectangle(0, 0, 500, 50, fill=lightish_gray, outline="")
-
-    left_rectangle = canvas.create_rectangle(50, 100, 75, 150, fill=light_gray, outline="",tags="home")
-    right_rectangle = canvas.create_rectangle(95, 100, 120, 150, fill=light_gray, outline="", tags="home")
-
-    welcomeText = canvas.create_text(260, 25, text=f"Welcome {user}!", fill=whitish, font=("Arial", 15, "bold"))
-
-    # Create the roof triangle of the home symbol
-    roof_triangle = canvas.create_polygon(30, 100, 85, 30, 140, 100, fill=light_gray, outline="", tags="home")
-
-    homeIcoUnderscoreTrue = canvas.create_line(50, 163, 120, 163, fill="blue", tags="home")
-
-    canvas.scale("home", 1, 1, 0.33, 0.28)
-    canvas.move("home", -3, 90)
-
-    # Create a circle
-    circle = canvas.create_oval(66.7, 66.7, 133.3, 133.3, fill=light_gray, outline=light_gray, width=1.5, tags=('userSymbol'))
-
-    # Create a half circle, Create a line to close off the bottom
-    half_circle = canvas.create_arc(50, 134, 150, 234, start=0, extent=180, fill=light_gray, outline=light_gray, width=1.5, tags=('userSymbol'))
-    #                                X   Y   X    Y                        
-    line1 = canvas.create_line(48, 184, 152, 184, width=1.5, fill=light_gray, tags=('userSymbol'))
-    #                           X   Y    X    Y
-
-    userIcoUnderscoreFalse = canvas.create_line(48, 197, 152, 197, fill=light_gray,tags="userSymbol")
-    canvas.scale("userSymbol", 1, 1, 0.25, 0.25)
-    canvas.move("userSymbol", 0, 140)
-
-
-    rectIco = canvas.create_rectangle(50, 50, 150, 150, fill=light_gray, outline="", tags="menuIco")
-    # Create the horizontal lines
-    line1Ico = canvas.create_line(60, 80, 140, 80, width=4, fill=darkGray, tags="menuIco")
-    line2Ico = canvas.create_line(60, 100, 140, 100, width=4, fill=darkGray, tags="menuIco")
-    line3Ico = canvas.create_line(60, 120, 140, 120, width=4, fill=darkGray, tags="menuIco")
-
-    menuIcoUnderscoreFalse = canvas.create_line(50, 163, 150, 163, fill=light_gray, tags="menuIco")
-    canvas.scale("menuIco", 1, 1, 0.3, 0.3)
-    canvas.move("menuIco", -5, 200)
-
+def user():
+    global username, password, masked_password
+    
+def home():
+    global username, password, masked_password
+    
+def menu():
+    global username, password, masked_password
     
 
 
-    top_line = canvas.create_line(50, 50, 500, 50, fill=whitish)
-    left_line = canvas.create_line(50, 50, 50, 500, fill=whitish)
+def switchMenu(current_menu):
+    if current_menu == "home":
+        result = home()
+    elif current_menu == "user":
+        result = user()
+    elif current_menu == "menu":
+        result = menu()
+    
 
 
+
+
+
+
+
+
+#-----------------------------------------------
 
 
 # Create a Tkinter window
@@ -236,7 +220,7 @@ def click(event):
     if password.lower() != str('password'):
         if any(char.isdigit() for char in password):
             if len(password) >= 8:
-                appHome(username, password, masked_password)
+                switchMenu(current_menu = "home")
 
 
 
