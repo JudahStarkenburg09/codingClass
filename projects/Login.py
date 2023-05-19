@@ -8,34 +8,16 @@ darkGray = '#343434'
 hotPinkRed = '#FF69B4'
 font = ("Arial", 15)
 
-import tkinter as tk
 
-whitish = '#B6B6B6'  # Order from lightest to darkest
-light_gray = '#8A8A8A'
-lighterish_gray = '#4D4D4D'
-lightish_gray = '#3F3F3F'
-darkGray = '#343434'
-hotPinkRed = '#FF69B4'
-font = ("Arial", 15)
-
-def user():
-    global username, password, masked_password
-    
-def home():
-    global username, password, masked_password
-    
-def menu():
-    global username, password, masked_password
+ 
     
 
 
 def switchMenu(current_menu):
-    if current_menu == "home":
-        result = home()
-    elif current_menu == "user":
-        result = user()
-    elif current_menu == "menu":
-        result = menu()
+    ''
+
+        
+
     
 
 
@@ -220,9 +202,8 @@ def click(event):
     if password.lower() != str('password'):
         if any(char.isdigit() for char in password):
             if len(password) >= 8:
-                switchMenu(current_menu = "home")
-
-
+                current_menu = "home"
+                switchMenu(current_menu)
 
             else:
                 messagebox.showwarning("Error", "Your password must be at least 8 characters long!")
