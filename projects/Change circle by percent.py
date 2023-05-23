@@ -22,7 +22,7 @@ w = x2 - x1  # width of the original circle
 h = y2 - y1  # height of the original circle
 
 
-percent = 70 # PERCENAGE TO CHANGE SMALLER
+percent = 20 # PERCENAGE TO CHANGE SMALLER
 
 
 N = (100-percent)/100

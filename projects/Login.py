@@ -1,4 +1,32 @@
 import tkinter as tk
+import cv2
+import os
+from PIL import Image, ImageDraw, ImageTk
+
+def take_picture():
+    # Open the camera
+    cap = cv2.VideoCapture(0)
+
+    # Check if the camera is opened successfully
+    if not cap.isOpened():
+        print("Failed to open the camera")
+        return
+
+    # Capture a frame from the camera
+    ret, frame = cap.read()
+
+    # Release the camera
+    cap.release()
+
+    # Check if the frame was captured successfully
+    if not ret:
+        print("Failed to capture frame")
+        return
+
+    # Save the captured frame as an image file
+    cv2.imwrite("profile.jpg", frame)
+    return
+
 
 whitish = '#B6B6B6'  # Order from lightest to darkest
 light_gray = '#8A8A8A'
@@ -118,6 +146,35 @@ def runApp():
         canvas.tag_bind(userSymbolRectBind, "<Button-1>", lambda event: switch_to_user_symbol_screen())
         canvas.tag_bind(menuIcoSymbolRectBind, "<Button-1>", lambda event: switch_to_menu_ico_screen())
         # Additional logic to update the graphics for the user symbol screen
+
+
+
+        circle2 = canvas.create_oval(66.7, 66.7, 133.3, 133.3, fill=light_gray, outline=light_gray, width=1.5, tags=('userSymbol2'))
+        half_circle2 = canvas.create_arc(50, 134, 150, 234, start=0, extent=180, fill=light_gray, outline=light_gray, width=1.5, tags=('userSymbol2'))
+        line1_2 = canvas.create_line(48, 184, 152, 184, width=1.5, fill=light_gray, tags=('userSymbol2'))
+        userSymbolRectBind2 = canvas.create_rectangle(45, 62.7, 155, 187, fill=None, width=0 ,tags=("userSymbol2"))
+        canvas.scale("userSymbol2", 1, 1, 1, 1)
+        canvas.move("userSymbol2", 20, 0)
+        # clickToTakePicure = canvas.create_text(200, 200, text="Click To Set Avatar", tags='underline1', fill="light blue", font=('Arial', 8))
+        # clickToTakePicureUnderlineCoords = canvas.bbox("underline1")
+        # uX1, uY1, uX2, uY2 = clickToTakePicureUnderlineCoords
+        # underlineClickToTakePicture = canvas.create_line(uX1, uY2 + 1, uX2, uY2 + 1, fill="light blue", tags="underline1")
+        # canvas.tag_bind("underline1", "<Button-1>", lambda event: take_picture())
+        # canvas.tag_bind(userSymbolRectBind2, "<Button-1>", lambda event: take_picture())
+        if os.path.isfile("profile.jpg"):
+            canvas.delete("userSymbol2")
+            print("found profile.jpg")
+            try:
+                profile = Image.open("profile.jpg")
+                profile = profile.resize((200, 200))  # Resize the image if necessary
+
+                profileImg = ImageTk.PhotoImage(profile)
+                lableProfile = tk.Label(root, image=profileImg)
+                lableProfile.pack()
+                print("Image loaded and displayed successfully!")
+            except Exception as e:
+                print("Error loading the image:", str(e))
+
 
     def switch_to_menu_ico_screen():
         print("menu")
