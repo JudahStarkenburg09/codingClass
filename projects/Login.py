@@ -35,15 +35,30 @@ lightish_gray = '#3F3F3F'
 darkGray = '#343434'
 hotPinkRed = '#FF69B4'
 font = ("Arial", 15)
-
+firstName = False
+middleName = False
+lastName = False
+age = False
+dateOfBirth = False
+occupation = False
 
  
     
 
 
 def runApp():
-    global username
+    global username, usernameText, masked_password, expression, PasswordText
     canvas.delete("all")
+    
+    usernameText = tk.Entry(canvas, width=10, fg=light_gray, font=('Arial', 12), bd=0, insertbackground=lighterish_gray) #border=.5,)
+    usernameText.insert(0, f'{username}')
+    usernameText.configure({"background": darkGray})
+    PasswordText = tk.Entry(canvas, width=10, fg=light_gray, font=('Arial', 12), bd=0, insertbackground=lighterish_gray) #border=.5,)
+    PasswordText.insert(0, f'{masked_password}')
+    PasswordText.configure({"background": darkGray})
+
+    masked_password = re.sub(expression, r'\1*******', PasswordText.get())
+
 
     rect1bar = canvas.create_rectangle(0, 0, 50, 500, fill=lightish_gray, outline="", tags='bar')
     rect2bar = canvas.create_rectangle(0, 0, 500, 50, fill=lightish_gray, outline="", tags='bar')
@@ -74,6 +89,9 @@ def runApp():
     canvas.move("menuIco", -5, 200)
 
     def switch_to_home_screen():
+        global usernameText, username, expression, PasswordText, masked_password
+        username = usernameText.get()
+        masked_password = re.sub(expression, r'\1*****', PasswordText.get())
         print("home")
         canvas.itemconfigure("homeIcoUnderscoreFalse", fill=light_gray)
         canvas.itemconfigure("homeIcoUnderscoreTrue", fill="blue")
@@ -111,6 +129,9 @@ def runApp():
         # Additional logic to update the graphics for the home screen
 
     def switch_to_user_symbol_screen():
+        global usernameText, masked_password, expression, masked_password, username, PasswordText, firstName, middleName, lastName, age, occupation, dateOfBirth
+        username = usernameText.get()
+        masked_password = re.sub(expression, r'\1*******', str(PasswordText.get()))
         print("user")
         canvas.itemconfigure("userIcoUnderscoreFalse", fill=light_gray)
         canvas.itemconfigure("userIcoUnderscoreTrue", fill="blue")
@@ -175,8 +196,47 @@ def runApp():
             except Exception as e:
                 print("Error loading the image:", str(e))
 
+        usernameText = tk.Entry(canvas, width=11, fg=light_gray, justify="center", font=('Arial', 12), bd=0, insertbackground=lighterish_gray) #border=.5,)
+        usernameText.insert(0, f'{username}')
+        usernameText.configure({"background": darkGray})
+
+        canvas.create_window(120, 200, window=usernameText)
+
+        PasswordText = tk.Entry(canvas, width=10, fg=light_gray, font=('Arial', 12), bd=0, insertbackground=lighterish_gray) #border=.5,)
+        PasswordText.insert(0, f'{masked_password}')
+        PasswordText.configure({"background": darkGray})
+
+        canvas.create_window(120, 220, window=PasswordText)
+        if firstName == False:
+            def firstNameAsk():
+                global firstName
+                def on_close_NameAsk():
+                    global firstName
+                    firstName = nameAsk.get()
+                    print(firstName)
+                    ask.destroy()
+                global firstName
+                ask = tk.Tk()
+                ask.geometry('200x100')
+                ask.title("Name")
+                nameAsk = tk.Entry(ask)
+                nameAsk.place(x=10, y=10)
+                ask.protocol("WM_DELETE_WINDOW", on_close_NameAsk)
+                ask.mainloop()
+            firstNameText = canvas.create_text(300, 100, text="Click to Add First Name", fill="blue")
+            canvas.tag_bind(firstNameText, "<Button-1>", lambda event: firstNameAsk())
+        else:
+            firstNameText = canvas.create_text(300, 100, text=f"{firstName}", fill=light_gray)
+            
+        
+
+        
+
 
     def switch_to_menu_ico_screen():
+        global usernameText, PasswordText, expression, masked_password, username
+        username = usernameText.get()
+        masked_password = re.sub(expression, r'\1*******', PasswordText.get())
         print("menu")
         canvas.delete("all")
         rect1bar = canvas.create_rectangle(0, 0, 50, 500, fill=lightish_gray, outline="", tags='bar')
@@ -395,7 +455,7 @@ canvas.bind("<Motion>", on_mouse_move)
 import re
 from tkinter import messagebox
 def click(event):
-    global username, password
+    global username, password, masked_password, expression
     username = username_entry.get()
     password = password_entry.get()
     expression = r'(.*).....$'  # Match any characters before the last 5 characters
@@ -415,6 +475,7 @@ def click(event):
 
 # Bind the clicked function to the left mouse button click event on the button symbol
 canvas.tag_bind('submit', '<Button-1>', click)
+root.bind('<Return>', click)
 
 canvas.scale('submit', 0, 0, .6, .85)
 canvas.move('submit', -25, 200)
