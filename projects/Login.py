@@ -207,6 +207,31 @@ def runApp():
         PasswordText.configure({"background": darkGray})
 
         canvas.create_window(120, 220, window=PasswordText)
+        if lastName == False:
+            def lastNameAsk():
+                global lastName
+                def on_close_lastAsk():
+                    global lastName
+                    lastName = lastNameAskVar.get()
+                    print(lastName)
+                    ask.destroy()
+                    switch_to_user_symbol_screen()
+                ask = tk.Tk()
+                ask.geometry('200x100')
+                ask.title("Last Name")
+                text = tk.Text(ask)
+                text.place(x=10, y=30)
+                text.insert(tk.END, "Enter Your First Name!")
+                lastNameAskVar = tk.Entry(ask)
+                lastNameAskVar.place(x=10, y=10)
+                lastNameAskVar.bind('<Return>', lambda event: on_close_lastAsk())  # Bind Enter key
+                ask.protocol("WM_DELETE_WINDOW", on_close_lastAsk)
+                ask.mainloop()
+            lastNameText = canvas.create_text(300, 130, text="Click to Add Last Name", fill="light blue")
+            canvas.tag_bind(lastNameText, "<Button-1>", lambda event: lastNameAsk())
+        else:
+            lastNameText = canvas.create_text(280, 130, text=f"{lastName}", fill=light_gray, font=font)
+            canvas.tag_bind(lastNameText, "<Button-1>", lambda event: lastNameAsk())
         if firstName == False:
             def firstNameAsk():
                 global firstName
@@ -215,18 +240,25 @@ def runApp():
                     firstName = nameAsk.get()
                     print(firstName)
                     ask.destroy()
+                    switch_to_user_symbol_screen()
+
                 global firstName
                 ask = tk.Tk()
                 ask.geometry('200x100')
                 ask.title("Name")
+                text = tk.Text(ask)
+                text.place(x=10, y=30)
+                text.insert(tk.END, "Enter Your First Name!")
                 nameAsk = tk.Entry(ask)
                 nameAsk.place(x=10, y=10)
                 ask.protocol("WM_DELETE_WINDOW", on_close_NameAsk)
+                nameAsk.bind('<Return>', lambda event: on_close_NameAsk())  # Bind Enter key
                 ask.mainloop()
-            firstNameText = canvas.create_text(300, 100, text="Click to Add First Name", fill="blue")
+            firstNameText = canvas.create_text(300, 100, text="Click to Add First Name", fill="light blue")
             canvas.tag_bind(firstNameText, "<Button-1>", lambda event: firstNameAsk())
         else:
-            firstNameText = canvas.create_text(300, 100, text=f"{firstName}", fill=light_gray)
+            firstNameText = canvas.create_text(280, 100, text=f"{firstName}", fill=light_gray, font=font)
+            canvas.tag_bind(firstNameText, "<Button-1>", lambda event: firstNameAsk())
             
         
 
