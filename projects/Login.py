@@ -2,6 +2,8 @@ import tkinter as tk
 import cv2
 import os
 from PIL import Image, ImageDraw, ImageTk
+from guessWord import wordGuessing
+from addTo100 import addTo100Game
 
 def take_picture():
     # Open the camera
@@ -38,7 +40,7 @@ font = ("Arial", 15)
 firstName = False
 middleName = False
 lastName = False
-age = False
+ageBirth = False
 dateOfBirth = False
 occupation = False
 
@@ -259,6 +261,33 @@ def runApp():
         else:
             firstNameText = canvas.create_text(280, 100, text=f"{firstName}", fill=light_gray, font=font)
             canvas.tag_bind(firstNameText, "<Button-1>", lambda event: firstNameAsk())
+        if ageBirth == False:
+            def ageBirthAsk():
+                global ageBirth
+                def on_close_NameAsk():
+                    global ageBirth
+                    ageBirth = nameAsk.get()
+                    print(ageBirth)
+                    ask.destroy()
+                    switch_to_user_symbol_screen()
+
+                global ageBirth
+                ask = tk.Tk()
+                ask.geometry('200x100')
+                ask.title("Age")
+                text = tk.Text(ask)
+                text.place(x=10, y=30)
+                text.insert(tk.END, "Enter Your Date Of Birth!")
+                nameAsk = tk.Entry(ask)
+                nameAsk.place(x=10, y=10)
+                ask.protocol("WM_DELETE_WINDOW", on_close_NameAsk)
+                nameAsk.bind('<Return>', lambda event: on_close_NameAsk())  # Bind Enter key
+                ask.mainloop()
+            ageBirthText = canvas.create_text(300, 160, text="Click to Add Birth-Date", fill="light blue")
+            canvas.tag_bind(ageBirthText, "<Button-1>", lambda event: ageBirthAsk())
+        else:
+            ageBirthText = canvas.create_text(280, 160, text=f"{ageBirth}", fill=light_gray, font=font)
+            canvas.tag_bind(ageBirthText, "<Button-1>", lambda event: ageBirthAsk())
             
         
 
@@ -302,6 +331,26 @@ def runApp():
         canvas.tag_bind(userSymbolRectBind, "<Button-1>", lambda event: switch_to_user_symbol_screen())
         canvas.tag_bind(menuIcoSymbolRectBind, "<Button-1>", lambda event: switch_to_menu_ico_screen())
         # Additional logic to update the graphics for the menu icon screen
+
+        wordGuessGame = canvas.create_text(250, 130, text=f"Click To Play Word Guess Game!", fill="light blue", font=font)
+        canvas.tag_bind(wordGuessGame, "<Button-1>", lambda event: wordGuessing())
+
+        def tictactoe():
+            rootTTTAsk = tk.Tk()
+            rootTTTAsk.geometry('200x200')
+            rootTTTAsk.title("Tic Tac Toe")
+
+            rootTTTAsk.mainloop()
+
+
+        tttText = canvas.create_text(250, 160, text=f"Click To Play Tic Tac Toe!", fill="light blue", font=font)
+        canvas.tag_bind(tttText, "<Button-1>", lambda event: tictactoe())
+
+        
+
+
+        addto100Text = canvas.create_text(250, 190, text=f"Click To Play Add To 100 Game!", fill="light blue", font=font)
+        canvas.tag_bind(addto100Text, "<Button-1>", lambda event: addTo100Game())
 
     # Bind click events to rectangles using lambda functions
     canvas.tag_bind(homeRectBind, "<Button-1>", lambda event: switch_to_home_screen())
