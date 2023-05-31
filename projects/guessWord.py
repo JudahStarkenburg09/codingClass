@@ -48,7 +48,6 @@ def wordGuessing():
         lives_label.config(text=f"Lives: {remaining_lives}")
         letters_frame.pack()  # Use pack() instead of grid()
 
-    # Function to handle letter button clicks
     def guess_letter(letter):
         global remaining_lives
 
@@ -63,15 +62,28 @@ def wordGuessing():
             if "_" not in revealed_letters:
                 messagebox.showinfo("Congratulations", f"You guessed the word correctly! Word Was: '{word_to_guess}'")
                 letters_frame.pack_forget()
+                guessRoot.destroy()
+                return
         else:
             remaining_lives -= 1
             lives_label.config(text=f"Lives: {remaining_lives}")
+
+            # Change the button color to gray for incorrect guesses
+            for btn in letters_frame.winfo_children():
+                if btn["text"] == letter:
+                    btn.config(bg="gray")
 
             # Check if the player has run out of lives
             if remaining_lives == 0:
                 messagebox.showinfo("Game Over", f"The word was '{word_to_guess}'. Better luck next time!")
                 letters_frame.pack_forget()
                 guessRoot.destroy()
+                return
+        # Change the button color to green for correct guesses
+        for btn in letters_frame.winfo_children():
+            if btn["text"] == letter and btn["bg"] != "gray":
+                btn.config(bg="green")
+
 
     # Function to handle key presses
     def key_press(event):

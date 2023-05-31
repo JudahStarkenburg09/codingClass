@@ -4,6 +4,8 @@ import os
 from PIL import Image, ImageDraw, ImageTk
 from guessWord import wordGuessing
 from addTo100 import addTo100Game
+from TicTacToe1p import tic_tac_toe1P
+from TicTacToe2P import tic_tac_toe2P
 
 def take_picture():
     # Open the camera
@@ -337,8 +339,26 @@ def runApp():
 
         def tictactoe():
             rootTTTAsk = tk.Tk()
-            rootTTTAsk.geometry('200x200')
+            rootTTTAsk.geometry('300x100')
             rootTTTAsk.title("Tic Tac Toe")
+            def playTTT1():
+                rootTTTAsk.destroy()
+                tic_tac_toe1P()
+                return
+            def playTTT2():
+                rootTTTAsk.destroy()
+                tic_tac_toe2P()
+                return
+
+
+
+            # Create a button for 1 player game
+            btn_1p = tk.Button(rootTTTAsk, text="1 Player", command=playTTT1)
+            btn_1p.pack()
+
+            # Create a button for 2 player game
+            btn_2p = tk.Button(rootTTTAsk, text="2 Player", command=playTTT2)
+            btn_2p.pack()
 
             rootTTTAsk.mainloop()
 
