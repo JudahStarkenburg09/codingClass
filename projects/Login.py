@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageTk
 from guessWord import wordGuessing
 from addTo100 import addTo100Game
 from TicTacToe1p import tic_tac_toe1P
-from TicTacToe2P import tic_tac_toe2P
+from TicTacToe2p import tic_tac_toe2P
 
 def take_picture():
     # Open the camera
@@ -561,11 +561,13 @@ def click(event):
     password = password_entry.get()
     expression = r'(.*).....$'  # Match any characters before the last 5 characters
     masked_password = re.sub(expression, r'\1*****', password)  # Substitute last 5 characters with '*'
-    if password.lower() != str('password'):
+    if password.lower() != str('password') and username.lower() != str('username') and username.lower() != '':
         if any(char.isdigit() for char in password):
             if len(password) >= 8:
-                runApp()
-
+                if len(username) >= 3:
+                    runApp()
+                else:
+                    messagebox.showwarning("Error", "Your username must be at least 3 characters long!")
             else:
                 messagebox.showwarning("Error", "Your password must be at least 8 characters long!")
         else:
