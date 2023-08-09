@@ -1,103 +1,137 @@
 import pygame
+import sys
+import tkinter as tk
 
-# from collisions import *
+def save_answer():
+    global answer
+    answer = entry.get()
+    weight.destroy()
+
+def on_enter(event):
+    save_answer()
+
+def on_closing():
+    # Any cleanup or saving actions can be placed here
+    exit()
+
+weight = tk.Tk()
+weight.geometry('300x200')
+weight.title('Weight')
+weight.protocol("WM_DELETE_WINDOW", on_closing)
+
+question = tk.Label(weight, text="Enter the amount of weight for the block (kg)")
+question.place(x=5, y=20)
+
+entry = tk.Entry(weight)
+entry.pack(padx=20, pady=50)
+entry.bind("<Return>", on_enter)
+
+
+weight.mainloop()
+
+
+
+
+
+
+# Initialize pygame
 pygame.init()
 
-s1, s2 = 100, 50  # block sides
-x1, y1 = 1000, 250  # bigger block coords
-x2, y2 = 500, y1 + s1 - s2  # smaller block coords
+# Set up display
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Collision Simulation")
 
-power = int(input('enter: '))  # mass ratio
-v1 = (-0.5)  # initial velocity of block 1
-
-m1, m2 = 100 ** (power - 1), 1  # mass of blocks
-v2 = 0  # initial velocity of block 2
-
-# temp_x1 = 0
-red = (255, 0, 0)
+# Colors
+white = (255, 255, 255)
 blue = (0, 0, 255)
+red = (255, 0, 0)
+
+# Create blocks
+block1_mass = 1
+block2_mass_red = int(answer)
+speed = 1
 
 
-def message_to_print(msg, color):
-    font = pygame.font.SysFont(None, 40)
-    text = font.render(msg, True, color)
-    win.blit(text, [10, 10])
+block1_width = 40
+block1_height = 40
+block1_x = 50
+block1_y = screen_height - block1_height
+block1_vx = 0
+
+block2_width = 40
+block2_height = 40
+block2_x = 300
+block2_y = screen_height - block2_height
+block2_vx = -speed
+collision_count = 0
+
+# Create wall
+wall_color = (0, 0, 0)
+wall_thickness = 5
+black = (0,0,0)
+# Create font
+font1 = pygame.font.Font(None, 20)
+font2 = pygame.font.Font(None, 30)
 
 
-def reverse_vel(vel):
-    '''
-    reversing velocity of block
-    '''
-    vel *= -1
-    return vel
+def draw_wall():
+    pygame.draw.line(screen, wall_color, (0, 0), (0, screen_height), wall_thickness)
+
+def draw_weights():
+    text_block1 = font1.render(f"{block1_mass} kg", True, black)
+    text_block2 = font1.render(f"{block2_mass_red} kg", True, black )
+    screen.blit(text_block1, (block1_x +5, block1_y-20))
+    screen.blit(text_block2, (block2_x +5, block2_y-20))
+
+def update_velocity(m1, v1, m2, v2):
+    new_v1 = ((m1 - m2) / (m1 + m2)) * v1 + (2 * m2 / (m1 + m2)) * v2
+    new_v2 = (2 * m1 / (m1 + m2)) * v1 + ((m2 - m1) / (m1 + m2)) * v2
+    return new_v1, new_v2
+
+# Main loop
+def main():
+    global block1_x, block2_x, block1_vx, block2_vx, block1_mass, block2_mass_red, collision_count
+    clock = pygame.time.Clock()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        screen.fill(white)
+        draw_wall()
+
+        # Update block positions
+        block1_x += block1_vx
+        block2_x += block2_vx
+
+        # Check collisions
+    
+        if block1_x + block1_width >= block2_x:
+            block1_vx, block2_vx = update_velocity(block1_mass, block1_vx, block2_mass_red, block2_vx)
+            collision_count += 1
+
+        if block1_x <= 0:
+            block1_vx *= -1
+            collision_count +=1
+
+        if block2_x <= 0:
+            block2_vx *= -1
+
+        # Draw blocks
+        pygame.draw.rect(screen, blue, (block1_x, block1_y, block1_width, block1_height))
+        pygame.draw.rect(screen, red, (block2_x, block2_y, block2_width, block2_height))
+
+        text_collision_count = font2.render(f"Collisions: {collision_count}", True, (0, 0, 0))
+        screen.blit(text_collision_count, (20, 100))
+        draw_weights()
+
+        pygame.display.update()
+        clock.tick(60)
 
 
-def exchange_vel(v1, m1, v2, m2):
-    '''
-    this function is calculating the new velocity of the block after collision,
-    based on law of conservation of momentum and kinetic energy
-    '''
-    v1 = ((m1 - m2) / (m1 + m2)) * v1 + ((2 * m2) / (m1 + m2)) * v2
 
-    return v1  # returning new velocity after collision
-
-
-win = pygame.display.set_mode((1200, 500))
-win.fill((255, 255, 255))
-pygame.display.set_caption('simulation')
-
-Collisions = 0  # counting number of collisions
-run = True
-while run:
-    # click_sound = pygame.mixer.Sound("rss/click.wav")
-    # pygame.time.delay(10)
-    # sound_collide, sound_reverse = True, True
-
-    message_to_print('collision ' + str(Collisions), (0, 0, 0))
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
-
-    # biger block
-    x1 += v1  # changing block coordinates according to velocity
-    if x1 >= s2:
-        t = x1
-        t2 = x2
-    else:
-        t2 = 0
-
-
-
-    if not x2 + s2 < x1 or x1 + s1 < x2:
-        '''
-        changing velocity after collision,
-        storing them in temp variable for each block,
-        then assiging new velocity
-        '''
-        v2_temp = exchange_vel(v2, m2, v1, m1)
-        v1_temp = exchange_vel(v1, m1, v2, m2)
-        # if sound_collide:
-        # click_sound.play()
-        # sound = False
-
-        v2, v1 = v2_temp, v1_temp  # assigning new velocities
-        Collisions += 1
-
-    # smaller Block
-    x2 += v2
-    if x2 <= 0:
-        '''
-        if block 1 touch left wall, its velocity reverses, 
-        '''
-        v2 = reverse_vel(v2)
-        # if sound_reverse:
-        # click_sound.play()
-        # sound_reverse = False
-        Collisions += 1
-    pygame.draw.rect(win, blue, (t2, y2, s2, s2)) # x2-> t2
-    pygame.draw.rect(win, red, (t, y1, s1, s1))
-
-    pygame.display.update()
-    win.fill((255, 255, 255))
-
-pygame.quit()
+main()
