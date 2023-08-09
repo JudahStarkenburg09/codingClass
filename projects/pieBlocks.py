@@ -2,8 +2,6 @@ import pygame
 import sys
 import math
 from pygame.locals import *
-from OpenGL.GL import *
-from OpenGL.GLU import *
 
 # Set up the screen
 pygame.init()
@@ -11,12 +9,6 @@ screen_width = 800
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 clock = pygame.time.Clock()
-
-glMatrixMode(GL_PROJECTION)
-glLoadIdentity()
-gluOrtho2D(0, screen_width, 0, screen_height)
-# glOrtho(-100, screen_width, -100, screen_height, -1, 1)
-glMatrixMode(GL_MODELVIEW)
 
 # Create block class
 class Block:
@@ -123,9 +115,9 @@ while running:
     text = font.render(f"Collisions: {count}", True, (255, 255, 255))  # Set text color to white
     screen.blit(text, (10, 10))
 
-    # Render the pi value text
-    text_pi = font.render(f"Expected pi value: {pi_value}", True, (255, 255, 255))
-    screen.blit(text_pi, (10, 50))
+    # # Render the pi value text
+    # text_pi = font.render(f"Expected pi value: {pi_value}", True, (255, 255, 255))
+    # screen.blit(text_pi, (10, 50))
 
     # Display mass value
     text = font.render(f"M1: {b1Mass}   M2: {b2Mass}", True, (255, 255, 255))
@@ -139,3 +131,6 @@ while running:
 
     pygame.display.flip()
     clock.tick(60)
+
+pygame.quit()
+sys.exit()
