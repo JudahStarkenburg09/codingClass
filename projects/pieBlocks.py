@@ -109,7 +109,7 @@ while running:
         block2.vel = v2f
         count += 1
 
-    # Render the frame
+    # Render the frame 
     screen.fill((0, 0, 0))  # Set the background color to black
     font = pygame.font.Font(None, 30)
     text = font.render(f"Collisions: {count}", True, (255, 255, 255))  # Set text color to white
