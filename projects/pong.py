@@ -1,7 +1,7 @@
 import pygame
 import time
 import os
-from termcolor import colored
+# from termcolor import colored
 import random
 
 
@@ -78,8 +78,8 @@ while countdown > 0:
     screen.blit(background, (0, 0))
     pygame.draw.rect(screen, (255, 255, 255), (paddle1_x, paddle1_y, paddle_width, paddle_height))
     pygame.draw.rect(screen, (255, 255, 255), (paddle2_x, paddle2_y, paddle_width, paddle_height))
-    pygame.mixer.music.load("countdown.mp3")
-    pygame.mixer.music.play()
+    # pygame.mixer.music.load("countdown.mp3")
+    # pygame.mixer.music.play()
 
 # Set up countdown timer
 
@@ -131,8 +131,8 @@ while running:
         ball_speed_x = -ball_speed_x
         COLOR = random.choice(COLORS)
         screen.blit(background, (0, 0))
-        pygame.mixer.music.load("boing.mp3")
-        pygame.mixer.music.play()
+        # pygame.mixer.music.load("boing.mp3")
+        # pygame.mixer.music.play()
         pygame.draw.rect(screen, (COLOR), (paddle1_x, paddle1_y, paddle_width, paddle_height))
         pygame.draw.rect(screen, (COLOR), (paddle2_x, paddle2_y, paddle_width, paddle_height))
         pygame.draw.circle(screen, (COLOR), (ball_x, ball_y), ball_radius)
@@ -142,8 +142,8 @@ while running:
         ball_speed_x = -ball_speed_x
         COLOR = random.choice(COLORS)
         screen.blit(background, (0, 0))
-        pygame.mixer.music.load("boing.mp3")
-        pygame.mixer.music.play()
+        # pygame.mixer.music.load("boing.mp3")
+        # pygame.mixer.music.play()
         pygame.draw.rect(screen, (COLOR), (paddle1_x, paddle1_y, paddle_width, paddle_height))
         pygame.draw.rect(screen, (COLOR), (paddle2_x, paddle2_y, paddle_width, paddle_height))
         pygame.draw.circle(screen, (COLOR), (ball_x, ball_y), ball_radius)
