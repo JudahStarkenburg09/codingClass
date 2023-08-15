@@ -1,0 +1,26 @@
+import re
+
+
+def mathing(matches, talk):
+    for rmatch in matches:
+        match rmatch[1]:
+            case '+' | 'plus':
+                respondWith = (rmatch[0] + ' + ' + rmatch[2] + ' = ' + str(float(rmatch[0]) + (float(rmatch[2]))))
+            case '-' | 'minus':
+                respondWith = (rmatch[0] + ' - ' + rmatch[2] + ' = ' + str(float(rmatch[0]) - (float(rmatch[2]))))
+            case '*' | 'x' | 'times':
+                respondWith = (rmatch[0] + ' x ' + rmatch[2] + ' = ' + str(float(rmatch[0]) * (float(rmatch[2]))))
+            case '/' | 'divided' | 'divided by':
+                respondWith = (rmatch[0] + ' ÷ ' + rmatch[2] + ' = ' + str(float(rmatch[0]) / (float(rmatch[2]))))
+            case '^' | 'to the power of' | 'exponent' | '**':
+                respondWith = (rmatch[0] + '^' + rmatch[2] + ' = ' + str(float(rmatch[0]) ** (float(rmatch[2]))))
+    return respondWith
+
+talk = input("?: ")
+
+
+regex = re.findall(r'(\d*\.?\d+)\s*(\*|x|\/|\+|-|\^|\*\*|times|minus|plus|divide|divided by|to the power of|exponent)\s*(\d*\.?\d+)', talk)
+
+if regex:
+    answer = mathing(regex, talk)
+    print(str(answer))

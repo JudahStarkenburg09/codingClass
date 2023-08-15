@@ -34,9 +34,10 @@ root.config(bg='light gray')
 canvas = tk.Canvas(root, width = 1000, height = 1000, bg='light gray')
 canvas.pack()
 
-canvas.create_arc(50, 200, 105, 134, start=180, extent=180, fill=rColor1, outline='black', style='arc',width=1.5, tags=('beaker'))
-canvas.create_arc(50, 200, 105, 134, start=180, extent=180, fill=rColor1, outline='black', width=0, tags=('beaker'))
 
+canvas.create_arc(50, 200, 105, 134, start=180, extent=180, fill=rColor1, outline='black', width=1.5, tags=('beaker1'))
+canvas.create_line(51, 167, 104, 167, fill=rColor1, width=1.5, tags=('beaker1'))
+canvas.create_rectangle()
 
 
 
