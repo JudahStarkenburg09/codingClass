@@ -29,15 +29,18 @@ print(result)
 root = tk.Tk()
 root.geometry('500x300')
 root.title('Water Sort Puzzle')
-root.config(bg='light gray')
+root.config(bg='light gray')   
 
 canvas = tk.Canvas(root, width = 1000, height = 1000, bg='light gray')
 canvas.pack()
 
 
 canvas.create_arc(50, 200, 105, 134, start=180, extent=180, fill=rColor1, outline='black', width=1.5, tags=('beaker1'))
+canvas.create_rectangle(50, 127, 105, 167, fill=rColor2, width=1.5, outline='black', tags=('beaker'))
 canvas.create_line(51, 167, 104, 167, fill=rColor1, width=1.5, tags=('beaker1'))
-canvas.create_rectangle()
+canvas.create_rectangle(50, 87, 105, 127, fill=rColor3, width=1.5, outline='black', tags=('beaker'))
+canvas.create_line(51, 127, 104, 127, fill=rColor2, width=1.5, tags=('beaker1'))
+canvas.create_line(51, 87, 104, 87, fill=rColor3, width=1.5, tags=('beaker1'))
 
 
 

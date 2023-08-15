@@ -1,26 +1,55 @@
 import re
+import sympy
 
+def solve_expression(expression):
+    try:
+        x = sympy.symbols('x')
+        result = sympy.solve(expression, x)
+        return result
+    except:
+        return "Unable to solve the expression."
 
 def mathing(matches, talk):
+    responses = []
+    total = None
+
     for rmatch in matches:
-        match rmatch[1]:
-            case '+' | 'plus':
-                respondWith = (rmatch[0] + ' + ' + rmatch[2] + ' = ' + str(float(rmatch[0]) + (float(rmatch[2]))))
-            case '-' | 'minus':
-                respondWith = (rmatch[0] + ' - ' + rmatch[2] + ' = ' + str(float(rmatch[0]) - (float(rmatch[2]))))
-            case '*' | 'x' | 'times':
-                respondWith = (rmatch[0] + ' x ' + rmatch[2] + ' = ' + str(float(rmatch[0]) * (float(rmatch[2]))))
-            case '/' | 'divided' | 'divided by':
-                respondWith = (rmatch[0] + ' ÷ ' + rmatch[2] + ' = ' + str(float(rmatch[0]) / (float(rmatch[2]))))
-            case '^' | 'to the power of' | 'exponent' | '**':
-                respondWith = (rmatch[0] + '^' + rmatch[2] + ' = ' + str(float(rmatch[0]) ** (float(rmatch[2]))))
-    return respondWith
+        operand = float(rmatch[0])
+        operator = rmatch[1]
+
+        if total is None:
+            total = operand
+        elif operator in ('+', 'plus'):
+            total += operand
+        elif operator in ('-', 'minus'):
+            total -= operand
+        elif operator in ('*', 'x', 'times'):
+            total *= operand  # Fix: Update total using multiplication
+        elif operator in ('/', 'divided', 'divided by'):
+            if operand != 0:
+                total /= operand
+            else:
+                responses.append("Division by zero is undefined.")
+                continue
+        else:
+            responses.append("Unknown operator: " + operator)
+            continue
+
+    if total is not None:
+        responses.append(f"Total: {total}")
+
+    return responses
 
 talk = input("?: ")
 
-
-regex = re.findall(r'(\d*\.?\d+)\s*(\*|x|\/|\+|-|\^|\*\*|times|minus|plus|divide|divided by|to the power of|exponent)\s*(\d*\.?\d+)', talk)
+# Adjusted regular expression pattern to match multiple operands and operators
+regex = re.findall(r'(\d*\.?\d+)\s*(\*|x|\/|\+|-)\s*', talk)
 
 if regex:
-    answer = mathing(regex, talk)
-    print(str(answer))
+    responses = mathing(regex, talk)
+    for response in responses:
+        print(response)
+else:
+    algebraic_expression = sympy.sympify(talk)
+    solved_expression = solve_expression(algebraic_expression)
+    print("Solved:", solved_expression)
