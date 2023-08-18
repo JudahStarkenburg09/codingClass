@@ -18,14 +18,17 @@ def clear_selection():
     global selected, selectV1_button, selectV2_button, selectV3_button, selected
 
     selectV1_button.destroy()
-    selectV1_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(selected=1))
+    selectV1_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(1, selected))
     selectV1_button.place(x=40, y=20, width=80, height=30)
     selectV2_button.destroy()
-    selectV2_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(selected=2))
+    selectV2_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(2, selected))
     selectV2_button.place(x=140, y=20, width=80, height=30)
     selectV3_button.destroy()
-    selectV3_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(selected=3))
+    selectV3_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(3, selected))
     selectV3_button.place(x=240, y=20, width=80, height=30)
+    selectV4_button.destroy()
+    selectV4_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(4, selected))
+    selectV4_button.place(x=340, y=20, width=80, height=30)
 
 
     selected = None
@@ -33,45 +36,52 @@ def clear_selection():
 
 
 
-def select(selected):
-    global select, selectV1_button, selectV2_button, selectV3_button
+def select(selected, previouslySelected):
+    global select, selectV1_button, selectV2_button, selectV3_button, selectV4_button
+    
 
     pour()
-
+    
     selectV1_button.destroy()
-    selectV1_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(selected=1))
+    selectV1_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(1, selected))
     selectV1_button.place(x=40, y=20, width=80, height=30)
     selectV2_button.destroy()
-    selectV2_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(selected=2))
+    selectV2_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(2, selected))
     selectV2_button.place(x=140, y=20, width=80, height=30)
     selectV3_button.destroy()
-    selectV3_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(selected=3))
+    selectV3_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(3, selected))
     selectV3_button.place(x=240, y=20, width=80, height=30)
+    selectV4_button.destroy()
+    selectV4_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(4, selected))
+    selectV4_button.place(x=340, y=20, width=80, height=30)
+        
+
+
     
 
     if selected == 1:
         selectV1_button.destroy()
-        selectV1_button = tk.Button(root, text='Select', bg='green', command=lambda: select(selected=1))
+        selectV1_button = tk.Button(root, text='Select', bg='green', command=lambda: select(1, selected))
         selectV1_button.place(x=40, y=20, width=80, height=30)
     elif selected == 2:
         selectV2_button.destroy()
-        selectV2_button = tk.Button(root, text='Select', bg='green', command=lambda: select(selected=2))
+        selectV2_button = tk.Button(root, text='Select', bg='green', command=lambda: select(2, selected))
         selectV2_button.place(x=140, y=20, width=80, height=30)
     elif selected == 3:
         selectV3_button.destroy()
-        selectV3_button = tk.Button(root, text='Select', bg='green', command=lambda: select(selected=3))
+        selectV3_button = tk.Button(root, text='Select', bg='green', command=lambda: select(3, selected))
         selectV3_button.place(x=240, y=20, width=80, height=30)
     elif selected == 4:
-        ''
+        selectV4_button.destroy()
+        selectV4_button = tk.Button(root, text='Select', bg='green', command=lambda: select(4, selected))
+        selectV4_button.place(x=340, y=20, width=80, height=30)
 
 
     print(selected)
 
 def pour():
-    global select, selectV1_button, selectV2_button, selectV3_button, selected
-    if selected:
-        ''
-    selected = None
+    global select, selectV1_button, selectV2_button, selectV3_button, selected, selectV4_button
+    
 
 
 while True:
@@ -98,7 +108,7 @@ canvas.pack()
 
 # region beaker1
 
-selectV1_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(selected=1))
+selectV1_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(1, selected))
 selectV1_button.place(x=40, y=20, width=80, height=30)
 
 canvas.create_arc(50, 300, 105, 234, start=180, extent=180, fill=rColor1, outline='black', width=1.5, tags=('beaker1')) #bottom
@@ -119,7 +129,7 @@ canvas.move('beaker1', 0, 0)
 
 # region beaker2
 
-selectV2_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(selected=2))
+selectV2_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(2, selected))
 selectV2_button.place(x=140, y=20, width=80, height=30)
 
 canvas.create_arc(50, 300, 105, 234, start=180, extent=180, fill=rColor5, outline='black', width=1.5, tags=('beaker2')) #bottom
@@ -142,7 +152,7 @@ canvas.move('beaker2', 100, 0)
 
 # region beaker3
 
-selectV3_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(selected=3))
+selectV3_button = tk.Button(root, text='Select', bg='gray', command=lambda: select(3, selected))
 selectV3_button.place(x=240, y=20, width=80, height=30)
 
 canvas.create_arc(50, 300, 105, 234, start=180, extent=180, fill=rColor9, outline='black', width=1.5, tags=('beaker3')) #bottom
@@ -163,6 +173,9 @@ canvas.move('beaker3', 200, 0)
 # endregion
 
 # region beaker4
+
+selectV4_button = tk.Button(root, text='Select', bg='green', command=lambda: select(4, selected))
+selectV4_button.place(x=340, y=20, width=80, height=30)
 
 canvas.create_arc(50, 300, 105, 234, start=180, extent=180, fill=rColor13, outline='black', width=1.5, tags=('beaker4')) #bottom
 canvas.create_rectangle(50, 227, 105, 267, fill=rColor14, width=1.5, outline='black', tags=('beaker4')) #2nd layer
