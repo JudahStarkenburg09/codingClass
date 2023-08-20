@@ -11,6 +11,10 @@ import random
 colors = ['red', 'orange', 'yellow', 'blue']
 color_counts = {color: 0 for color in colors}
 color_limit = 4
+redcount = 0
+orangecount = 0
+yellowcount = 0
+bluecount = 0
 
 result = []
 selected = None
