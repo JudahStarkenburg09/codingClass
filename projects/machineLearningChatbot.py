@@ -142,11 +142,12 @@ class BotBrain:
         self.memory.append(memory_entry)
         print(self.memory)
 
-    def storeMemory(self):
-        global user_input
+    def storeMemory(self, user_input):
         groups = re.search(f'{memoryRegex}', user_input)
         Newmemory = groups.group(1)
         typeMemory = groups.group(0)
+        print(Newmemory)
+        print(typeMemory)
         bot.saveNewMemory(user_input, Newmemory, typeMemory)
 
     def get_matching_response(self, user_input):
