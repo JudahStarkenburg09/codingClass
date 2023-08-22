@@ -872,6 +872,7 @@ def chatbot_response(talk, untalk):
             regexMatches = re.findall(response['regex'], untalk) 
             if regexMatches:
                 if "action" in response:
+                    print(globals())
                     func = globals()[response['action']]
                     return func(regexMatches, talk)
                 elif "responses" in response:  
