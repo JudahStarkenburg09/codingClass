@@ -143,12 +143,15 @@ class BotBrain:
         print(self.memory)
 
     def storeMemory(self, user_input):
-        groups = re.search(f'{memoryRegex}', user_input)
-        Newmemory = groups.group(1)
-        typeMemory = groups.group(0)
-        print(Newmemory)
-        print(typeMemory)
-        bot.saveNewMemory(user_input, Newmemory, typeMemory)
+        groups = re.search(memoryRegex, user_input)
+        if groups:
+            Newmemory = groups.group(2)
+            typeMemory = groups.group(1)
+            print(Newmemory)
+            print(typeMemory)
+            bot.saveNewMemory(user_input, Newmemory, typeMemory)
+        else:
+            print("No match found.")
 
     def get_matching_response(self, user_input):
         for item in self.responsesInputs:
@@ -156,19 +159,21 @@ class BotBrain:
                 if "response" in item:
                     return item["response"]
                 elif "action" in item:
-                    func = getattr(self,item['action'])
+                    func = getattr(self, item['action'])
                     return func(user_input)
-        return None
+        return None  # Change this to return response instead of None
+
 
     def process_input(self, user_input):
         response = self.get_matching_response(user_input)
-        if not None:
+        if response is not None:  # Corrected condition here
             if isinstance(response, list):
                 return response[0]
             elif callable(response):
                 return response(user_input)
             else:
                 return "I'm sorry, I didn't understand that."
+
 
     def runJokes(self, user_input):
         selected_joke = random.choice(self.allJokes)
@@ -191,4 +196,5 @@ while True:
         print(f"{botText}Goodbye!")
         break
     botResponse = bot.process_input(yourInput)
-    print(botText, botResponse)
+    if botResponse is not None:
+        print(botText, botResponse)
