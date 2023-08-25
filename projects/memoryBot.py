@@ -2,6 +2,7 @@
 from termcolor import cprint, colored
 import re
 import requests
+import datetime
 
 youText = colored('?: ', 'blue')
 
@@ -9,7 +10,7 @@ class Store:
     def __init__(self):
         self.url = "https://languagetool.org/api/v2/check"
         self.language = "en-US"  # Change this if needed
-
+        self.memoryBank = []
         self.newInput = ""
         self.category_patterns = {
             "name": ["my name is"],
@@ -27,10 +28,46 @@ class Store:
     def memoryEntry(self, newInput):
         self.newInput = newInput
         self.memory = self.extract_info(self.newInput)
+        self.current_time = datetime.datetime.now()
+        self.formatted_time = f"{self.current_time.year}/{self.current_time.month}/{self.current_time.day} {self.current_time.hour}:{self.current_time.minute}:{self.current_time.second}"
+        if not self.memory == None:
+            print(self.memory)
+            mt, m = self.memory
+            print(mt)
+            print(m)
+            self.memoryToAdd = {
+                "type": f"{mt}",
+                "memory": f"{m}",
+                "timestamp": f"{self.formatted_time}",
+            }
+            self.memoryBank.append(self.memoryToAdd)
+            print(self.memoryBank)
+            return self.memory
+        else:
+            return self.memory
         
+    def find_closest_memory(self, groupCheck):
+        if not self.memoryBank:
+            print("Memory bank is empty.")
+            return None
 
+        current_time = datetime.datetime.now()
+        closest_memory = None
+        closest_time_difference = float('inf')  # Initialize with a very large value
 
-        return self.memory
+        for memory_entry in self.memoryBank:
+            if memory_entry['type'] == groupCheck:
+                entry_timestamp = datetime.datetime.strptime(memory_entry['timestamp'], '%Y/%m/%d %H:%M:%S')
+                time_difference = abs((current_time - entry_timestamp).total_seconds())
+
+                if time_difference < closest_time_difference:
+                    closest_time_difference = time_difference
+                    closest_memory = memory_entry
+
+        if closest_memory:
+            return closest_memory
+        else:
+            return f"No memories with group {groupCheck}"
 
     def extract_info(self, phrase):
         lower_phrase = phrase.lower()
@@ -96,18 +133,26 @@ class Store:
         return any(char.isdigit() for char in text)
 
 thoughts = Store()
-
 while True:
-    newInput = input(youText)
-    if newInput.strip() == "":
-        print("No input provided.")
-        continue
-    
-    infoReceived = thoughts.memoryEntry(newInput)
-    if infoReceived:
-        category, info = infoReceived
-        response = f"('{category}', '{info}')"
-        response = re.sub(r"\b(i)\b", '', response, flags=re.IGNORECASE)
-    else:
-        response = "No matching pattern found."
-    print(response)
+    while True:
+        newInput = input(youText)
+        if newInput.strip() == "":
+            print("No input provided.")
+            continue
+        
+        infoReceived = thoughts.memoryEntry(newInput)
+        if infoReceived:
+            category, info = infoReceived
+            response = f"('{category}', '{info}')"
+            response = re.sub(r"\b(i)\b", '', response, flags=re.IGNORECASE)
+        else:
+            response = "No matching pattern found."
+        # print(response)
+
+        if 'y' in input("y/n: "):
+            break
+
+    textToRespondForTest = thoughts.find_closest_memory(input("Check for closest group: "))
+    print(textToRespondForTest)
+
+
