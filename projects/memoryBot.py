@@ -12,17 +12,26 @@ class Store:
         self.language = "en-US"  # Change this if needed
         self.memoryBank = []
         self.newInput = ""
+        self.categoriesWithMatches = {"category": "likes", "responseCat": "likes",
+                                       "category": "has", "responseCat": "has", }
         self.category_patterns = {
             "name": ["my name is"],
             "age": ["i am"],
             "likes": ["i like"],
             "friend": ["friend is", "is my friend"],
+            "dad": ["is my dad", "my dad is", "my dads name is"],
+            "mom": ["is my mom", "my mom is", "my moms name is"],
+            "brother": ["is my brother", "my brother is", "my brothers name is"],
+            "sister": ["is my sister", "my sister is", "my sisters name is"],
+            "sibling": ["is my sibling", "my sibling is ", "my siblings name is"],
+            "has": ["have"]
             # Add more categories and corresponding patterns here
         }
         self.separator_patterns = {
             "is": [" is "],
             "are": [" are "],
-            "am": [" am "]
+            "am": [" am "],
+            "has": [" have "]
         }
 
     def memoryEntry(self, newInput):
@@ -71,7 +80,7 @@ class Store:
 
     def extract_info(self, phrase):
         lower_phrase = phrase.lower()
-
+        lower_phrase = re.sub(r"[^\w\d\s]", "", lower_phrase)
         for category, cat_patterns in self.category_patterns.items():
             for cat_pattern in cat_patterns:
                 if cat_pattern in lower_phrase:
@@ -80,6 +89,18 @@ class Store:
                     info = info.replace("years old", "").strip()
                     if category == 'friend':
                         category = 'friend'
+                    elif category == "dad":
+                        category = "dad"
+                    elif category == "mom":
+                        category = 'mom'
+                    elif category == 'has':
+                        category = 'has'
+                    elif category == 'brother':
+                        category = 'brother'
+                    elif category == 'sister':
+                        category = 'sister'
+                    elif category == 'sibling':
+                        category = 'sibling'
                     elif category == 'likes':
                         category = 'likes'
                     elif category == "name":
@@ -136,6 +157,7 @@ thoughts = Store()
 while True:
     while True:
         newInput = input(youText)
+        newInput = re.sub(r"[^\w\d\s]", "", newInput)
         if newInput.strip() == "":
             print("No input provided.")
             continue
