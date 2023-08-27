@@ -15,9 +15,9 @@ class Store:
         self.categoriesWithMatches = {"category": "likes", "responseCat": "likes",
                                        "category": "has", "responseCat": "has", }
         self.category_patterns = {
-            "name": ["my name is"],
-            "age": ["i am"],
-            "likes": ["i like"],
+            "name": ["my name is", 'is my name'],
+            "age": ["i am", "im", "my age is"], 
+            "likes": ["i like", "is something i like", "are something i like", "enjoy"],
             "friend": ["friend is", "is my friend"],
             "dad": ["is my dad", "my dad is", "my dads name is"],
             "mom": ["is my mom", "my mom is", "my moms name is"],
@@ -47,6 +47,7 @@ class Store:
             self.memoryToAdd = {
                 "type": f"{mt}",
                 "memory": f"{m}",
+                "statement": f"{newInput}",
                 "timestamp": f"{self.formatted_time}",
             }
             self.memoryBank.append(self.memoryToAdd)
@@ -115,6 +116,8 @@ class Store:
                         category = "is"
                         info = info.replace("i", "").strip()
                     
+                    info = re.sub(r"\b(is something|are something)\b", "", info).strip()  # Removing "is something" or "are something"
+                    
                     return category, info
         return None
     
@@ -143,7 +146,8 @@ class Store:
     def contains_integer_or_number_word(self, text):
         number_words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
                         "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"]
-        return any(char.isdigit() for char in text) or any(word in text for word in number_words)
+        return any(char.isdigit() for char in text) or any(word.lower() in text.lower() for word in number_words)
+
 
     def remove_standalone_words(self, text, words):
         for word in words:
@@ -176,5 +180,7 @@ while True:
 
     textToRespondForTest = thoughts.find_closest_memory(input("Check for closest group: "))
     print(textToRespondForTest)
+
+
 
 

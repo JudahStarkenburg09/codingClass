@@ -1,200 +1,46 @@
-import re
-import random
-import time
-from termcolor import cprint, colored
+import pandas as pd
+import numpy as np
+import json
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
+#https://docs.google.com/spreadsheets/d/1Mij_-YI-a8L3ok-i7zKapqAjW_860tXX5qxksnelZlk/edit#gid=0
 
-memoryRegex = '^(i am|my name is|i like)(.*)$'
+from MLdatasetAugust26 import data
 
-class BotBrain:
-    global botText, userInput, memoryRegex
-    def __init__(self):
-        self.responsesInputs = [
-            {
-                "input": "^(hello|hi|hi there|what's up|sup)$",
-                "response": ["Hello!", "Hi there!"],
-            },
-            {
-                "input": f"{memoryRegex}",
-                "action": "storeMemory",
-            },
-            {
-                "input": "^(how are you|how's it going|how are you doing)$",
-                "response": ["I'm doing well, thank you!", "I'm here and ready to help!"],
-            },
-            {
-                "input": "^(bye|goodbye|see you later|farewell)$",
-                "response": ["Goodbye!", "Take care!"],
-            },
-            {
-                "input": "^(tell me a joke|say something funny)$",
-                "action": "runJokes",
-            },
-            # Add more regular expressions and responses/actions here
-        ]
+# Convert data to a pandas DataFrame
+df = pd.DataFrame(data)
 
-        self.allJokes = [
-            {
-                "joke": 'Why did the tomato turn red?',
-                "secondResponse": 'Because it saw the salad dressing!'
-            },
-            {
-                "joke": 'Why do bicycles fall over?',
-                "secondResponse": 'Because they’re two-tired!'
-            },
-            {
-                "joke": 'Why did the cookie go to the doctor?',
-                "secondResponse": 'Because it was feeling crumbly!'
-            },
-            {
-                "joke": 'Why did the hipster burn his tongue?',
-                "secondResponse": 'He drank his coffee before it was cool!'
-            },
-            {
-                "joke": 'What do you call fake spaghetti?',
-                "secondResponse": 'An impasta!'
-            },
-            {
-                "joke": 'Why don’t scientists trust atoms?',
-                "secondResponse": 'Because they make up everything!'
-            },
-            {
-                "joke": 'What do you call a belt made out of watches?',
-                "secondResponse": 'A waist of time!'
-            },
-            {
-                "joke": 'Why did the gym close down?',
-                "secondResponse": 'It just didn’t work out!'
-            },
-            {
-                "joke": 'What’s the difference between a poorly dressed man on a trampoline and a well-dressed man on a trampoline?',
-                "secondResponse": 'Attire!'
-            },
-            {
-                "joke": 'Why don’t oysters share their pearls?',
-                "secondResponse": 'Because they’re shellfish!'
-            },
-            {
-                "joke": 'Why did the banana go to the doctor?',
-                "secondResponse": 'Because it wasn’t peeling well!'
-            },
-            {
-                "joke": 'Why did the mushroom go to the party?',
-                "secondResponse": 'Because he was a fungi to be with!'
-            },
-            {
-                "joke": 'Why did the coffee file a police report?',
-                "secondResponse": 'It got mugged!'
-            },
-            {
-                "joke": 'What do you get when you cross a snowman and a shark?',
-                "secondResponse": 'Frostbite!'
-            },
-            {
-                "joke": 'Why don’t scientists trust atoms?',
-                "secondResponse": 'Because they make up everything!'
-            },
-            {   
-                "joke": 'Why did the golfer wear two pairs of pants?',
-                "secondResponse": 'In case he got a hole in one!'
-            },
-            {
-                "joke": 'Why do fish live in saltwater?',
-                "secondResponse": 'Because pepper water makes them sneeze!'
-            },
-            {
-                "joke": 'Why did the cookie go to the doctor?',
-                "secondResponse": 'Because it was feeling crumbly!'
-            },
-            {
-                "joke": 'Why did the chicken cross the playground?',
-                "secondResponse": 'To get to the other slide!'
-            },
-            {
-                "joke": 'Why did the tomato turn red?',
-                "secondResponse": 'Because it saw the salad dressing!'
-            },
-            {
-                "joke": 'Why did the teddy bear say no to dessert?',
-                "secondResponse": 'Because she was already stuffed!'
-            },
-            {
-                "joke": 'Why did the scarecrow win an award?',
-                "secondResponse": 'Because he was outstanding in his field!'
-            },
-            {
-                "joke": 'Why don’t skeletons fight each other?',
-                "secondResponse": 'They don’t have the guts!'
-            },
-            {
-                "joke": 'How did the scarecrow win the talent show?',
-                "secondResponse": 'He was outstanding in his field',
-            }
-        ]
-    
-        self.memory = []  # List to store user inputs and memories
-    
-    def saveNewMemory(self, user_input, Newmemory, typeMemory):
-        memory_entry = {
-            "type": typeMemory,  # Replace with the appropriate type
-            "mem": Newmemory,
-        }
-        self.memory.append(memory_entry)
-        print(self.memory)
+# Preprocess the data
+df['statement'] = df['array'].apply(lambda x: json.loads(x)[0]['statement'].lower())  # Convert to lowercase
 
-    def storeMemory(self, user_input):
-        groups = re.search(memoryRegex, user_input)
-        if groups:
-            Newmemory = groups.group(2)
-            typeMemory = groups.group(1)
-            print(Newmemory)
-            print(typeMemory)
-            bot.saveNewMemory(user_input, Newmemory, typeMemory)
-        else:
-            print("No match found.")
+# Create a TF-IDF vectorizer
+vectorizer = TfidfVectorizer()
+tfidf_matrix = vectorizer.fit_transform(df['statement'])
+tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=vectorizer.get_feature_names_out())
+df = pd.concat([df, tfidf_df], axis=1)
 
-    def get_matching_response(self, user_input):
-        for item in self.responsesInputs:
-            if re.match(item["input"], user_input, re.IGNORECASE):
-                if "response" in item:
-                    return item["response"]
-                elif "action" in item:
-                    func = getattr(self, item['action'])
-                    return func(user_input)
-        return None  # Change this to return response instead of None
+# Calculate cosine similarities
+similarities = cosine_similarity(df.drop(['array', 'ideal response'], axis=1))
 
+# Function to find the most similar ideal response
+def find_ideal_response(statement_vector):
+    similar_index = np.argmax(similarities[df.index, :], axis=1)
+    most_similar_response = df.loc[similar_index, 'ideal response'].values
+    return most_similar_response
 
-    def process_input(self, user_input):
-        response = self.get_matching_response(user_input)
-        if response is not None:  # Corrected condition here
-            if isinstance(response, list):
-                return response[0]
-            elif callable(response):
-                return response(user_input)
-            else:
-                return "I'm sorry, I didn't understand that."
+# Test with examples
+examples = [
+    {'type': 'age', 'array': "[{'type': 'age', 'memory': '35', 'statement': 'i am 35 years old','timestamp': '2023/8/26 17:5:9'}]"},
+    # ... add more examples here
+]
 
-
-    def runJokes(self, user_input):
-        selected_joke = random.choice(self.allJokes)
-        joke_setup = selected_joke["joke"]
-        joke_punchline = selected_joke["secondResponse"]
-        
-        print(botText, joke_setup)
-        time.sleep(2)  # Pause for 2 seconds
-        print(joke_punchline)
-        return None
-
-# Creating an instance of the BotBrain class
-bot = BotBrain()
-
-botText = colored("Bot: ", 'red')
-
-while True:
-    yourInput = input(colored("You: ", 'blue'))
-    if yourInput.lower() == "exit":
-        print(f"{botText}Goodbye!")
-        break
-    botResponse = bot.process_input(yourInput)
-    if botResponse is not None:
-        print(botText, botResponse)
+for example in examples:
+    example_vector = vectorizer.transform([json.loads(example['array'])[0]['statement'].lower()])
+    most_similar_responses = find_ideal_response(example_vector)
+    print(f"Example: {json.loads(example['array'])[0]['statement']}")
+    if len(most_similar_responses) > 0:
+        print(f"Ideal Response: {most_similar_responses[0]}")
+    else:
+        print("Ideal Response: No ideal response found")
+    print()
