@@ -28,18 +28,15 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
-    for v in range(3):
-        for h in range(15):
-            pygame.draw.rect(h * 10 + 10, v * 10 + 10)
-
-
-
-    time.sleep(.01)
     screen.fill(dGray)
-    pygame.display.update()
 
+    for layer in range(3):
+        for v in range(0, height // 5):
+            for h in range(0, width // 5):
+                pygame.draw.rect(screen, (255, 255, 255), (h * 5 + layer * 3, v * 5 + layer * 3, 5, 5))
 
+    time.sleep(0.01)
+    pygame.display.flip()
 
-
+# Quit pygame
 pygame.quit()
