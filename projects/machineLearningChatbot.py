@@ -4,15 +4,25 @@ import json
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-#https://docs.google.com/spreadsheets/d/1Mij_-YI-a8L3ok-i7zKapqAjW_860tXX5qxksnelZlk/edit#gid=0
-
-from MLdatasetAugust26 import data
+from MLdatasetAugust27 import data
 
 # Convert data to a pandas DataFrame
 df = pd.DataFrame(data)
 
 # Preprocess the data
-df['statement'] = df['array'].apply(lambda x: json.loads(x)[0]['statement'].lower())  # Convert to lowercase
+def extract_statement(entry):
+    try:
+        if isinstance(entry, list) and len(entry) > 0 and 'statement' in entry[0]:
+            return entry[0]['statement'].lower()
+        elif isinstance(entry, str):
+            parsed_entry = json.loads(entry)
+            if isinstance(parsed_entry, list) and len(parsed_entry) > 0 and 'statement' in parsed_entry[0]:
+                return parsed_entry[0]['statement'].lower()
+        return ""
+    except (json.JSONDecodeError, KeyError):
+        return ""
+
+df['statement'] = df['array'].apply(extract_statement)  # Convert to lowercase
 
 # Create a TF-IDF vectorizer
 vectorizer = TfidfVectorizer()
@@ -21,7 +31,8 @@ tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=vectorizer.get_feature_n
 df = pd.concat([df, tfidf_df], axis=1)
 
 # Calculate cosine similarities
-similarities = cosine_similarity(df.drop(['array', 'ideal response'], axis=1))
+numeric_columns = df.drop(['array', 'ideal response', 'type', 'statement'], axis=1)
+similarities = cosine_similarity(numeric_columns)
 
 # Function to find the most similar ideal response
 def find_ideal_response(statement_vector):
