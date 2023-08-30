@@ -1,8 +1,15 @@
+import java.util.*;
+
+
 public class Test
 {
-   public static void main(String[] args)
+   
+   public static void main(String args[])
    {
-      System.out.print("Hello");
-      System.out.println( "World"); // println means print line, therefore printing on same line as before
+      List<String> list1 = new ArrayList<String>();
+      list1.add("Hello");
+      System.out.print(list1);
+      System.out.println(list1);
+
    }
 }
