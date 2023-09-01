@@ -533,7 +533,7 @@ def animate():
     #     pygame.mixer.music.stop()
         
     # accelerating = roadSpeed
-    
+
     if speedObstacle1 == speedObstacle2 and speedObstacle2 == speedObstacle3 and gameJustStarted == True:
         errorWithGame = True
         print("A Bug Has Been Fixed!")

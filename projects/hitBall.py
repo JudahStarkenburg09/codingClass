@@ -1,13 +1,14 @@
 import pygame
 import sys
+import math
 
 # Initialize pygame
 pygame.init()
 
 # Screen settings
-screen_width = 800
-screen_height = 600
-screen = pygame.display.set_mode((screen_width, screen_height))
+screenWidth = 800
+screenHeight = 600
+screen = pygame.display.set_mode((screenWidth, screenHeight))
 pygame.display.set_caption("Ball Game")
 
 # Colors
@@ -15,18 +16,19 @@ white = (255, 255, 255)
 red = (255, 0, 0)
 
 # Line settings
-line_width = 120
-line_height = 10
-line_speed = 5
-line_x = screen_width // 2 - line_width // 2
-line_y = screen_height - line_height
+paddleWidth = 120
+paddleHeight = 10
+paddleSpeed = 7
+paddleX = screenWidth // 2 - paddleWidth // 2
+paddleY = screenHeight - paddleHeight
+paddleRotation = 0  # Initial rotation angle
 
 # Ball settings
-ball_radius = 20
-ball_speed_x = 5
-ball_speed_y = 5
-ball_x = screen_width // 2
-ball_y = screen_height // 2
+ballRadius = 20
+ballSpeedX = paddleSpeed - 2
+ballSpeedY = paddleSpeed - 2
+ballX = screenWidth // 2
+ballY = screenHeight // 2
 
 # Main game loop
 while True:
@@ -38,49 +40,56 @@ while True:
     # Get user input
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
-        line_x -= line_speed
+        paddleX -= paddleSpeed
     if keys[pygame.K_RIGHT]:
-        line_x += line_speed
+        paddleX += paddleSpeed
     if keys[pygame.K_UP]:
-        line_y -= line_speed
+        paddleY -= paddleSpeed
     if keys[pygame.K_DOWN]:
-        line_y += line_speed
+        paddleY += paddleSpeed
+
+    # Rotation controls
+    if keys[pygame.K_RCTRL]:
+        paddleRotation += 2  # Rotate counter-clockwise
+    if keys[pygame.K_KP0]:
+        paddleRotation -= 2  # Rotate clockwise
 
     # Update ball position
-    ball_x += ball_speed_x
-    ball_y += ball_speed_y
+    ballX += ballSpeedX
+    ballY += ballSpeedY
 
     # Ball collision with walls
-    if ball_x <= 0+ball_radius or ball_x >= screen_width-ball_radius:
-        ball_speed_x = -ball_speed_x
-    if ball_y <= 0 or ball_y >= screen_height:
-        ball_speed_y = -ball_speed_y
-
-    # Ball collision with line
-    if (
-        line_x <= (ball_x + ball_radius) <= line_x + line_width
-        and line_y <= ball_y+ball_radius <= line_y + line_height
-    ):
-        ball_speed_y = -ball_speed_y
+    if ballX <= ballRadius or ballX >= screenWidth - ballRadius:
+        ballSpeedX = -ballSpeedX
+    if ballY <= ballRadius or ballY >= screenHeight - ballRadius:
+        ballSpeedY = -ballSpeedY
 
     # Line collision with walls
-    if line_x <= 0:
-        line_x = 0
-    if line_x + line_width >= screen_width:
-        line_x = screen_width - line_width
-    if line_y <= 0:
-        line_y = 0
-    if line_y + line_height >= screen_height:
-        line_y = screen_height - line_height
+    if paddleX <= 0:
+        paddleX = 0
+    if paddleX + paddleWidth >= screenWidth:
+        paddleX = screenWidth - paddleWidth
+    if paddleY <= 0:
+        paddleY = 0
+    if paddleY + paddleHeight >= screenHeight:
+        paddleY = screenHeight - paddleHeight
 
     # Clear the screen
     screen.fill(white)
 
-    # Draw the line
-    pygame.draw.rect(screen, red, (line_x, line_y, line_width, line_height))
+    # Draw the rotating paddle
+    rotated_paddle = pygame.transform.rotate(pygame.Surface((paddleWidth, paddleHeight)), paddleRotation)
+    paddle_rect = rotated_paddle.get_rect(center=(paddleX + paddleWidth // 2, paddleY + paddleHeight // 2))
+    screen.blit(rotated_paddle, paddle_rect.topleft)
 
     # Draw the ball
-    pygame.draw.circle(screen, red, (ball_x, ball_y), ball_radius)
+    ball = pygame.draw.circle(screen, red, (ballX, ballY), ballRadius)
+
+    # Create a Rect object for the ball
+    ball_rect = pygame.Rect(ballX - ballRadius, ballY - ballRadius, ballRadius * 2, ballRadius * 2)
+
+    if ball_rect.colliderect(paddle_rect):
+        ballSpeedY = -ballSpeedY
 
     # Update the display
     pygame.display.update()
