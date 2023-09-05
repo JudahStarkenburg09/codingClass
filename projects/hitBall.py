@@ -30,6 +30,11 @@ ballSpeedY = paddleSpeed - 2
 ballX = screenWidth // 2
 ballY = screenHeight // 2
 
+# Load the paddle image and initialize its rect
+paddle_image = pygame.Surface((paddleWidth, paddleHeight), pygame.SRCALPHA)
+pygame.draw.rect(paddle_image, (0, 0, 0, 0), (0, 0, paddleWidth, paddleHeight))
+original_paddle = pygame.draw.rect(paddle_image, red, (0, 0, paddleWidth, paddleHeight))
+
 # Main game loop
 while True:
     for event in pygame.event.get():
@@ -77,10 +82,12 @@ while True:
     # Clear the screen
     screen.fill(white)
 
-    # Draw the rotating paddle
-    rotated_paddle = pygame.transform.rotate(pygame.Surface((paddleWidth, paddleHeight)), paddleRotation)
-    paddle_rect = rotated_paddle.get_rect(center=(paddleX + paddleWidth // 2, paddleY + paddleHeight // 2))
-    screen.blit(rotated_paddle, paddle_rect.topleft)
+    # Rotate the paddle image
+    rotated_paddle = pygame.transform.rotate(paddle_image, paddleRotation)
+    rotated_paddle_rect = rotated_paddle.get_rect(center=(paddleX + paddleWidth // 2, paddleY + paddleHeight // 2))
+
+    # Draw the rotated paddle
+    screen.blit(rotated_paddle, rotated_paddle_rect.topleft)
 
     # Draw the ball
     ball = pygame.draw.circle(screen, red, (ballX, ballY), ballRadius)
@@ -88,8 +95,8 @@ while True:
     # Create a Rect object for the ball
     ball_rect = pygame.Rect(ballX - ballRadius, ballY - ballRadius, ballRadius * 2, ballRadius * 2)
 
-    if ball_rect.colliderect(paddle_rect):
-        ballSpeedY = -ballSpeedY
+    if ball_rect.colliderect(rotated_paddle_rect):
+        ballSpeedY = -ballSpeedY  # Reverse the ball's vertical direction upon collision with the paddle
 
     # Update the display
     pygame.display.update()
