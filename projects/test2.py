@@ -1,205 +1,160 @@
-# pip install requests
-from termcolor import cprint, colored
-import re
-import requests
-import datetime
+import pygame
+import sys
+import math
+import random
 
-youText = colored('?: ', 'blue')
+# Initialize Pygame
+pygame.init()
 
-class Store:
-    def __init__(self):
-        self.url = "https://languagetool.org/api/v2/check"
-        self.language = "en-US"  # Change this if needed
-        self.memoryBank = []
-        self.newInput = ""
-        self.categoriesWithMatches = {"category": "likes", "responseCat": "likes",
-                                       "category": "has", "responseCat": "has", }
-        self.category_patterns = {
-            "name": ["my name is"],
-            "age": ["i am", "im", "my age is"],
-            "likes": ["i like"],
-            "friend": ["friend is", "is my friend"],
-            "dad": ["is my dad", "my dad is", "my dads name is"],
-            "mom": ["is my mom", "my mom is", "my moms name is"],
-            "brother": ["is my brother", "my brother is", "my brothers name is"],
-            "sister": ["is my sister", "my sister is", "my sisters name is"],
-            "sibling": ["is my sibling", "my sibling is ", "my siblings name is"],
-            "has": ["have"]
-            # Add more categories and corresponding patterns here
-        }
-        self.separator_patterns = {
-            "is": [" is "],
-            "are": [" are "],
-            "am": [" am "],
-            "has": [" have "]
-        }
+rotation_slowdown = 0
+rotation_speed = 0
+item_list = ["Item 1", "Item 2", "Item 3"]
+# Rotation speed (in degrees per frame)
 
-    def memoryEntry(self, newInput):
-        self.newInput = newInput
-        self.memory = self.extract_info(self.newInput)
-        self.current_time = datetime.datetime.now()
-        self.formatted_time = f"{self.current_time.year}/{self.current_time.month}/{self.current_time.day} {self.current_time.hour}:{self.current_time.minute}:{self.current_time.second}"
-        if not self.memory == None:
-            print(self.memory)
-            mt, m = self.memory
-            print(mt)
-            print(m)
-            self.memoryToAdd = {
-                "type": f"{mt}",
-                "memory": f"{m}",
-                "statement": f"{newInput}",
-                "timestamp": f"{self.formatted_time}",
-            }
-            self.memoryBank.append(self.memoryToAdd)
-            print(self.memoryBank)
-            return self.memory
-        else:
-            return self.memory
-        
-    def find_closest_memory(self, groupCheck):
-        if not self.memoryBank:
-            print("Memory bank is empty.")
-            return None
 
-        current_time = datetime.datetime.now()
-        closest_memory = None
-        closest_time_difference = float('inf')  # Initialize with a very large value
+def spin(item_list, rotation_speed, rotation_slowdown):
+    slows = [
+        {
+        "input": 1,
+        "slowdown": .001,
+        },
+        {
+        "input": 2,
+        "slowdown": .0005,
+        },
+        {
+        "input": 3,
+        "slowdown": .0001,
+        },
+        {
+        "input": 4,
+        "slowdown": .00005,
+        },
+        {
+        "input": 5,
+        "slowdown": .00001,
+        },
+    ]
+    speeds = [
+        {
+            "input": 1,
+            "speed": 2,
+        },
+        {
+            "input": 2,
+            "speed": 2,
+        },
+        {
+            "input": 3,
+            "speed": 3,
+        },
+        {
+            "input": 4,
+            "speed": 3,
+        },
+        {
+            "input": 5,
+            "speed": 4,
+        },
+    ]
 
-        for memory_entry in self.memoryBank:
-            if memory_entry['type'] == groupCheck:
-                entry_timestamp = datetime.datetime.strptime(memory_entry['timestamp'], '%Y/%m/%d %H:%M:%S')
-                time_difference = abs((current_time - entry_timestamp).total_seconds())
+    rotation_objects = input("Enter 'speed , time': ")
 
-                if time_difference < closest_time_difference:
-                    closest_time_difference = time_difference
-                    closest_memory = memory_entry
-
-        if closest_memory:
-            return closest_memory
-        else:
-            return f"No memories with group {groupCheck}"
-
-    def extract_info(self, phrase):
-        lower_phrase = phrase.lower()
-        lower_phrase = re.sub(r"[^\w\d\s]", "", lower_phrase)
-        for category, cat_patterns in self.category_patterns.items():
-            for cat_pattern in cat_patterns:
-                if cat_pattern in lower_phrase:
-                    category_info = re.sub(cat_pattern, "", phrase, flags=re.IGNORECASE).strip()
-                    info = re.sub(r'\b(am|i|my)\b', '', category_info, flags=re.IGNORECASE).strip()
-                    info = info.replace("years old", "").strip()
-                    if category == 'friend':
-                        category = 'friend'
-                    elif category == "dad":
-                        category = "dad"
-                    elif category == "mom":
-                        category = 'mom'
-                    elif category == 'has':
-                        category = 'has'
-                    elif category == 'brother':
-                        category = 'brother'
-                    elif category == 'sister':
-                        category = 'sister'
-                    elif category == 'sibling':
-                        category = 'sibling'
-                    elif category == 'likes':
-                        category = 'likes'
-                    elif category == "name":
-                        return category, info
-                    elif self.contains_integer_or_number_word(info):
-                        category = "age"
-                        info = self.convert_number_words_to_integer(info)  # Convert number words to integers
-                    elif category == "age" and self.contains_integer(info):
-                        category = "age"
-                    else:
-                        category = "is" if category == "age" else "are"
-                    if info.lower() == "i" and "i " in category_info:
-                        category = "is"
-                        info = info.replace("i", "").strip()
-
-                    return category, info
-        return None
+    # Remove spaces and split the input by comma
+    rotation_objects = rotation_objects.replace(" ", "").split(",")
+    chose = False
+    for i in slows:
+        print(str(i["input"]) + " =? " + rotation_objects[1])
+        if rotation_objects[1] == str(i["input"]):
+            rotation_slowdown = i["slowdown"] + random.uniform(0, 0.0001)
+            chose = True
+            print("found")
+    if chose == False:
+        return "Time must be 1-5!"
     
-    def correct_grammar(self, textToChange):
-        data = {
-            "text": textToChange,
-            "language": self.language,
-        }
+    chose = False
+    for d in speeds:
+        if rotation_objects[0] == str(d["input"]):
+            rotation_speed = d["speed"] + random.uniform(0, 0.05)
+            chose = True
+    if chose == False:
+        return "Speed must be 1-5!"
+    
+    print(rotation_speed, rotation_slowdown)
+
+
+
+    width, height = 800, 600
+    screen = pygame.display.set_mode((width, height))
+    pygame.display.set_caption("Rotating Circle with Items")
+
+    # Define colors
+    white = (255, 255, 255)
+    black = (0, 0, 0)
+
+    # Circle properties
+    circle_radius = 200
+    circle_center = (width // 2, height // 2)
+
+    # Line properties
+    num_lines = len(item_list)
+
+    # Define the initial rotation angle
+    rotation_angle = 0
+
+    # Create a surface for the circle with lines
+    circle_surface = pygame.Surface((circle_radius * 2, circle_radius * 2), pygame.SRCALPHA)
+
+    # Draw the lines inside the circle and place items between the lines
+    for i in range(num_lines):
+        angle = (360 / num_lines) * i
+        x1 = circle_radius
+        y1 = circle_radius
+        x2 = circle_radius + circle_radius * math.cos(math.radians(angle))
+        y2 = circle_radius + circle_radius * math.sin(math.radians(angle))
         
-        response = requests.post(self.url, data=data)
-        results = response.json()
-        
-        corrected_text = textToChange
-        
-        for match in reversed(results['matches']):
-            replacements = match.get('replacements', [])
-            if replacements:
-                corrected_text = (
-                    corrected_text[:match['offset']] +
-                    replacements[0]['value'] +
-                    corrected_text[match['offset'] + match['length']:]
-                )
-        
-        return corrected_text
+        # Calculate item position
+        item_angle = (angle + (360 / num_lines) / 2)  # Place item in the middle of each segment
+        item_x = circle_radius + circle_radius * 0.7 * math.cos(math.radians(item_angle))
+        item_y = circle_radius + circle_radius * 0.7 * math.sin(math.radians(item_angle))
 
-    def convert_number_words_to_integer(self, text):
-        number_words = {
-            "zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9,
-            "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13, "fourteen": 14, "fifteen": 15, "sixteen": 16,
-            "seventeen": 17, "eighteen": 18, "nineteen": 19, "twenty": 20, "twenty-one": 21
-            # Add more number words and their corresponding values here
-        }
-        
-        words = text.lower().split()
-        converted_parts = []
+        # Draw a line and place item text
+        pygame.draw.line(circle_surface, black, (x1, y1), (x2, y2), 2)
+        font = pygame.font.Font(None, 24)  # Adjust font size as needed
+        item_text = item_list[i]
+        text_surface = font.render(item_text, True, black)
+        text_rect = text_surface.get_rect(center=(item_x, item_y))
+        circle_surface.blit(text_surface, text_rect.topleft)
 
-        for word in words:
-            if word.isdigit():
-                converted_parts.append(word)
-            elif word in number_words:
-                converted_parts.append(str(number_words[word]))
-        
-        return ' '.join(converted_parts)
+    # Draw the circle on top of the lines and items
+    pygame.draw.circle(circle_surface, black, (circle_radius, circle_radius), circle_radius, 2)
 
+    # Main loop
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-    def contains_integer_or_number_word(self, text):
-        number_words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
-                        "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"]
-        return any(char.isdigit() for char in text) or any(word.lower() in text.lower() for word in number_words)
-
-
-
-
-    def remove_standalone_words(self, text, words):
-        for word in words:
-            text = re.sub(r'\b' + re.escape(word) + r'\b', '', text, flags=re.IGNORECASE).strip()
-        return text
-
-    def contains_integer(self, text):
-        return any(char.isdigit() for char in text)
-
-thoughts = Store()
-while True:
-    while True:
-        newInput = input(youText)
-        newInput = re.sub(r"[^\w\d\s]", "", newInput)
-        if newInput.strip() == "":
-            print("No input provided.")
-            continue
-        
-        infoReceived = thoughts.memoryEntry(newInput)
-        if infoReceived:
-            category, info = infoReceived
-            response = f"('{category}', '{info}')"
-            response = re.sub(r"\b(i)\b", '', response, flags=re.IGNORECASE)
+        # Clear the screen
+        screen.fill(white)
+        if rotation_speed <= 0:
+            rotation_speed = 0
         else:
-            response = "No matching pattern found."
-        # print(response)
+            # Update the rotation angle
+            rotation_angle += rotation_speed
+            rotation_speed -= rotation_slowdown
+            print(f"Current Speed: [{rotation_speed}], Slowing Down At: [{rotation_slowdown}]")
 
-        if 'y' in input("y/n: "):
-            break
+        # Rotate the circle surface with lines and items
+        rotated_circle = pygame.transform.rotate(circle_surface, rotation_angle)
+        rotated_rect = rotated_circle.get_rect(center=circle_center)
+        screen.blit(rotated_circle, rotated_rect.topleft)
 
-    textToRespondForTest = thoughts.find_closest_memory(input("Check for closest group: "))
-    print(textToRespondForTest)
+        pygame.display.flip()
 
+    # Quit Pygame
+    pygame.quit()
+    sys.exit()
 
+spin(item_list, rotation_speed, rotation_slowdown)
