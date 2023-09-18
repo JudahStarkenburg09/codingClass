@@ -1,4 +1,4 @@
-
+import math
 def calc(_expInput):
     def calculate_expressionInCalc(_expInput):
         # Define a dictionary to map textual representations to symbols

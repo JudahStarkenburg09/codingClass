@@ -163,4 +163,7 @@ def tic_tac_toe1P():
     window.mainloop()
 
 # Call the function to play the game
-# tic_tac_toe1P()
+tic_tac_toe1P()
+
+
+
