@@ -8,8 +8,8 @@ def tic_tac_toe1P():
     window.title("Tic Tac Toe")
 
     # Create variables for players
-    human_player = "X"
-    bot_player = "O"
+    human_player = "❌"
+    bot_player = "⭕"
 
     # Create the board
     board = [["" for _ in range(3)] for _ in range(3)]
@@ -164,6 +164,3 @@ def tic_tac_toe1P():
 
 # Call the function to play the game
 tic_tac_toe1P()
-
-
-
