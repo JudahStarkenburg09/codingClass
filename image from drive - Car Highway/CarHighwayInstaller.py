@@ -7,8 +7,14 @@ from pydrive.auth import ServiceAccountCredentials
 import tkinter as tk
 from tkinter import ttk, messagebox, IntVar
 import threading
-import shutil  # Added for copying the shortcut
 import winshell  # Added for creating the shortcut
+import shutil
+import ctypes
+import win32con
+import win32api
+import win32gui
+import win32ui
+
 
 # Function to load and store a file from Google Drive
 def load_and_store_file(file_name, destination_folder, progress_bar):
@@ -55,6 +61,7 @@ file_names = [
     'obstacleCar3.png',
     'road.png',
     'sparks.png',
+    # 'jsonCreds.json',
     'Car Highway.exe',  # Add your exe file name here
 ]
 
@@ -71,6 +78,39 @@ pygame.init()
 window = tk.Tk()
 window.title("Car Highway Installer")
 window.geometry("400x250")
+
+
+def setIconForExe(exe_path, icon_path):
+    """
+    Set the icon for an exe file.
+
+    :param exe_path: The path to the exe file.
+    :param icon_path: The path to the icon file.
+    """
+    # Ensure both files exist
+    if not os.path.exists(exe_path) or not os.path.exists(icon_path):
+        print("Exe file or icon file does not exist.")
+        return
+
+    # Get the handle to the exe file
+    exe_handle = win32ui.CreateFileIconExtractor(exe_path)
+
+    # Extract the icon from the exe file
+    icon_index = 0
+    large, small = exe_handle.GetIcon(icon_index)
+
+    # Save the icon as a .ico file
+    icon_temp_path = os.path.join(os.path.dirname(exe_path), "temp.ico")
+    small.SaveIcon(icon_temp_path)
+
+    # Replace the icon in the exe file
+    win32api.BeginUpdateResource(exe_path, False)
+    win32api.UpdateResource(exe_path, win32con.RT_ICON, 1, win32con.LANG_NEUTRAL, open(icon_temp_path, "rb").read())
+    win32api.EndUpdateResource(exe_path, False)
+
+    # Clean up the temporary icon file
+    os.remove(icon_temp_path)
+
 
 def createShortcut(exePath):
     desktop = winshell.desktop()
@@ -183,7 +223,7 @@ install_button.pack()
 
 # Function to simulate installation with a 5-minute delay
 def forLoop(progress_bar, increment):
-    global image_destination_folder, file_names
+    global image_destination_folder, file_names, exe_destination_folder
     division = 6
     for file_name in file_names:
         if not file_name.endswith('.exe'):
@@ -216,7 +256,14 @@ def forLoop(progress_bar, increment):
     progress_bar["value"] += ((((1/division)*3)*increment))
     time.sleep(0.75)
     progress_bar["value"] = 100
-    
+
+
+# HERE IS NEW UNTESTED CODE
+    exe_file_path = os.path.join(exe_destination_folder, 'Car Highway.exe')
+    icon_file_path = os.path.join(image_destination_folder, 'CarHighwayLogo.ico')
+
+    setIconForExe(exe_file_path, icon_file_path)
+# HERE
     
     # Show the installation complete message
     messagebox.showinfo("Installation Complete", "Car Highway has been successfully installed.")
