@@ -7,8 +7,14 @@ from pydrive.auth import ServiceAccountCredentials
 import tkinter as tk
 from tkinter import ttk, messagebox, IntVar
 import threading
-import shutil  # Added for copying the shortcut
 import winshell  # Added for creating the shortcut
+import shutil
+import ctypes
+import win32con
+import win32api
+import win32gui
+import win32ui
+
 
 # Function to load and store a file from Google Drive
 def load_and_store_file(file_name, destination_folder, progress_bar):
@@ -55,6 +61,7 @@ file_names = [
     'obstacleCar3.png',
     'road.png',
     'sparks.png',
+    # 'jsonCreds.json',
     'Car Highway.exe',  # Add your exe file name here
 ]
 
@@ -71,6 +78,8 @@ pygame.init()
 window = tk.Tk()
 window.title("Car Highway Installer")
 window.geometry("400x250")
+
+
 
 def createShortcut(exePath):
     desktop = winshell.desktop()
@@ -183,7 +192,7 @@ install_button.pack()
 
 # Function to simulate installation with a 5-minute delay
 def forLoop(progress_bar, increment):
-    global image_destination_folder, file_names
+    global image_destination_folder, file_names, exe_destination_folder
     division = 6
     for file_name in file_names:
         if not file_name.endswith('.exe'):
@@ -216,10 +225,14 @@ def forLoop(progress_bar, increment):
     progress_bar["value"] += ((((1/division)*3)*increment))
     time.sleep(0.75)
     progress_bar["value"] = 100
-    
+
+
     
     # Show the installation complete message
     messagebox.showinfo("Installation Complete", "Car Highway has been successfully installed.")
 
 # Start the Tkinter main loop
 window.mainloop()
+
+
+#Exe done!
