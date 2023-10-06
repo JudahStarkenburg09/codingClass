@@ -22,6 +22,4 @@ while True:
         right_y_axis = joystick.get_axis(3)
 
         print(f"Left Joystick: X={left_x_axis}, Y={left_y_axis}, Right Joystick: X={right_x_axis}, Y={right_y_axis}")
-        times += 1
-        if times >= 20000:
-            exit()
+
