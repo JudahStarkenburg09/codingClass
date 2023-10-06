@@ -103,7 +103,7 @@ circle = create_text(root, 78, 460, 16, "🔴", "red", "gray")
 
 ex = create_text(root, 110, 460, 16, "❌", "blue", "gray")
 
-L1 = create_text(root, 150, 460, 16, "L1", "blue", "gray")
+L1 = create_text(root, 150, 460, 16, "L1", "white", "gray")
 
 R1 = create_text(root, 185, 460, 16, "R1", "white", "gray")
 
@@ -130,7 +130,7 @@ joystickBaseRight = canvas_right.create_oval(150, 200, 250, 300, fill="light gra
 # Create the smaller dark gray oval for the right joystick (JoystickRight)
 JoystickRight = canvas_right.create_oval(75, 125, 125, 175, fill="dark gray")
 
-
+# canvas_right.itemconfig(JoystickRight, fill='black')
 
 # Function to update the position of the left joystick (JoystickLeft)
 def move_joystick_left():
@@ -218,6 +218,11 @@ def onPress(corresponded):
         L1.config(bg='black')
     elif corresponded == 'R1':
         R1.config(bg='black')
+    elif corresponded == 'Right Joystick PRESS':
+        canvas_right.itemconfig(JoystickRight, fill='black')
+    elif corresponded == 'Left Joystick PRESS':
+        canvas_left.itemconfig(JoystickLeft, fill='black')
+
 
 def onRelease(corresponded):
     global ex, triangle, square, circle, L1, Ri
@@ -233,6 +238,10 @@ def onRelease(corresponded):
         L1.config(bg='gray')
     elif corresponded == 'R1':
         R1.config(bg='gray')
+    elif corresponded == 'Right Joystick PRESS':
+        canvas_right.itemconfig(JoystickRight, fill='gray')
+    elif corresponded == 'Left Joystick PRESS':
+        canvas_left.itemconfig(JoystickLeft, fill='gray')
 
 
 def buttonsClicks():
