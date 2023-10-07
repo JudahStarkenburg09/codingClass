@@ -130,7 +130,7 @@ joystickBaseRight = canvas_right.create_oval(150, 200, 250, 300, fill="light gra
 # Create the smaller dark gray oval for the right joystick (JoystickRight)
 JoystickRight = canvas_right.create_oval(75, 125, 125, 175, fill="dark gray")
 
-# canvas_right.itemconfig(JoystickRight, fill='black')
+
 
 # Function to update the position of the left joystick (JoystickLeft)
 def move_joystick_left():
@@ -180,7 +180,6 @@ def move_joystick_right():
             right_x_axis += joystick.get_axis(2)
             right_y_axis += joystick.get_axis(3)
 
-        # print("Threaded Right")
 
         # Calculate the position based on right joystick input
         max_displacement_right = 25  # Maximum displacement for the right joystick
@@ -272,9 +271,9 @@ thread_right = threading.Thread(target=move_joystick_right)
 thread_right.daemon = True
 thread_right.start()
 
-thread_right = threading.Thread(target=buttonsClicks)
-thread_right.daemon = True
-thread_right.start()
+thread_click = threading.Thread(target=buttonsClicks)
+thread_click.daemon = True
+thread_click.start()
 
 # Start the main tkinter loop
 root.mainloop()
