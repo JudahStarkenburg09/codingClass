@@ -1,19 +1,13 @@
-import os
-import pygame
-import time
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 from pydrive.auth import ServiceAccountCredentials
+import os
+import pygame
+import time
 import tkinter as tk
 from tkinter import ttk, messagebox, IntVar
 import threading
 import winshell  # Added for creating the shortcut
-import shutil
-import ctypes
-import win32con
-import win32api
-import win32gui
-import win32ui
 
 
 # Function to load and store a file from Google Drive
