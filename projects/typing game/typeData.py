@@ -10,10 +10,10 @@ words = ['banana', 'cherry', 'chair', 'soccer', 'super', 'computer', 'apple',
 'wallet', 'key', 'door', 'bag', 'smile', 'bottle', 'string', 'parrot', 'mouse']
 
 
-def sentenceEquals():
+def sentenceEquals(length):
     global sentence
     sentenceList = []
-    for i in range(25):
+    for i in range(length):
         nextWord = random.choice(words)
         sentenceList.append(nextWord)
     sentence = ''
@@ -21,7 +21,6 @@ def sentenceEquals():
         sentence += i + ' '
     print(sentence)
     return sentence
-    
 
 
 
@@ -29,5 +28,9 @@ def getSentence():
     global sentence
     sentence = sentence
 
-def getNextKey():
-    ''
+def getNextKey(alreadyTyped):
+    global sentence
+    length = len(alreadyTyped)
+    typed = sentence[:length]
+
+    return (sentence[len(typed)]), typed
