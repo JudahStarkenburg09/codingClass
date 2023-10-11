@@ -165,6 +165,7 @@ def move_joystick_left():
 
         canvas_left.coords(JoystickLeft, new_x_left - 25, new_y_left - 25, new_x_left + 25, new_y_left + 25)
         root.update_idletasks()  # Update the tkinter window
+        time.sleep(.01)
 
 def move_joystick_right():
     while True:
@@ -180,7 +181,7 @@ def move_joystick_right():
             right_x_axis += joystick.get_axis(2)
             right_y_axis += joystick.get_axis(3)
 
-
+        print(str(right_x_axis) + " " + str(right_y_axis))
         # Calculate the position based on right joystick input
         max_displacement_right = 25  # Maximum displacement for the right joystick
         new_x_right = 150 + int(max_displacement_right * right_x_axis)
@@ -202,6 +203,7 @@ def move_joystick_right():
         canvas_right.coords(JoystickRight, new_x_right - 25, new_y_right - 25, new_x_right + 25, new_y_right + 25)
         # print(new_x_right, new_y_right)
         root.update_idletasks()  # Update the tkinter window
+        time.sleep(.01)
 
 def onPress(corresponded):
     global ex, triangle, square, circle, L1, R1

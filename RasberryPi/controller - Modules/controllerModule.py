@@ -2,12 +2,11 @@ import pygame
 
 
 
-def rightJSAxis():
+def rightJSAxis(joysticks):
     right_x_axis = 0
     right_y_axis = 0
 
     pygame.event.get()
-    joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 
     for joystick in joysticks:
         left_x_axis = joystick.get_axis(0)
@@ -21,12 +20,11 @@ def rightJSAxis():
     return right_x_axis, right_y_axis
 
 
-def leftJSAxis():
+def leftJSAxis(joysticks):
     left_x_axis = 0
     left_y_axis = 0
 
     pygame.event.get()
-    joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 
 
     for joystick in joysticks:
@@ -38,7 +36,7 @@ def leftJSAxis():
 
     return left_x_axis, left_y_axis
 
-def getPressedButtons():
+def getPressedButtons(events):
     buttonsCorrespondings = [
         {
             "button": 0,
@@ -102,19 +100,18 @@ def getPressedButtons():
         },
     ]
 
-    while True:
-        events = pygame.event.get()
-        for event in events:
-            if event.type == pygame.JOYBUTTONDOWN:
-                button_pressed = event.button
-                for correspond in buttonsCorrespondings:
-                    if correspond["button"] == button_pressed:
-                        return correspond["button"], correspond["correspond"]
-            elif event.type == pygame.JOYBUTTONUP:
-                button_released = event.button
-                for correspond in buttonsCorrespondings:
-                    if correspond["button"] == button_released:
-                        return correspond["button"], correspond["correspond"]
+
+    for event in events:
+        if event.type == pygame.JOYBUTTONDOWN:
+            button_pressed = event.button
+            for correspond in buttonsCorrespondings:
+                if correspond["button"] == button_pressed:
+                    return correspond["button"], correspond["correspond"]
+        elif event.type == pygame.JOYBUTTONUP:
+            button_released = event.button
+            for correspond in buttonsCorrespondings:
+                if correspond["button"] == button_released:
+                    return correspond["button"], correspond["correspond"]
 
 
 def convertJSAxisToCoords(centerX, centerY, radius, axisX, axisY):
@@ -138,7 +135,7 @@ def convertJSAxisToCoords(centerX, centerY, radius, axisX, axisY):
 pygame.init()
 pygame.joystick.init()
 
-while True:
-    leftJoystickPos = leftJSAxis()
-    print(leftJoystickPos)
+# while True:
+#     leftJoystickPos = leftJSAxis()
+#     print(leftJoystickPos)
 

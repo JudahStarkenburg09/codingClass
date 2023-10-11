@@ -39,23 +39,53 @@ joystickBaseRight = canvas_right.create_oval(150, 200, 250, 300, fill="light gra
 JoystickRight = canvas_right.create_oval(75, 125, 125, 175, fill="dark gray")
 
 
+joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 
-def moveJoysticks():
-    while True:
-        pygame.event.get()
-        leftJoystickPos = controllerModule.leftJSAxis()
-        rightJoystickPos = controllerModule.rightJSAxis()
-
-        print(leftJoystickPos)
-
-        # centerX, centerY = controllerModule.convertJSAxisToCoords(225, 175, 25, leftJoystickPos(0), leftJoystickPos(1))
-
-def threadedGetButtons():
-    while True:
-        buttonPressed = controllerModule.getPressedButtons()
+def moveJoysticks(joysticks):
+    pygame.event.get()
+    leftJoystickPos = controllerModule.leftJSAxis(joysticks)
+    rightJoystickPos = controllerModule.rightJSAxis(joysticks)
 
 
-#Thread
-thread_right = threading.Thread(target=moveJoysticks)
-# thread_right.daemon = True
-thread_right.start()
+    centerXleft, centerYleft = controllerModule.convertJSAxisToCoords(200, 250, 25, leftJoystickPos[0], leftJoystickPos[1])
+    canvas_left.coords(JoystickLeft, centerXleft - 25, centerYleft - 25, centerXleft + 25, centerYleft + 25)
+    
+    centerXright, centerYright = controllerModule.convertJSAxisToCoords(200, 250, 25, rightJoystickPos[0], rightJoystickPos[1])
+    canvas_right.coords(JoystickRight, centerXright - 25, centerYright - 25, centerXright + 25, centerYright + 25)
+
+def getButtons():
+    global ex, triangle, square, circle, L1, R1
+    buttonPressed = controllerModule.getPressedButtons(pygame.event.get())
+    print(f"'{buttonPressed}'")
+    if buttonPressed == 'X':
+        ex.config(bg='black')
+        print("pressed x")
+    elif buttonPressed == 'O':
+        circle.config(bg='black')
+    elif buttonPressed == 'Square':
+        square.config(bg='black')
+    elif buttonPressed == "Triangle":
+        triangle.config(bg='black')
+    elif buttonPressed == 'L1':
+        L1.config(bg='black')
+    elif buttonPressed == 'R1':
+        R1.config(bg='black')
+    elif buttonPressed == 'Right Joystick PRESS':
+        canvas_right.itemconfig(JoystickRight, fill='black')
+    elif buttonPressed == 'Left Joystick PRESS':
+        canvas_left.itemconfig(JoystickLeft, fill='black')
+
+
+
+
+def whileLoop(joysticks):
+    moveJoysticks(joysticks)
+    getButtons()
+    root.after(20, lambda: whileLoop(joysticks))
+
+root.after(0, lambda: whileLoop(joysticks))
+
+root.mainloop()
+
+
+
