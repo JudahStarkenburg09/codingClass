@@ -103,7 +103,7 @@ while running:
             y += 30
             x = 20
         charText = font.render(char, True, pygame.Color(color[char]))
-        window.blit(charText, (x, 20))
+        window.blit(charText, (x, y))
         x += charText.get_width()  # Adjust the spacing
 
     # Update the display
