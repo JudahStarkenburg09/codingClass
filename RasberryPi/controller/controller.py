@@ -181,7 +181,7 @@ def move_joystick_right():
             right_x_axis += joystick.get_axis(2)
             right_y_axis += joystick.get_axis(3)
 
-        print(str(right_x_axis) + " " + str(right_y_axis))
+        # print(str(right_x_axis) + " " + str(right_y_axis))
         # Calculate the position based on right joystick input
         max_displacement_right = 25  # Maximum displacement for the right joystick
         new_x_right = 150 + int(max_displacement_right * right_x_axis)

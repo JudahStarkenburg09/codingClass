@@ -36,6 +36,9 @@ def leftJSAxis(joysticks):
 
     return left_x_axis, left_y_axis
 
+pygame.init()
+pygame.joystick.init()
+
 def getPressedButtons(events):
     buttonsCorrespondings = [
         {
@@ -100,18 +103,20 @@ def getPressedButtons(events):
         },
     ]
 
-
+    matching_buttons = []
     for event in events:
         if event.type == pygame.JOYBUTTONDOWN:
             button_pressed = event.button
             for correspond in buttonsCorrespondings:
                 if correspond["button"] == button_pressed:
-                    return correspond["button"], correspond["correspond"]
+                    matching_buttons.append((correspond["button"], correspond["correspond"]))
         elif event.type == pygame.JOYBUTTONUP:
             button_released = event.button
             for correspond in buttonsCorrespondings:
                 if correspond["button"] == button_released:
-                    return correspond["button"], correspond["correspond"]
+                    matching_buttons.append((correspond["button"], correspond["correspond"]))
+
+    return matching_buttons
 
 
 def convertJSAxisToCoords(centerX, centerY, radius, axisX, axisY):
@@ -132,8 +137,7 @@ def convertJSAxisToCoords(centerX, centerY, radius, axisX, axisY):
 
     return new_x, new_y
 
-pygame.init()
-pygame.joystick.init()
+
 
 # while True:
 #     leftJoystickPos = leftJSAxis()

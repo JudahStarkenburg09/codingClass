@@ -55,25 +55,26 @@ def moveJoysticks(joysticks):
 
 def getButtons():
     global ex, triangle, square, circle, L1, R1
-    buttonPressed = controllerModule.getPressedButtons(pygame.event.get())
-    print(f"'{buttonPressed}'")
-    if buttonPressed == 'X':
-        ex.config(bg='black')
-        print("pressed x")
-    elif buttonPressed == 'O':
-        circle.config(bg='black')
-    elif buttonPressed == 'Square':
-        square.config(bg='black')
-    elif buttonPressed == "Triangle":
-        triangle.config(bg='black')
-    elif buttonPressed == 'L1':
-        L1.config(bg='black')
-    elif buttonPressed == 'R1':
-        R1.config(bg='black')
-    elif buttonPressed == 'Right Joystick PRESS':
-        canvas_right.itemconfig(JoystickRight, fill='black')
-    elif buttonPressed == 'Left Joystick PRESS':
-        canvas_left.itemconfig(JoystickLeft, fill='black')
+    buttonsPressed = controllerModule.getPressedButtons(pygame.event.get())
+    print(f"'{buttonsPressed}'")
+    for i in buttonsPressed:
+        buttonPressed  = i
+        if buttonPressed == 'X':
+            ex.config(bg='black')
+        elif buttonPressed == 'O':
+            circle.config(bg='black')
+        elif buttonPressed == 'Square':
+            square.config(bg='black')
+        elif buttonPressed == "Triangle":
+            triangle.config(bg='black')
+        elif buttonPressed == 'L1':
+            L1.config(bg='black')
+        elif buttonPressed == 'R1':
+            R1.config(bg='black')
+        elif buttonPressed == 'Right Joystick PRESS':
+            canvas_right.itemconfig(JoystickRight, fill='black')
+        elif buttonPressed == 'Left Joystick PRESS':
+            canvas_left.itemconfig(JoystickLeft, fill='black')
 
 
 
