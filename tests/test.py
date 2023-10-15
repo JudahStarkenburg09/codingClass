@@ -1,17 +1,7 @@
-import ast
+import subprocess
 
-def add_numbers(a, b):
-    return a + b
+# Replace 'your_app_executable.exe' with the path to the executable of the app you want to run
+app_to_run = 'your_app_executable.exe'
 
-code = """
-def add_numbers(a, b):
-    print('Adding numbers:', a, b)
-    return a + b + 1
-"""
-
-tree = ast.parse(code)
-compiled_code = compile(tree, "<string>", "exec")
-exec(compiled_code)
-
-result = add_numbers(2, 3)
-print(result)  # Output: 6
+# Start the app with Python
+subprocess.Popen([app_to_run], shell=True)
