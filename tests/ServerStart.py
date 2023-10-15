@@ -1,12 +1,9 @@
 import webview
 import threading
-import time
 import tkinter as tk
 import json
-import pyautogui
 import pygsheets
 from tkinter import messagebox
-
 creds = json.dumps({
     "type": "service_account",
     "project_id": "linus-co",
@@ -19,117 +16,55 @@ creds = json.dumps({
     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
     "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/linus-co-op%40linus-co.iam.gserviceaccount.com"
     })
-# set up credentials
-gc = pygsheets.authorize(service_account_json=creds)
-
-# open the Google Sheets document by its URL
-sheet_url = 'https://docs.google.com/spreadsheets/d/1nSwma4A-zN0TwHVlf4aMAJw2BmgfgZmq8QFZ189Kl94/edit#gid=0'
-sh = gc.open_by_url(sheet_url)
-
-worksheet = sh[0]
-
+worksheet = pygsheets.authorize(service_account_json=creds).open_by_url('https://docs.google.com/spreadsheets/d/1nSwma4A-zN0TwHVlf4aMAJw2BmgfgZmq8QFZ189Kl94/edit#gid=0')[0]
 def addWhitelist(username, name, server):
     global newRoot
     newRoot.destroy()
-
-    message1 = messagebox.showinfo("Adding", "Please Wait! This May take up to 5 seconds!")
-
     for i in range(3, 51):
         if str(worksheet.cell(f"J{i}").value) == '':
-            print(f"Cell J{i} is blank")
             usernameCell = worksheet.cell(f'J{i}')
             nameCell = worksheet.cell(f'K{i}')
             serverCell = worksheet.cell(f'L{i}')
             break
-    
     usernameCell.value = str(username)
     nameCell.value = str(name)
     serverCell.value = str(server)
-
     usernameCell.update()
     nameCell.update()
     serverCell.update()
-
-    message2 = messagebox.showinfo("Added", "Done!")
-
-
-
-
-def simulate_typing():
-    global root
-    time.sleep(.5)
-    print("Logging in")
-
-    message3 = messagebox.showinfo("Logged In!", "Username: NCAServerStarter, Password; 123NCA")
-
-
-
-alreadyLoaded = False
-
 def getWhitelistInfo():
-    global newRoot, window
+    global newRoot
     newRoot = tk.Tk()
-    newRoot.title("User Whitelist")
-
-    # Create labels and entry boxes
+    newRoot.title("-")
     username_label = tk.Label(newRoot, text="Username")
     username_label.grid(row=0, column=0, sticky="w")
     username_entry = tk.Entry(newRoot)
     username_entry.grid(row=0, column=1)
-
     name_label = tk.Label(newRoot, text="Real Name")
     name_label.grid(row=1, column=0, sticky="w")
     name_entry = tk.Entry(newRoot)
     name_entry.grid(row=1, column=1)
-
     server_label = tk.Label(newRoot, text="Server")
     server_label.grid(row=2, column=0, sticky="w")
     server_entry = tk.Entry(newRoot)
     server_entry.grid(row=2, column=1)
-
-    # Create a button to add to the whitelist
     add_button = tk.Button(newRoot, text="Add to Whitelist", command=lambda: addWhitelist(username_entry.get(), name_entry.get(), server_entry.get()))
     add_button.grid(row=3, column=0, columnspan=2)
-
     newRoot.mainloop()
-
-
 def getLogin():
-    
-    global root, alreadyLoaded
-    if alreadyLoaded == False:
-        alreadyLoaded = True
-        root = tk.Tk()
-        root.geometry('200x200')
-        root.title("Menu")
-
-        # Create a label
-        label = tk.Label(root, text="Menu")
-        label.pack(pady=10)
-
-        # Create "Yes" button
-        yes_button = tk.Button(root, text="Log In", command=simulate_typing)
-        yes_button.pack(padx=10, pady=5)
-
-        whitelist = tk.Button(root, text="Request Whitelist", command=getWhitelistInfo)
-        whitelist.pack(padx=10, pady=5)
-
+    root = tk.Tk()
+    root.geometry('200x200')
+    root.title("Menu")
+    label = tk.Label(root, text="Menu")
+    label.pack(pady=10)
+    yes_button = tk.Button(root, text="Log In", command= lambda: messagebox.showinfo("Logged In!", "Username: NCAServerStarter, Password; 123NCA"))
+    yes_button.pack(padx=10, pady=5)
+    whitelist = tk.Button(root, text="Request Whitelist", command=getWhitelistInfo)
+    whitelist.pack(padx=10, pady=5)
     root.mainloop()
-
-def on_loaded():
-    time.sleep(5)
-    print("Webview window has fully loaded")
-    getLogin()
-
 def main():
-    global window
-    # Create a webview window
-    window_width, window_height = pyautogui.size()
-    window = webview.create_window("Aternos Server", "https://aternos.org/server/")
-    # Run the webview main loop
-    threadTime = threading.Thread(target=on_loaded)
+    webview.create_window("Aternos Server", "https://aternos.org/server/")
+    threadTime = threading.Thread(target=getLogin)
     threadTime.start()
     webview.start()
-
-if __name__ == "__main__":
-    main()
+main()
