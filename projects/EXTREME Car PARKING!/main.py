@@ -21,16 +21,33 @@ class Main:
         self.carImage = self.carNoWheels
         self.carRect = self.carImage.get_rect()
         self.carRect.center = (400, 300)
-        self.carSpeed = 5
+        self.carSpeed = 3
         self.carAngle = 0  # Initialize angle to 0
+        self.turnAngle = 0.01
+        self.carX = 400.0
+        self.carY = 300.0
 
-    def updateCarImage(self, leftKey, rightKey):
+    def updateCarImage(self, leftKey, rightKey, forwardKey, backwardKey):
+        if forwardKey:
+            if leftKey:
+                self.carAngle += self.turnAngle
+            elif rightKey:
+                self.carAngle -= self.turnAngle
+            self.carX += self.carSpeed * math.cos(self.carAngle)
+            self.carY += self.carSpeed * math.sin(self.carAngle)
+            self.carRect.center = (int(self.carX), int(self.carY))
+
         if leftKey:
-            self.carImage = self.carTurningLeft
+            self.carImage = pygame.transform.rotate(self.carTurningLeft, math.degrees(self.carAngle))
         elif rightKey:
-            self.carImage = self.carTurningRight
+            self.carImage = pygame.transform.rotate(self.carTurningRight, math.degrees(self.carAngle))
         else:
-            self.carImage = self.carNoWheels
+            self.carImage = pygame.transform.rotate(self.carNoWheels, math.degrees(self.carAngle))
+
+    def makeBarrier(self, x, y, angle):
+        rotatedBarrier = pygame.transform.rotate(self.trafficBarrier, angle)
+        rect = rotatedBarrier.get_rect(center=(x, y))
+        self.screen.blit(rotatedBarrier, rect.topleft)
 
     def levelOne(self):
         # Add your logic here
@@ -40,7 +57,7 @@ class Main:
         leftKey = False
         rightKey = False
         forwardKey = False
-        backwardKey = False  # Add a key for moving backward
+        backwardKey = False
 
         while self.isRunning:
             for event in pygame.event.get():
@@ -54,7 +71,7 @@ class Main:
                     elif event.key == pygame.K_UP:
                         forwardKey = True
                     elif event.key == pygame.K_DOWN:
-                        backwardKey = True  # Set backwardKey to True when the down arrow is pressed
+                        backwardKey = True
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         leftKey = False
@@ -63,23 +80,15 @@ class Main:
                     elif event.key == pygame.K_UP:
                         forwardKey = False
                     elif event.key == pygame.K_DOWN:
-                        backwardKey = False  # Set backwardKey to False when the down arrow is released
+                        backwardKey = False
+            self.screen.fill((40, 40, 40))
 
-            # Update car image based on arrow keys
-            self.updateCarImage(leftKey, rightKey)
+            # MAIN GAME LOGIC:
+            self.updateCarImage(leftKey, rightKey, forwardKey, backwardKey)
 
-            # Move the car forward and backward
-            if forwardKey:
-                self.carRect.x += self.carSpeed * math.cos(self.carAngle)
-                self.carRect.y -= self.carSpeed * math.sin(self.carAngle)
-            if backwardKey:  # Move backward when the backward key is pressed
-                self.carRect.x -= self.carSpeed * math.cos(self.carAngle)
-                self.carRect.y += self.carSpeed * math.sin(self.carAngle)
-
-            self.screen.fill((40, 40, 40))  # Fill the screen with a background color
             self.screen.blit(self.carImage, self.carRect)
             pygame.display.flip()
-            self.clock.tick(60)  # Limit the frame rate to 60 FPS
+            self.clock.tick(60)
 
         pygame.quit()
 
