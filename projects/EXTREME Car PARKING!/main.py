@@ -14,8 +14,12 @@ class Main:
 
         # Load car images
         self.carNoWheels = pygame.image.load('carNoWheels.png')
+        self.carNoWheels = pygame.transform.scale(self.carNoWheels, [225, 100])
         self.carTurningLeft = pygame.image.load('carTurningLeft.png')
+        self.carTurningLeft = pygame.transform.scale(self.carTurningLeft, [225, 100])
         self.carTurningRight = pygame.image.load('carTurningRight.png')
+        self.carTurningRight = pygame.transform.scale(self.carTurningRight, [225, 100])
+
 
         # Initial car position and state
         self.carImage = self.carNoWheels
