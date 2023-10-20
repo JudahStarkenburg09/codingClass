@@ -14,20 +14,20 @@ class Main:
 
         # Load car images
         self.carNoWheels = pygame.image.load('carNoWheels.png')
-        self.carNoWheels = pygame.transform.scale(self.carNoWheels, [225, 100])
+        self.carNoWheels = pygame.transform.scale(self.carNoWheels, [100, 50])
         self.carTurningLeft = pygame.image.load('carTurningLeft.png')
-        self.carTurningLeft = pygame.transform.scale(self.carTurningLeft, [225, 100])
+        self.carTurningLeft = pygame.transform.scale(self.carTurningLeft, [100, 50])
         self.carTurningRight = pygame.image.load('carTurningRight.png')
-        self.carTurningRight = pygame.transform.scale(self.carTurningRight, [225, 100])
+        self.carTurningRight = pygame.transform.scale(self.carTurningRight, [100, 50])
 
 
         # Initial car position and state
         self.carImage = self.carNoWheels
         self.carRect = self.carImage.get_rect()
         self.carRect.center = (400, 300)
-        self.carSpeed = 3
+        self.carSpeed = 2.5
         self.carAngle = 0  # Initialize angle to 0
-        self.turnAngle = 0.01
+        self.turnAngle = 0.015
         self.carX = 400.0
         self.carY = 300.0
 
@@ -38,7 +38,7 @@ class Main:
             elif rightKey:
                 self.carAngle -= self.turnAngle
             self.carX += self.carSpeed * math.cos(self.carAngle)
-            self.carY += self.carSpeed * math.sin(self.carAngle)
+            self.carY += -self.carSpeed * math.sin(self.carAngle)
             self.carRect.center = (int(self.carX), int(self.carY))
 
         if leftKey:
