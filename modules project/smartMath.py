@@ -26,3 +26,7 @@ def calc(_expInput):
         return _resultExp
     except (ValueError, SyntaxError, NameError) as e:
         return f"Error: {e}"
+
+
+def hyesung():
+    print("HEEEELLOO HYE SUNG")
