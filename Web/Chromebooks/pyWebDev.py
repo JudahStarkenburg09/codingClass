@@ -30,16 +30,35 @@ def entryBox(id, position=None):
         style = ""
     return f"<input type='text' id='{id}' {style}>"
 
-def button(label, onclick=None, position=None):
+def button(label, script=None, position=None):
     if position:
         style = f"style='position: absolute; top: {position[1]}px; left: {position[0]}px;'"
     else:
         style = ""
     
-    if onclick:
-        return f"<button {style} onclick='{onclick}'>{label}</button>"
+    if script:
+        js_function = f"""
+        <script>
+            function executePythonFile() {{
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/run_python_file", true);
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhr.onreadystatechange = function () {{
+                    if (xhr.readyState == 4 && xhr.status == 200) {{
+                        console.log(xhr.responseText);
+                    }}
+                }};
+                var data = JSON.stringify({{ "file": "{script}" }});
+                xhr.send(data);
+            }}
+        </script>
+        """
+        return f"{js_function}<button {style} onclick='executePythonFile()'>{label}</button>"
     else:
         return f"<button {style}>{label}</button>"
+
+
+
 
 def app():
     "Welcome to Judah's web development module!"
