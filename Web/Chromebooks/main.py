@@ -5,33 +5,47 @@ app = Flask(__name__)
 
 # https://getbootstrap.com/docs/5.3/getting-started/introduction/
 
+
 @app.route('/')
+def onOpen():
+    blank = app.redirect('/home')
+    return blank
+
+@app.route('/home')
 def index():
-    global dropArray
-    html_content = """<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">"""
-    html_content += """"""
-    # Call the render_template_as_string method with arguments
-    html_content += PWD.createDropdown('btn btn-secondary dropdown-toggle', dropArray)
-    html_content += PWD.makeButton("Hello", buttonXPos=100, buttonYPos=100, onclick="/Hello", classType="btn btn-outline-primary")
-    html_content += PWD.makeText("Click me", posx=50, posy=50, link="/Hello", underlined=True, color="#FF0000", fontSize=20)
-    html_content += PWD.makeEntryBox("entryBox1", "Type here", posx=50, posy=200, actionFunction="/Hello", buttonPosX=400, buttonPosY=100, buttonText="Submit123")
-    html_content += PWD.createImage("NCASymbol.png", posX=500, posY=300)
-    return html_content
+    global dropArray, html_content
+    boostrap = {
+        "name": "bootstrap",
+        "code": """<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">""",
+    }
 
-@app.route('/Hello', methods=['GET', 'POST'])
+    html_content = [boostrap]
+    html_content.append(PWD.makeButton(buttonLabel="Sign In", buttonName="button" ,buttonXPos=50, buttonYPos=50, onclick='/sign-in', classType="btn btn-primary"))
+
+
+    index = """"""
+    for i in html_content:
+        index += str(i["code"])
+    return index
+
+# if request.method == 'POST':
+#     print("Got In")
+#     entry_content = request.form.get('entryBox1')
+#     print(f"Entry Box Content: {entry_content}")
+@app.route('/sign-in', methods=['GET', 'POST'])
 def changePage():
-    html_content = ''
+    global html_content
+    for i in html_content:
+        if i["name"] == "button":
+            html_content.remove(i)
 
-    if request.method == 'POST':
-        print("Got In")
-        entry_content = request.form.get('entryBox1')
-        print(f"Entry Box Content: {entry_content}")
 
-    html_content += PWD.makeButton("Hello", buttonXPos=100, buttonYPos=100, onclick="/Hello")
-    html_content += PWD.makeText("Back to Home", posx=50, posy=150, link="/", underlined=True, color="#0000FF", fontSize=20)
-    html_content += PWD.makeEntryBox("entryBox1", "Type here", posx=50, posy=200, actionFunction="/Hello", buttonPosX=400, buttonPosY=100, buttonText="Submit123")
-    html_content += PWD.createImage("NCASymbol.png", posX=500, posY=300)
-    return html_content
+
+    
+    index = ''
+    for i in html_content:
+        index += str(i["code"])
+    return index
 
 dropArray = [
     {

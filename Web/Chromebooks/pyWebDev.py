@@ -1,10 +1,15 @@
 # https://getbootstrap.com/docs/5.3/getting-started/introduction/
 
-def makeButton(buttonLabel, buttonXPos, buttonYPos, onclick, classType=None):
+def makeButton(buttonLabel, buttonName, buttonXPos, buttonYPos, onclick, classType=None):
     html_code = f"""
     <button class="{classType}" style="position: absolute; left: {buttonXPos}px; top: {buttonYPos}px;" onclick="window.location.href='{onclick}'">{buttonLabel}</button>
     """
-    return html_code
+    array = {
+        "name": f"{buttonName}",
+        "code": html_code
+    }
+    return array
+
 
 def makeText(text=None, posy=None, posx=None, link=None, underlined=False, bold=False, color=None, highlightColor=None, fontSize=None, font=None):
     style = ""
