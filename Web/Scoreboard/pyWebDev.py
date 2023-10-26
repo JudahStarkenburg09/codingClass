@@ -1,11 +1,26 @@
 # https://getbootstrap.com/docs/5.3/getting-started/introduction/
 
-def makeButton(buttonLabel, buttonName, buttonXPos, buttonYPos, onclick, classType=None):
+def makeButton(buttonLabel, buttonName, buttonXPos=None, buttonYPos=None, onclick=None, classType=None):
     html_code = f"""
     <button class="{classType}" style="position: absolute; left: {buttonXPos}px; top: {buttonYPos}px;" onclick="window.location.href='{onclick}'">{buttonLabel}</button>
     """
     array = {
         "name": f"{buttonName}",
+        "code": html_code
+    }
+    return array
+
+def createCheckbox(id, name, label,  posx, posy, checked=False):
+    html_code = f"""
+<div class="form-check">
+   <input class="form-check-input" type="checkbox" value="" id="{id}" style="position: absolute; left: {posx}px; top: {posy}px;">
+   <label class="form-check-label" for="{id}" style="position: absolute; left: {posx}px; top: {posy}px;">
+    {label}
+   </label>
+</div>
+"""
+    array = {
+        "name": name,
         "code": html_code
     }
     return array
@@ -31,14 +46,19 @@ def makeText(text=None, posy=None, posx=None, link=None, underlined=False, bold=
     """
     return html_code
 
-def makeEntryBox(id, placeholder, actionFunction, posx, posy, buttonPosX, buttonPosY, buttonText):
+def makeEntryBox(id, placeholder, barText, classType, entryName, posx, posy):
     html_code = f"""
-    <form method="POST" action="{actionFunction}">
-        <input type="text" id="{id}" name="{id}" placeholder="{placeholder}" style="position: absolute; left: {posx}px; top: {posy}px;">
-        <input type="submit" value="{buttonText}" style="position: absolute; left: {buttonPosX}px; top: {buttonPosY}px;">
-    </form>
+<div style="position: absolute; left: {posx}px; top: {posy}px;" class="input-group flex-nowrap">
+  <span class="input-group-text" id="{id}">{barText}</span>
+  <input type="text" class="{classType}" placeholder="{placeholder}" aria-label="{placeholder}" aria-describedby="addon-wrapping">
+</div>
     """
-    return html_code
+    array = {
+        "name": f"{entryName}",
+        "code": html_code,
+    }
+
+    return array
 
 def createImage(fileName, posX, posY):
     html_code = f"""
@@ -46,26 +66,3 @@ def createImage(fileName, posX, posY):
     """
     return html_code
 
-def createTable():
-    ''
-
-def createDropdown(classType, dropArray):
-    ''
-
-def createScrollspy():
-    ''
-
-def createProgressBar():
-    ''
-
-def createSpinner():
-    ''
-
-def createToast():
-    ''
-    
-def createBadge():
-    ''
-
-def createModal():
-    ''
