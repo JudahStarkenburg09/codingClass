@@ -60,9 +60,14 @@ def makeEntryBox(id, placeholder, barText, classType, entryName, posx, posy):
 
     return array
 
-def createImage(fileName, posX, posY):
+def createImage(fileName, posX, posY, name):
     html_code = f"""
     <img src="/static/{fileName}" style="position: absolute; left: {posX}px; top: {posY}px;">
     """
-    return html_code
+
+    array = {
+        "name": f"{name}",
+        "code": html_code
+    }
+    return array
 
