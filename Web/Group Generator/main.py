@@ -30,7 +30,6 @@ def index():
     html_content.append(PWD.createCheckbox(label="Timer", id="timerCheckbox", checked=False, name="timerCheckbox", posx=50, posy=50))
     html_content.append(PWD.makeButton(buttonLabel="Start", buttonName="start" ,buttonXPos=50, buttonYPos=100, onclick='/load', classType="btn btn-primary"))
 
-
     index = """"""
     for i in html_content:
         index += str(i["code"])

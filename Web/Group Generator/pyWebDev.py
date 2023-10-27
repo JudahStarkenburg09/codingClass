@@ -46,11 +46,11 @@ def makeText(text=None, posy=None, posx=None, link=None, underlined=False, bold=
     """
     return html_code
 
-def makeEntryBox(id, placeholder, barText, classType, entryName, posx, posy):
+def makeEntryBox(id, placeholder, barText, entryName, posx, posy):
     html_code = f"""
 <div style="position: absolute; left: {posx}px; top: {posy}px;" class="input-group flex-nowrap">
   <span class="input-group-text" id="{id}">{barText}</span>
-  <input type="text" class="{classType}" placeholder="{placeholder}" aria-label="{placeholder}" aria-describedby="addon-wrapping">
+  <input type="text" class="form-control" placeholder="{placeholder}" aria-label="{placeholder}" aria-describedby="addon-wrapping">
 </div>
     """
     array = {
