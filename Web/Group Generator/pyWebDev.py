@@ -1,11 +1,11 @@
 # https://getbootstrap.com/docs/5.3/getting-started/introduction/
 
-def makeButton(buttonLabel, buttonName, buttonXPos=None, buttonYPos=None, onclick=None, classType=None):
+def makeButton(buttonLabel, name, buttonXPos=None, buttonYPos=None, onclick=None, classType=None):
     html_code = f"""
     <button class="{classType}" style="position: absolute; left: {buttonXPos}px; top: {buttonYPos}px;" onclick="window.location.href='{onclick}'">{buttonLabel}</button>
     """
     array = {
-        "name": f"{buttonName}",
+        "name": f"{name}",
         "code": html_code
     }
     return array
@@ -26,8 +26,9 @@ def createCheckbox(id, name, label,  posx, posy, checked=False):
     return array
 
 
-def makeText(text=None, posy=None, posx=None, link=None, underlined=False, bold=False, color=None, highlightColor=None, fontSize=None, font=None):
+def makeText(name, text=None, posy=None, posx=None, link=None, underlined=False, bold=False, color=None, highlightColor=None, fontSize=None, font=None):
     style = ""
+    hasLink = ''
     if underlined:
         style += "text-decoration: underline;"
     if bold:
@@ -40,11 +41,19 @@ def makeText(text=None, posy=None, posx=None, link=None, underlined=False, bold=
         style += f"font-size: {fontSize}px;"
     if font:
         style += f"font-family: {font};"
+    if link:
+        hasLink = f""" href='{link}'"""
 
     html_code = f"""
-    <a href="{link}" style="position: absolute; left: {posx}px; top: {posy}px; {style}">{text}</a>
+    <a{hasLink} style="position: absolute; left: {posx}px; top: {posy}px; {style}">{text}</a>
     """
-    return html_code
+
+    array = {
+        "name": name,
+        "code": html_code,
+    }
+
+    return array
 
 def makeEntryBox(id, placeholder, barText, entryName, posx, posy):
     html_code = f"""
@@ -60,9 +69,9 @@ def makeEntryBox(id, placeholder, barText, entryName, posx, posy):
 
     return array
 
-def createImage(fileName, posX, posY, name):
+def createImage(fileName, posX, posY, name, width=None, height=None):
     html_code = f"""
-    <img src="/static/{fileName}" style="position: absolute; left: {posX}px; top: {posY}px;">
+    <img src="/static/{fileName}" style="position: absolute; left: {posX}px; top: {posY}px; width: {width}px; height: {height}px;">
     """
 
     array = {
@@ -70,4 +79,5 @@ def createImage(fileName, posX, posY, name):
         "code": html_code
     }
     return array
+
 
