@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, redirect
 import pyWebDev as PWD
 
 import os
@@ -17,7 +17,7 @@ html_content.append(boostrap)
 @app.route('/')
 def onOpen():
     global html_content
-    blank = app.redirect('/group-generator/home')
+    blank = redirect('/group-generator/home')
     return blank
 
 
@@ -115,10 +115,6 @@ def classes():
             fontSize=20
         ))
 
-
-
-
-
     index = """"""
     for i in html_content:
         index += str(i["code"])
@@ -145,9 +141,33 @@ def editClass():
     html_content.append(PWD.createImage('NCASymbol.png', posX=10, posY=10, name="logo",width=75, height=75))
 
     html_content.append(PWD.makeEntryBox(id="nameOfClass", placeholder="Class Name", barText="📛", posx=125, posy=100, name="nameOfClass", width=300, bgColor="#7F7F7F", height=None))
-    html_content.append(PWD.makeEntryBox(id="addNew", placeholder="Student", barText="👤", posx=125, posy=150, name="addNew", width=300, bgColor="#7F7F7F", height=None))
-    contents = ''
-    html_content.append(PWD.makeButton(buttonLabel="Add", name='add', buttonXPos=440, buttonYPos=150, onclick=f'/get?contents={contents}', classType="btn btn-primary"))
+
+
+
+    # Create the entry box with an ID so that we can reference it in JavaScript
+    html_content.append(PWD.makeEntryBox(
+        id="addNewInput",  # Set an ID for the input field
+        placeholder="Student",
+        barText="👤",
+        name="addNew",
+        posx=125,
+        posy=150,
+        bgColor="#7F7F7F",
+        width=300,
+        height=None
+    ))
+    editing = request.args.get('file_name')
+    # Create the button with the updated onclick attribute
+    html_content.append(PWD.makeGetButton(
+        buttonLabel="Add",
+        name='add',
+        buttonXPos=440,
+        buttonYPos=150,
+        onclick=f"window.location.href='/get?contents=' + document.getElementById('addNewInput').value",
+        classType="btn btn-primary"
+    ))
+
+
 
 
     # Use the file_name as needed in your route handler
@@ -159,12 +179,16 @@ def editClass():
     return index
 
 studentList = []
-@app.route('/get')
+@app.route('/get', methods=['GET'])
 def get():
     global html_content
 
+    print("Contents: " + request.args.get('contents'))
+    print("Changed")
+    editing = request.args.get('file_name')
 
-    return app.redirect('/group-generator/classroom/classes/edit-class')
+    return redirect(f'/group-generator/classroom/classes/edit-class?file_name={editing}')
+
 
 
 
@@ -205,7 +229,7 @@ def save():
     index = """"""
     for i in html_content:
         index += str(i["code"])
-    return app.redirect('/group-generator/classroom/classes')
+    return redirect('/group-generator/classroom/classes')
 
 
 if __name__ == '__main__':
