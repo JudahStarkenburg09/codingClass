@@ -25,10 +25,11 @@ def createCheckbox(id, name, label,  posx, posy, checked=False):
     }
     return array
 
-
-def makeText(name, text=None, posy=None, posx=None, link=None, underlined=False, bold=False, color=None, highlightColor=None, fontSize=None, font=None):
+def makeText(name, text=None, posy=None, posx=None, link=None, underlined=False, bold=False, color=None, highlightColor=None, fontSize=None, font=None, hoverText=None):
     style = ""
     hasLink = ''
+    hover_attribute = ''
+    
     if underlined:
         style += "text-decoration: underline;"
     if bold:
@@ -43,9 +44,11 @@ def makeText(name, text=None, posy=None, posx=None, link=None, underlined=False,
         style += f"font-family: {font};"
     if link:
         hasLink = f""" href='{link}'"""
+    if hoverText:
+        hover_attribute = f""" title="{hoverText}" """
 
     html_code = f"""
-    <a{hasLink} style="position: absolute; left: {posx}px; top: {posy}px; {style}">{text}</a>
+    <a{hasLink} style="position: absolute; left: {posx}px; top: {posy}px; {style}"{hover_attribute}>{text}</a>
     """
 
     array = {
@@ -55,19 +58,23 @@ def makeText(name, text=None, posy=None, posx=None, link=None, underlined=False,
 
     return array
 
-def makeEntryBox(id, placeholder, barText, entryName, posx, posy):
+
+def makeEntryBox(id, placeholder, barText, name, posx, posy, bgColor, width, height):
     html_code = f"""
-<div style="position: absolute; left: {posx}px; top: {posy}px;" class="input-group flex-nowrap">
-  <span class="input-group-text" id="{id}">{barText}</span>
-  <input type="text" class="form-control" placeholder="{placeholder}" aria-label="{placeholder}" aria-describedby="addon-wrapping">
-</div>
+<form method="POST">
+    <div style="position: absolute; left: {posx}px; top: {posy}px; background-color: {bgColor}; width: {width}px; height: {height}px;" class="input-group flex-nowrap">
+        <span class="input-group-text" id="{id}">{barText}</span>
+        <input type="text" class="form-control" placeholder="{placeholder}" aria-label="{placeholder}" aria-describedby="addon-wrapping">
+    </div>
+</form>
     """
     array = {
-        "name": f"{entryName}",
+        "name": f"{name}",
         "code": html_code,
     }
 
     return array
+
 
 def createImage(fileName, posX, posY, name, width=None, height=None):
     html_code = f"""
