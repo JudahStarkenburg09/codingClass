@@ -1,10 +1,19 @@
 import tkinter as tk
+from tkinter import messagebox
 
 def handelGraphics(timer, timerValue, possession, switch, team1, team2, homeTeam):
     global root, colorLeft, colorRight, left, right, score_labelL, score_labelR, scoreL, scoreR, side
     scoreL = 0
     scoreR = 0
     side = "left"
+    messagebox.showinfo("Info", """Press (Q, W) to change left score
+Press (O, P) to change right score
+Press space to switch sides
+Press T to start/pause the timer
+Press F11 To Toggle Fullscreen
+Press arrow keys (< >) to change possession
+Press Enter to Reset Score, Possession, and Timer
+                """)
 
     root = tk.Tk()
     root.geometry('500x400')
@@ -28,7 +37,7 @@ def handelGraphics(timer, timerValue, possession, switch, team1, team2, homeTeam
 
         if event.keysym == 'q':
             scoreL += 1
-        elif event.keysym == 'w' and scoreL > 0:
+        elif event.keysym == 'w':
             scoreL -= 1
         elif event.keysym == 'o':
             scoreR -= 1
@@ -92,7 +101,32 @@ def handelGraphics(timer, timerValue, possession, switch, team1, team2, homeTeam
             score_labelL = canvas.create_text(posxScoreL, posyScoreL, text=str(scoreR), fill="white", font=("Helvetica", fontSize), anchor="center")
             score_labelR = canvas.create_text(posxScoreR, posyScoreR, text=str(scoreL), fill="white", font=("Helvetica", fontSize), anchor="center")
 
+
         root.after(100, graphics)
+
+    def timerFunction():
+        global timerValue, minutes, seconds
+        # print(timerValue)
+        minutes, seconds = str(timerValue).split(":")
+        minutes = int(minutes)
+        seconds = int(seconds)
+        seconds -= 1
+        if seconds > 0:
+            seconds = seconds
+        elif seconds < 0:
+            seconds = 59
+            minutes -= 1
+        else:
+            print("Failed")
+        minutes = str(minutes)
+        seconds = str(seconds)
+        if len(seconds) == 1:
+            seconds = (f"0{seconds}")
+        if len(minutes) == 1:
+            minutes = (f"0{minutes}")
+        timerValue = (f"{minutes}:{seconds}")
+        print(timerValue)
+        root.after(1000, timerFunction)
 
     left = None
     right = None
@@ -100,9 +134,13 @@ def handelGraphics(timer, timerValue, possession, switch, team1, team2, homeTeam
     score_labelR = None
 
     root.after(0, graphics)
-
+    if timer:
+        root.after(0, timerFunction)
     colorLeft = "#ff0000"
     colorRight = "#0000ff"
+
+
+
 
     root.mainloop()
 

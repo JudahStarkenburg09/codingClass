@@ -42,13 +42,13 @@ def create_window():
 
     # Entry box with place holder: Team 1
     team1_entry = tk.Entry(window)
-    team1_entry.insert(0, "Team 1")
+    team1_entry.insert(0, "Home")
     team1_entry.config(bg='white', fg='black')
     team1_entry.place(x=200, y=140, anchor='center')
 
     # Entry box with place holder: Team 2
     team2_entry = tk.Entry(window)
-    team2_entry.insert(0, "Team 2")
+    team2_entry.insert(0, "Away")
     team2_entry.config(bg='white', fg='black')
     team2_entry.place(x=200, y=160, anchor='center')
 
@@ -56,6 +56,7 @@ def create_window():
 
     def submit():
         global setText
+        print(timer_entry.get())
         all = [timer_var.get(), timer_entry.get(), possession_var.get(), switch_sides_var.get(), team1_entry.get(), team2_entry.get()]
         def finalSubmit():
             root.destroy()
