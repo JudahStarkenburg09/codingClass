@@ -10,6 +10,16 @@ def makeButton(buttonLabel, name, buttonXPos=None, buttonYPos=None, onclick=None
     }
     return array
 
+def makeGetButton(buttonLabel, name, buttonXPos=None, buttonYPos=None, onclick=None, classType=None):
+    html_code = f"""
+    <button class="{classType}" style="position: absolute; left: {buttonXPos}px; top: {buttonYPos}px;" onclick={onclick}>{buttonLabel}</button>
+    """
+    array = {
+        "name": f"{name}",
+        "code": html_code
+    }
+    return array
+
 def createCheckbox(id, name, label,  posx, posy, checked=False):
     html_code = f"""
 <div class="form-check">
@@ -64,7 +74,7 @@ def makeEntryBox(id, placeholder, barText, name, posx, posy, bgColor, width, hei
 <form method="POST">
     <div style="position: absolute; left: {posx}px; top: {posy}px; background-color: {bgColor}; width: {width}px; height: {height}px;" class="input-group flex-nowrap">
         <span class="input-group-text" id="{id}">{barText}</span>
-        <input type="text" class="form-control" placeholder="{placeholder}" aria-label="{placeholder}" aria-describedby="addon-wrapping">
+        <input type="text" class="form-control" id="{id}" placeholder="{placeholder}" aria-label="{placeholder}" aria-describedby="addon-wrapping" name="{name}">
     </div>
 </form>
     """

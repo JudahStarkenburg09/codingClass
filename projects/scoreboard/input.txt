@@ -1,0 +1,16 @@
+import start
+import tkinter as tk
+from tkinter import messagebox
+
+
+create a tkinter window that will create these graphics:
+
+checkbox with label and entry box (entry box only enabled if checked): Timer
+checkbox with label: Possession
+checkbox with label: Switch Sides Possible
+entry box with place holder: Team 1
+entry box with place holder: Team 2
+dropdown with label, but the three options (With unset as option) are always set to the results of the team entry boxes: Home Team
+
+with those things, also add a button called submit, and it will call start.handelGraphics(timer, timerValue, possession, switch, team1, team2, homeTeam)
+timer is a boolean, timerValue is a interger with colon, possession is a boolean, switch is a boolean, team1 is a string, team2 is a string, homeTeam is a string (Must be set to a value of a team1, team2)
