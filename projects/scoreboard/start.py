@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import font
 
-def handelGraphics(timer, timerValue, possession, switch, team1, team2, homeTeam):
+def handelGraphics(timer, timerValue, possession, switch, team1, team2, coloredSides):
     global root, colorLeft, colorRight, left, right, score_labelL, score_labelR, scoreL, scoreR, side
     scoreL = 0
     scoreR = 0
@@ -33,7 +34,7 @@ Press Enter to Reset Score, Possession, and Timer
             root.after(2000, lambda: toast.destroy())
 
     def update_scores(event):
-        global scoreL, scoreR, side
+        global scoreL, scoreR, side, colorLeft, colorRight, side
 
         if event.keysym == 'q':
             scoreL += 1
@@ -44,7 +45,11 @@ Press Enter to Reset Score, Possession, and Timer
         elif event.keysym == 'p':
             scoreR += 1
         elif event.keysym == 'space':
-            scoreL, scoreR = scoreR, scoreL
+            if side == "left":
+                side = "right"
+            else:
+                side = "left"
+
 
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
@@ -56,7 +61,7 @@ Press Enter to Reset Score, Possession, and Timer
     canvas.pack()
 
     def graphics():
-        global colorLeft, colorRight, left, right, score_labelR, score_labelL, side
+        global colorLeft, colorRight, left, right, score_labelR, score_labelL, side, colorRight, colorLeft
         if root.attributes('-fullscreen'):
             posxl = root.winfo_screenwidth() / 2 - 7.5
             posxr2 = root.winfo_screenwidth() - 15
@@ -80,26 +85,26 @@ Press Enter to Reset Score, Possession, and Timer
             posyScoreR = (posyt + posyb) / 2
             fontSize = 125
 
-        if left and right:
-            canvas.delete(left)
-            canvas.delete(right)
+        if (left and right) or (coloredSides == False):
             canvas.delete(score_labelL)
             canvas.delete(score_labelR)
 
         if side == "left":
             colorLeft = "#ff0000"
             colorRight = "#0000ff"
-            left = canvas.create_rectangle(10, posyt, posxl, posyb, fill=colorLeft)
-            right = canvas.create_rectangle(posxr1, posyt, posxr2, posyb, fill=colorRight)
-            score_labelL = canvas.create_text(posxScoreL, posyScoreL, text=str(scoreL), fill="white", font=("Helvetica", fontSize), anchor="center")
-            score_labelR = canvas.create_text(posxScoreR, posyScoreR, text=str(scoreR), fill="white", font=("Helvetica", fontSize), anchor="center")
+            if coloredSides:
+                left = canvas.create_rectangle(10, posyt, posxl, posyb, fill=colorLeft)
+                right = canvas.create_rectangle(posxr1, posyt, posxr2, posyb, fill=colorRight)
+            score_labelL = canvas.create_text(posxScoreL, posyScoreL, text=str(scoreL), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
+            score_labelR = canvas.create_text(posxScoreR, posyScoreR, text=str(scoreR), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
         else:
             colorLeft = "#0000ff"
             colorRight = "#ff0000"
-            left = canvas.create_rectangle(10, posyt, posxl, posyb, fill=colorLeft)
-            right = canvas.create_rectangle(posxr1, posyt, posxr2, posyb, fill=colorRight)
-            score_labelL = canvas.create_text(posxScoreL, posyScoreL, text=str(scoreR), fill="white", font=("Helvetica", fontSize), anchor="center")
-            score_labelR = canvas.create_text(posxScoreR, posyScoreR, text=str(scoreL), fill="white", font=("Helvetica", fontSize), anchor="center")
+            if coloredSides:
+                left = canvas.create_rectangle(10, posyt, posxl, posyb, fill=colorLeft)
+                right = canvas.create_rectangle(posxr1, posyt, posxr2, posyb, fill=colorRight)
+            score_labelL = canvas.create_text(posxScoreL, posyScoreL, text=str(scoreR), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
+            score_labelR = canvas.create_text(posxScoreR, posyScoreR, text=str(scoreL), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
 
 
         root.after(100, graphics)
@@ -145,4 +150,4 @@ Press Enter to Reset Score, Possession, and Timer
     root.mainloop()
 
 if __name__ == "__main__":
-    handelGraphics(10, 15, 'possession', 'switch', 'team1', 'team2', 'homeTeam')
+    handelGraphics(10, 15, 'possession', 'switch', 'team1', 'team2', True)
