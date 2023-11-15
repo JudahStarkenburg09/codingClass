@@ -71,10 +71,10 @@ def create_window():
         home_icon_path = False
         away_icon_path = False
         print(timer_entry.get())
+        all = [timer_var.get(), timer_entry.get(), possession_var.get(), switch_sides_var.get(), team1_entry.get(), team2_entry.get(), colored_sides_var.get()]
         def finalSubmit():
             global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
             root.destroy()
-            all = [timer_var.get(), timer_entry.get(), possession_var.get(), switch_sides_var.get(), team1_entry.get(), team2_entry.get(), colored_sides_var.get(), home_icon_path, away_icon_path]
             a = all[0]
             b = all[1]
             c = all[2]
@@ -82,11 +82,9 @@ def create_window():
             e = all[4]
             f = all[5]
             g = all[6]
-            h = all[7]
-            i = all[8]
             print(home_icon_path)
             print(away_icon_path)
-            start.handelGraphics(a, b, c, d, e, f, g, h, i)
+            start.handelGraphics(a, b, c, d, e, f, g, home_icon_path, away_icon_path)
             
         var1 =  team1_entry.get()
         var2 = team2_entry.get()

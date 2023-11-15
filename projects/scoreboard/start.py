@@ -37,13 +37,25 @@ Press Enter to Reset Score, Possession, and Timer
         global scoreL, scoreR, side, colorLeft, colorRight, side
 
         if event.keysym == 'q':
-            scoreL += 1
+            if side == "left":
+                scoreL += 1
+            else:
+                scoreR += 1
         elif event.keysym == 'w':
-            scoreL -= 1
+            if side == "left":
+                scoreL -= 1
+            else:
+                scoreR -= 1
         elif event.keysym == 'o':
-            scoreR -= 1
+            if side == "left":
+                scoreR -= 1
+            else:
+                scoreL -= 1
         elif event.keysym == 'p':
-            scoreR += 1
+            if side == "left":
+                scoreR += 1
+            else:
+                scoreL += 1
         elif event.keysym == 'space':
             if side == "left":
                 side = "right"
