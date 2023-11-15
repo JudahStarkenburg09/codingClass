@@ -2,9 +2,15 @@ import start
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import filedialog
+from PIL import Image, ImageTk, ImageFilter
+
+def resize_image(image_path, width, height):
+    original_image = Image.open(image_path)
+    resized_image = original_image.resize((width, height), resample=Image.LANCZOS)
+    return ImageTk.PhotoImage(resized_image)
 
 def create_window():
-    global has_icon_var
+    global has_icon_var, window, team1_icon_button, team2_icon_button
     global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
     window = tk.Tk()
     window.title("Create Graphics")
@@ -66,15 +72,48 @@ def create_window():
     has_icon_checkbutton.place(x=200, y=220, anchor='center')
 
     def submit():
-        global has_icon_var, home_icon_path, away_icon_path
+        global has_icon_var, home_icon_path, away_icon_path, window, team1_icon_button, team2_icon_button
         global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
+        window.geometry('300x300')  # Adjust the size accordingly
+        window.config(bg='white')
+
+
+        def show_image_on_canvas(image_path, x, y, width, height):
+            global window, tk_image
+            # Load and resize the image
+            tk_image = resize_image(image_path, width=width, height=height)
+
+            # Create a Tkinter label and display the image at specified (x, y) coordinates
+            x_coordinate = x  # Replace with your desired x-coordinate
+            y_coordinate = y  # Replace with your desired y-coordinate
+            image_label = tk.Label(window, image=tk_image)
+            image_label.place(x=x_coordinate, y=y_coordinate)
+            return image_label
+
+
+
         home_icon_path = False
         away_icon_path = False
         print(timer_entry.get())
-        all = [timer_var.get(), timer_entry.get(), possession_var.get(), switch_sides_var.get(), team1_entry.get(), team2_entry.get(), colored_sides_var.get()]
+        all = [timer_var.get(), timer_entry.get(), possession_var.get(), switch_sides_var.get(), team1_entry.get(),
+            team2_entry.get(), colored_sides_var.get()]
+        var1 = team1_entry.get()
+        var2 = team2_entry.get()
+        timer_checkbutton.destroy()
+        possession_checkbutton.destroy()
+        has_icon_checkbutton.destroy()
+        team2_entry.destroy()
+        # team2_icon_button.destroy()
+        team1_entry.destroy()
+        # team2_icon_button.destroy()
+        timer_entry.destroy()
+        switch_sides_checkbutton.destroy()
+        colored_sides_checkbutton.destroy()
+
         def finalSubmit():
+            print("Submitted")
             global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
-            root.destroy()
+            window.destroy()
             a = all[0]
             b = all[1]
             c = all[2]
@@ -85,39 +124,36 @@ def create_window():
             print(home_icon_path)
             print(away_icon_path)
             start.handelGraphics(a, b, c, d, e, f, g, home_icon_path, away_icon_path)
-            
-        var1 =  team1_entry.get()
-        var2 = team2_entry.get()
-        root = tk.Tk()
-        root.geometry('200x200')
-        root.config(bg='light gray')
+
 
         if has_icon_var.get():
             # Adding buttons for each team's icon
-            team1_icon_button = tk.Button(root, text=f"{var1} Icon")
-            team1_icon_button.place(x=50, y=110, anchor='center')
+            team1_icon_button = tk.Button(window, text=f"{var1} Icon")
+            team1_icon_button.place(x=50, y=210, anchor='center')
 
-            team2_icon_button = tk.Button(root, text=f"{var2} Icon")
-            team2_icon_button.place(x=150, y=110, anchor='center')
+            team2_icon_button = tk.Button(window, text=f"{var2} Icon")
+            team2_icon_button.place(x=250, y=210, anchor='center')
 
-
-        def browseIcon(button):
+        def browseIcon(button, x, y):
             global home_icon_path, away_icon_path
             if button.cget('text') == 'Home':
-                home_icon_path = filedialog.askopenfilename(title=f"Select {button.cget('text')}", filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
+                home_icon_path = filedialog.askopenfilename(title=f"Select {button.cget('text')}",
+                                                            filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
                 print(f"Selected {button.cget('text')} Path:", home_icon_path)
+                homeIcon = show_image_on_canvas(home_icon_path, x, y, 100, 100)
             else:
-                away_icon_path = filedialog.askopenfilename(title=f"Select {button.cget('text')}", filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
+                away_icon_path = filedialog.askopenfilename(title=f"Select {button.cget('text')}",
+                                                            filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
                 print(f"Selected {button.cget('text')} Path:", away_icon_path)
+                awayIcon = show_image_on_canvas(away_icon_path, x, y, 100, 100)
 
         if has_icon_var.get():
-            team1_icon_button.config(command=lambda: browseIcon(team1_icon_button))
-            team2_icon_button.config(command=lambda: browseIcon(team2_icon_button))
+            team1_icon_button.config(command=lambda: browseIcon(team1_icon_button, 10, 20))
+            team2_icon_button.config(command=lambda: browseIcon(team2_icon_button, 150, 20))
 
-        submit_button = tk.Button(root, text="Submit", command=finalSubmit, anchor="center")
-        submit_button.place(x=100, y=150, anchor='center')
-        root.after(100, window.destroy())
-        root.mainloop()
+        submit_button = tk.Button(window, text="Submit", command=finalSubmit, anchor="center")
+        submit_button.place(x=150, y=250, anchor='center')
+
 
     submit_button = tk.Button(window, text="Submit", command=submit, anchor="center")
     submit_button.place(x=200, y=350, anchor='center')

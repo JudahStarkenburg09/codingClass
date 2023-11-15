@@ -1,43 +1,28 @@
 import tkinter as tk
-from tkinter import font
-import time
+from PIL import Image, ImageTk
 
-# Function to update the time
-def update_time():
-    current_time = time.strftime("%H:%M:%S")
-    label.config(text=current_time)
-    root.after(1000, update_time)  # Update every 1000 milliseconds (1 second)
+def resize_image(image_path, width, height):
+    original_image = Image.open(image_path)
+    resized_image = original_image.resize((width, height), resample=Image.LANCZOS)
+    return ImageTk.PhotoImage(resized_image)
 
-# Create the main window
-root = tk.Tk()
-root.title("Digital Clock")
+# Replace 'path_to_your_image' with the actual path to your image file
+image_path = 'NCASymbol.png'
+desired_width = 50  # Replace with your preferred width in pixels
+desired_height = 50  # Replace with your preferred height in pixels
 
-import tkinter as tk
-from tkinter import font
+# Create the main Tkinter window
+window = tk.Tk()
+window.title("Image Resizing Example")
 
-# Print available font families
-print(font.families())
+# Load and resize the image
+tk_image = resize_image(image_path, desired_width, desired_height)
 
-# Rest of your code
-# ...
-
-
-# Load the digital-7.ttf font file
-try:
-    digital_font = font.Font(family='ds-digital', size=50)
-    print("Success")
-except tk.TclError:
-    print("Error: Unable to load the font. Make sure 'digital-7.ttf' is in the same directory as your script.")
-
-# Create a label for displaying the time
-label = tk.Label(root, font=digital_font, background="black", foreground="green")
-label.pack(padx=20, pady=20)
-
-# Run the update_time function to initialize the time display
-update_time()
-
-# Set the window background color
-root.configure(bg="black")
+# Create a Tkinter label and display the image at specified (x, y) coordinates
+x_coordinate = 50  # Replace with your desired x-coordinate
+y_coordinate = 50  # Replace with your desired y-coordinate
+image_label = tk.Label(window, image=tk_image)
+image_label.place(x=x_coordinate, y=y_coordinate)
 
 # Run the Tkinter event loop
-root.mainloop()
+window.mainloop()
