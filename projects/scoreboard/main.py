@@ -5,6 +5,7 @@ from tkinter import filedialog
 
 def create_window():
     global has_icon_var
+    global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
     window = tk.Tk()
     window.title("Create Graphics")
     window.geometry("400x400")
@@ -66,11 +67,12 @@ def create_window():
 
     def submit():
         global has_icon_var, home_icon_path, away_icon_path
+        global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
         home_icon_path = False
         away_icon_path = False
         print(timer_entry.get())
         def finalSubmit():
-            timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
+            global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
             root.destroy()
             all = [timer_var.get(), timer_entry.get(), possession_var.get(), switch_sides_var.get(), team1_entry.get(), team2_entry.get(), colored_sides_var.get(), home_icon_path, away_icon_path]
             a = all[0]
