@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import font
 
-def handelGraphics(timer, timerValue, possession, switch, team1, team2, coloredSides):
+def handelGraphics(timer, timerValue, possession, switch, team1, team2, coloredSides, icon1, icon2):
     global root, colorLeft, colorRight, left, right, score_labelL, score_labelR, scoreL, scoreR, side
     scoreL = 0
     scoreR = 0
