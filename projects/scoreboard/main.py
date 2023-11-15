@@ -69,9 +69,10 @@ def create_window():
         home_icon_path = False
         away_icon_path = False
         print(timer_entry.get())
-        all = [timer_var.get(), timer_entry.get(), possession_var.get(), switch_sides_var.get(), team1_entry.get(), team2_entry.get(), colored_sides_var.get(), home_icon_path, away_icon_path]
         def finalSubmit():
+            timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
             root.destroy()
+            all = [timer_var.get(), timer_entry.get(), possession_var.get(), switch_sides_var.get(), team1_entry.get(), team2_entry.get(), colored_sides_var.get(), home_icon_path, away_icon_path]
             a = all[0]
             b = all[1]
             c = all[2]
