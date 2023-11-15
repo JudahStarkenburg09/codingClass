@@ -71,16 +71,15 @@ def create_window():
         print(timer_entry.get())
         all = [timer_var.get(), timer_entry.get(), possession_var.get(), switch_sides_var.get(), team1_entry.get(), team2_entry.get(), colored_sides_var.get()]
         def finalSubmit():
-            if home_icon_path and away_icon_path:
-                root.destroy()
-                a = all[0]
-                b = all[1]
-                c = all[2]
-                d = all[3]
-                e = all[4]
-                f = all[5]
-                g = all[6]
-                start.handelGraphics(a, b, c, d, e, f, g)
+            root.destroy()
+            a = all[0]
+            b = all[1]
+            c = all[2]
+            d = all[3]
+            e = all[4]
+            f = all[5]
+            g = all[6]
+            start.handelGraphics(a, b, c, d, e, f, g)
             
         var1 =  team1_entry.get()
         var2 = team2_entry.get()
