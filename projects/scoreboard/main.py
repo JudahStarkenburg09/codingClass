@@ -84,6 +84,8 @@ def create_window():
             g = all[6]
             h = all[7]
             i = all[8]
+            print(home_icon_path)
+            print(away_icon_path)
             start.handelGraphics(a, b, c, d, e, f, g, h, i)
             
         var1 =  team1_entry.get()
