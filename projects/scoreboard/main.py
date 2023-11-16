@@ -72,23 +72,31 @@ def create_window():
     has_icon_checkbutton.place(x=200, y=220, anchor='center')
 
     def submit():
-        global has_icon_var, home_icon_path, away_icon_path, window, team1_icon_button, team2_icon_button
+        global has_icon_var, home_icon_path, away_icon_path, window, team1_icon_button, team2_icon_button, tk_images
         global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
-        window.geometry('300x300')  # Adjust the size accordingly
+        window.geometry('320x300')  # Adjust the size accordingly
         window.config(bg='white')
 
+        tk_images = []
+        def show_image(image_path, x, y, width, height):
+            global window, tk_images
 
-        def show_image_on_canvas(image_path, x, y, width, height):
-            global window, tk_image
-            # Load and resize the image
-            tk_image = resize_image(image_path, width=width, height=height)
+            # Load the image using PIL
+            original_image = Image.open(image_path)
 
-            # Create a Tkinter label and display the image at specified (x, y) coordinates
-            x_coordinate = x  # Replace with your desired x-coordinate
-            y_coordinate = y  # Replace with your desired y-coordinate
-            image_label = tk.Label(window, image=tk_image)
-            image_label.place(x=x_coordinate, y=y_coordinate)
-            return image_label
+            # Resize the image
+            resized_image = original_image.resize((width, height), resample=Image.LANCZOS)
+
+            # Create a PhotoImage object from the resized image
+            tk_image = ImageTk.PhotoImage(resized_image)
+
+            # Keep a reference to the PhotoImage to prevent it from being garbage collected
+            tk_images.append(tk_image)
+
+            for i in tk_images:
+                # Create a Tkinter label and display the image at specified (x, y) coordinates
+                image_label = tk.Label(window, image=i)
+                image_label.place(x=x, y=y)
 
 
 
@@ -140,16 +148,16 @@ def create_window():
                 home_icon_path = filedialog.askopenfilename(title=f"Select {button.cget('text')}",
                                                             filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
                 print(f"Selected {button.cget('text')} Path:", home_icon_path)
-                homeIcon = show_image_on_canvas(home_icon_path, x, y, 100, 100)
+                show_image(home_icon_path, x, y, 100, 100)
             else:
                 away_icon_path = filedialog.askopenfilename(title=f"Select {button.cget('text')}",
                                                             filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
                 print(f"Selected {button.cget('text')} Path:", away_icon_path)
-                awayIcon = show_image_on_canvas(away_icon_path, x, y, 100, 100)
+                show_image(away_icon_path, x, y, 100, 100)
 
         if has_icon_var.get():
             team1_icon_button.config(command=lambda: browseIcon(team1_icon_button, 10, 20))
-            team2_icon_button.config(command=lambda: browseIcon(team2_icon_button, 150, 20))
+            team2_icon_button.config(command=lambda: browseIcon(team2_icon_button, 200, 20))
 
         submit_button = tk.Button(window, text="Submit", command=finalSubmit, anchor="center")
         submit_button.place(x=150, y=250, anchor='center')

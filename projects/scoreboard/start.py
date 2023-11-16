@@ -2,10 +2,12 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import font
 
-def handelGraphics(timer, timerValue, possession, switch, team1, team2, coloredSides, icon1, icon2):
-    global root, colorLeft, colorRight, left, right, score_labelL, score_labelR, scoreL, scoreR, side
+def handelGraphics(timer, timerValuestr, possession, switch, team1, team2, coloredSides, icon1, icon2):
+    global root, colorLeft, colorRight, left, right, score_labelL, score_labelR, scoreL, scoreR, side, timerValue, paused, timerText
+    timerValue = timerValuestr
     scoreL = 0
     scoreR = 0
+    paused = True
     side = "left"
     messagebox.showinfo("Info", """Press (Q, W) to change left score
 Press (O, P) to change right score
@@ -33,25 +35,26 @@ Press Enter to Reset Score, Possession, and Timer
             toast.place(x=250, y=15, anchor='center')
             root.after(2000, lambda: toast.destroy())
 
-    def update_scores(event):
-        global scoreL, scoreR, side, colorLeft, colorRight, side
 
-        if event.keysym == 'q':
+    def update_scores(event, keysubl='w', keyaddl='q', keysubr='o', keyaddr='p', keyreset='Return'):
+        global scoreL, scoreR, side, colorLeft, colorRight, side, timerValue, paused
+
+        if event.keysym == keyaddl:
             if side == "left":
                 scoreL += 1
             else:
                 scoreR += 1
-        elif event.keysym == 'w':
+        elif event.keysym == keysubl:
             if side == "left":
                 scoreL -= 1
             else:
                 scoreR -= 1
-        elif event.keysym == 'o':
+        elif event.keysym == keysubr:
             if side == "left":
                 scoreR -= 1
             else:
                 scoreL -= 1
-        elif event.keysym == 'p':
+        elif event.keysym == keyaddr:
             if side == "left":
                 scoreR += 1
             else:
@@ -61,31 +64,55 @@ Press Enter to Reset Score, Possession, and Timer
                 side = "right"
             else:
                 side = "left"
+        elif event.keysym == keyreset:
+            paused = True
+            timerValue = timerValuestr
+            scoreL = 0
+            scoreR = 0
+        elif event.keysym == 't':
+            if paused:
+                paused = False
+            else:
+                paused = True
+
+
 
 
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
 
+    keysubl = 'w'
+    keyaddl = 'q'
+    keysubr = 'o'
+    keyaddr = 'p'
+    keyreset = 'Return'
+
     root.bind("<F11>", toggle_fullscreen)
-    root.bind("<Key>", update_scores)
+    root.bind("<Key>", lambda event: update_scores(event, keysubl, keyaddl, keysubr, keyaddr, keyreset))
 
     canvas = tk.Canvas(width=10000, height=10000, bg='black')
     canvas.pack()
 
     def graphics():
-        global colorLeft, colorRight, left, right, score_labelR, score_labelL, side, colorRight, colorLeft
+        global colorLeft, colorRight, left, right, score_labelR, score_labelL, side, colorRight, colorLeft, timerValue, timerText
         if root.attributes('-fullscreen'):
             posxl = root.winfo_screenwidth() / 2 - 7.5
             posxr2 = root.winfo_screenwidth() - 15
             posxr1 = root.winfo_screenwidth() / 2 + 7.5
             posyb = root.winfo_screenheight() - 15
-            posyt = 250
+            posxT = root.winfo_screenwidth() / 2
+            posyT = 110
+            scoreFontSize = 175
+            posyt = 230
             posxScoreL = (10 + posxl) / 2
             posyScoreL = (posyt + posyb) / 2
             posxScoreR = (posxr1 + posxr2) / 2
             posyScoreR = (posyt + posyb) / 2
             fontSize = 300
         else:
+            posxT = 250
+            scoreFontSize = 100
+            posyT = 40
             posxl = 245
             posxr2 = 490
             posxr1 = 255
@@ -118,38 +145,59 @@ Press Enter to Reset Score, Possession, and Timer
             score_labelL = canvas.create_text(posxScoreL, posyScoreL, text=str(scoreR), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
             score_labelR = canvas.create_text(posxScoreR, posyScoreR, text=str(scoreL), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
 
+        if timerText:
+            canvas.delete(timerText)
+        timerText = canvas.create_text(posxT, posyT, text=f"{timerValue}", fill="red", font=font.Font(family='ds-digital', size=(scoreFontSize-50)), anchor="center")
+
 
         root.after(100, graphics)
 
+    timerText = None
+    print("here1")
     def timerFunction():
-        global timerValue, minutes, seconds
-        # print(timerValue)
-        minutes, seconds = str(timerValue).split(":")
-        minutes = int(minutes)
-        seconds = int(seconds)
-        seconds -= 1
-        if seconds > 0:
-            seconds = seconds
-        elif seconds < 0:
-            seconds = 59
-            minutes -= 1
+        global root, timerValue, paused
+
+        minutes, seconds = map(int, timerValue.split(":"))
+
+        # Convert minutes and seconds to total seconds
+        total_seconds = minutes * 60 + seconds
+
+        if not paused:
+            # Decrement total seconds
+            if total_seconds > 10:
+                total_seconds -= 1
+            else:
+                total_seconds -= .01
+
+            # Calculate new minutes and seconds
+            new_minutes = total_seconds // 60
+            new_seconds = total_seconds % 60
+
+            # Format the new values
+            minutes_str = f"{new_minutes:02d}"
+            seconds_str = f"{new_seconds:02d}"
+
+            # Update timerValue
+            timerValue = f"{minutes_str}:{seconds_str}"
+
+            print(timerValue)
+
+            if total_seconds > 0:
+                # If there are remaining seconds, continue the countdown
+                pass
+            else:
+                print("Timer reached 0:00")
+                # Perform actions when timer reaches 0:00
+        if total_seconds > 10:
+            root.after(1000, timerFunction)
         else:
-            print("Failed")
-        minutes = str(minutes)
-        seconds = str(seconds)
-        if len(seconds) == 1:
-            seconds = (f"0{seconds}")
-        if len(minutes) == 1:
-            minutes = (f"0{minutes}")
-        timerValue = (f"{minutes}:{seconds}")
-        print(timerValue)
-        root.after(1000, timerFunction)
+            root.after(10, timerFunction)
 
     left = None
     right = None
     score_labelL = None
     score_labelR = None
-
+    print("here2")
     root.after(0, graphics)
     if timer:
         root.after(0, timerFunction)
@@ -158,8 +206,8 @@ Press Enter to Reset Score, Possession, and Timer
 
 
 
-
+    print("here3")
     root.mainloop()
 
 if __name__ == "__main__":
-    handelGraphics(10, 15, 'possession', 'switch', 'team1', 'team2', True)
+    handelGraphics(True, '04:13', 'possession', 'switch', 'team1', 'team2', False, False, False)
