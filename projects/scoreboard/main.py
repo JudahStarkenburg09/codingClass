@@ -117,7 +117,7 @@ def create_window():
         timer_entry.destroy()
         switch_sides_checkbutton.destroy()
         colored_sides_checkbutton.destroy()
-
+ 
         def finalSubmit():
             print("Submitted")
             global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
