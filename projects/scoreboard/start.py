@@ -123,10 +123,10 @@ Press F1 to show Keybinds again / Open Live Window"""
             posyT = 110
             scoreFontSize = 175
             posyt = 230
-            posxScoreL = (10 + posxl) / 2
-            posyScoreL = (posyt + posyb) / 2
-            posxScoreR = (posxr1 + posxr2) / 2
-            posyScoreR = (posyt + posyb) / 2
+            posxScoreL = ((10 + posxl) / 2) - 50
+            posyScoreL = ((posyt + posyb) / 2) + 50
+            posxScoreR = ((posxr1 + posxr2) / 2) - 50
+            posyScoreR = ((posyt + posyb) / 2) + 50
             fontSize = 300
             tBase1 = posxT - 200
             tBase2 = -10
@@ -159,18 +159,18 @@ Press F1 to show Keybinds again / Open Live Window"""
             colorLeft = "#ff0000"
             colorRight = "#0000ff"
             if coloredSides:
-                left = canvas.create_rectangle(10, posyt, posxl, posyb, fill=colorLeft)
-                right = canvas.create_rectangle(posxr1, posyt, posxr2, posyb, fill=colorRight)
-            score_labelL = canvas.create_text(posxScoreL, posyScoreL, text=str(scoreL), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
-            score_labelR = canvas.create_text(posxScoreR, posyScoreR, text=str(scoreR), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
+                left = canvas.create_rectangle(10, posyt+50, posxl, posyb, fill=colorLeft)
+                right = canvas.create_rectangle(posxr1, posyt+50, posxr2, posyb, fill=colorRight)
+            score_labelL = canvas.create_text(posxScoreL-50, posyScoreL+50, text=str(scoreL), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
+            score_labelR = canvas.create_text(posxScoreR+50, posyScoreR+50, text=str(scoreR), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
         else:
             colorLeft = "#0000ff"
             colorRight = "#ff0000"
             if coloredSides:
-                left = canvas.create_rectangle(10, posyt, posxl, posyb, fill=colorLeft)
-                right = canvas.create_rectangle(posxr1, posyt, posxr2, posyb, fill=colorRight)
-            score_labelL = canvas.create_text(posxScoreL, posyScoreL, text=str(scoreR), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
-            score_labelR = canvas.create_text(posxScoreR, posyScoreR, text=str(scoreL), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
+                left = canvas.create_rectangle(10, posyt+50, posxl, posyb, fill=colorLeft)
+                right = canvas.create_rectangle(posxr1, posyt+50, posxr2, posyb, fill=colorRight)
+            score_labelL = canvas.create_text(posxScoreL-50, posyScoreL+50, text=str(scoreR), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
+            score_labelR = canvas.create_text(posxScoreR+50, posyScoreR+50, text=str(scoreL), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
 
         if timerText:
             canvas.delete(timerText)

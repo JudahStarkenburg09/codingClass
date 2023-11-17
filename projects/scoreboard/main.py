@@ -10,7 +10,7 @@ def resize_image(image_path, width, height):
     return ImageTk.PhotoImage(resized_image)
 
 def create_window():
-    global has_icon_var, window, team1_icon_button, team2_icon_button, hasPeriod
+    global has_icon_var, window, team1_icon_button, team2_icon_button, hasPeriod, period
     global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
     window = tk.Tk()
     window.title("Create Graphics")
@@ -77,7 +77,7 @@ def create_window():
     period.place(x=200, y=250, anchor='center')
 
     def submit():
-        global has_icon_var, home_icon_path, away_icon_path, window, team1_icon_button, team2_icon_button, tk_images, hasPeriod
+        global has_icon_var, home_icon_path, away_icon_path, window, team1_icon_button, team2_icon_button, tk_images, hasPeriod, period
         global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
         window.geometry('320x300')  # Adjust the size accordingly
         window.config(bg='white')
@@ -115,6 +115,7 @@ def create_window():
         timer_checkbutton.destroy()
         possession_checkbutton.destroy()
         has_icon_checkbutton.destroy()
+        period.destroy()
         team2_entry.destroy()
         # team2_icon_button.destroy()
         team1_entry.destroy()
@@ -134,9 +135,10 @@ def create_window():
             e = all[4]
             f = all[5]
             g = all[6]
+            h = all[7]
             print(home_icon_path)
             print(away_icon_path)
-            start.handelGraphics(a, b, c, d, e, f, g, home_icon_path, away_icon_path)
+            start.handelGraphics(a, b, c, d, e, f, g, home_icon_path, away_icon_path, h)
 
 
         if has_icon_var.get():
