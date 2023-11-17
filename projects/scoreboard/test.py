@@ -1,37 +1,35 @@
 import tkinter as tk
-def timerFunction():
-    global timerValue, root
 
-    minutes, seconds = map(int, timerValue.split(":"))
+def show_keybinds():
+    keybinds = """Press (Q, W) to change left score
+Press (O, P) to change right score
+Press space to switch sides
+Press T to start/pause the timer
+Press F11 To Toggle Fullscreen
+Press arrow keys (< >) to change possession
+Press Enter to Reset Timer
+Press Ctrl + Enter to Reset Score, Possession, and Timer
+Press f1 to show Keybinds again"""
+    
+    # Create a new window
+    keybinds_window = tk.Toplevel(root)
+    keybinds_window.title("Keybinds")
 
-    # Convert minutes and seconds to total seconds
-    total_seconds = minutes * 60 + seconds
+    # Create a label to display the keybinds
+    label = tk.Label(keybinds_window, text=keybinds, padx=10, pady=10)
+    label.pack()
 
-    # Decrement total seconds
-    total_seconds -= 1
-
-    # Calculate new minutes and seconds
-    new_minutes = total_seconds // 60
-    new_seconds = total_seconds % 60
-
-    # Format the new values
-    minutes_str = f"{new_minutes:02d}"
-    seconds_str = f"{new_seconds:02d}"
-
-    # Update timerValue
-    timerValue = f"{minutes_str}:{seconds_str}"
-
-    print(timerValue)
-
-    if total_seconds > 0:
-        # If there are remaining seconds, continue the countdown
-        root.after(1000, timerFunction)
-    else:
-        print("Timer reached 0:00")
-        # Perform any actions you want when the timer reaches 0:00
+    # Create an OK button to close the window
+    ok_button = tk.Button(keybinds_window, text="OK", command=keybinds_window.destroy)
+    ok_button.pack(pady=10)
 
 # Example usage
 root = tk.Tk()
-timerValue = "04:13"  # Initial timer value (5 minutes)
-root.after(1000, timerFunction)
+root.title("ROOT")
+
+# Assuming you have a function to call this, for example, a button command
+# This function will open a new window with the keybinds information
+show_keybinds()
+
+# Start the Tkinter event loop
 root.mainloop()

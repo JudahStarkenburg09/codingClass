@@ -2,21 +2,34 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import font
 
-def handelGraphics(timer, timerValuestr, possession, switch, team1, team2, coloredSides, icon1, icon2):
-    global root, colorLeft, colorRight, left, right, score_labelL, score_labelR, scoreL, scoreR, side, timerValue, paused, timerText
+
+
+def handelGraphics(timer, timerValuestr, possession, switch, team1, team2, coloredSides, icon1, icon2, hasPeriod):
+    global switchPossible, currentPos, timerBase, keybinds, toggle_fullscreen, update_scores, period, periodPossible
+    global root, colorLeft, colorRight, left, right, score_labelL, score_labelR, scoreL, scoreR, side, timerValue, paused, timerText, possessionPossible
     timerValue = timerValuestr
     scoreL = 0
     scoreR = 0
     paused = True
     side = "left"
-    messagebox.showinfo("Info", """Press (Q, W) to change left score
+    possessionPossible = possession
+    if possessionPossible == True:
+        currentPos = '<'
+    periodPossible = False
+    if hasPeriod:
+        periodPossible = True
+        period = 1
+    switchPossible = switch
+    keybinds = """Press (Q, W) to change left score
 Press (O, P) to change right score
 Press space to switch sides
 Press T to start/pause the timer
 Press F11 To Toggle Fullscreen
 Press arrow keys (< >) to change possession
-Press Enter to Reset Score, Possession, and Timer
-                """)
+Press Enter to Reset Timer
+Press Ctrl + Enter to Reset Score, Possession, and Timer
+Press F1 to show Keybinds again / Open Live Window"""
+    messagebox.showinfo("Keybinds", keybinds)
 
     root = tk.Tk()
     root.geometry('500x400')
@@ -37,7 +50,7 @@ Press Enter to Reset Score, Possession, and Timer
 
 
     def update_scores(event, keysubl='w', keyaddl='q', keysubr='o', keyaddr='p', keyreset='Return'):
-        global scoreL, scoreR, side, colorLeft, colorRight, side, timerValue, paused
+        global scoreL, scoreR, side, colorLeft, colorRight, side, timerValue, paused, possessionPossible, switchPossible, currentPos, keybinds
 
         if event.keysym == keyaddl:
             if side == "left":
@@ -60,20 +73,26 @@ Press Enter to Reset Score, Possession, and Timer
             else:
                 scoreL += 1
         elif event.keysym == 'space':
-            if side == "left":
-                side = "right"
-            else:
-                side = "left"
-        elif event.keysym == keyreset:
+            if switchPossible:
+                if side == "left":
+                    side = "right"
+                else:
+                    side = "left"
+        elif event.keysym == "Return" and event.state == 0x4:  # 0x4 represents the Control key
             paused = True
             timerValue = timerValuestr
             scoreL = 0
             scoreR = 0
+        elif event.keysym == "Return":
+            paused = True
+            timerValue = timerValuestr
         elif event.keysym == 't':
             if paused:
                 paused = False
             else:
                 paused = True
+        elif event.keysym == "F1":
+            show_keybinds(keysubl, keyaddl, keysubr, keyaddr, keyreset)
 
 
 
@@ -94,7 +113,7 @@ Press Enter to Reset Score, Possession, and Timer
     canvas.pack()
 
     def graphics():
-        global colorLeft, colorRight, left, right, score_labelR, score_labelL, side, colorRight, colorLeft, timerValue, timerText
+        global colorLeft, colorRight, left, right, score_labelR, score_labelL, side, colorRight, colorLeft, timerValue, timerText, timerBase
         if root.attributes('-fullscreen'):
             posxl = root.winfo_screenwidth() / 2 - 7.5
             posxr2 = root.winfo_screenwidth() - 15
@@ -109,6 +128,10 @@ Press Enter to Reset Score, Possession, and Timer
             posxScoreR = (posxr1 + posxr2) / 2
             posyScoreR = (posyt + posyb) / 2
             fontSize = 300
+            tBase1 = posxT - 200
+            tBase2 = -10
+            tBase3 = posxT + 200
+            tBase4 = posyT + 100
         else:
             posxT = 250
             scoreFontSize = 100
@@ -123,6 +146,10 @@ Press Enter to Reset Score, Possession, and Timer
             posxScoreR = (posxr1 + posxr2) / 2
             posyScoreR = (posyt + posyb) / 2
             fontSize = 125
+            tBase1 = posxT - 100
+            tBase2 = -10
+            tBase3 = posxT + 100
+            tBase4 = posyT + 60
 
         if (left and right) or (coloredSides == False):
             canvas.delete(score_labelL)
@@ -148,11 +175,15 @@ Press Enter to Reset Score, Possession, and Timer
         if timerText:
             canvas.delete(timerText)
         timerText = canvas.create_text(posxT, posyT, text=f"{timerValue}", fill="red", font=font.Font(family='ds-digital', size=(scoreFontSize-50)), anchor="center")
-
+        if timer:
+            if timerBase:
+                canvas.delete(timerBase)
+            timerBase = canvas.create_rectangle(tBase1, tBase2, tBase3, tBase4, fill=None, outline='gray', width=2)
 
         root.after(100, graphics)
 
     timerText = None
+    timerBase = None
     print("here1")
     def timerFunction():
         global root, timerValue, paused
@@ -161,7 +192,7 @@ Press Enter to Reset Score, Possession, and Timer
 
         # Convert minutes and seconds to total seconds
         total_seconds = minutes * 60 + seconds
-
+        
         if not paused:
             # Decrement total seconds
             if total_seconds > 10:
@@ -209,5 +240,22 @@ Press Enter to Reset Score, Possession, and Timer
     print("here3")
     root.mainloop()
 
+def show_keybinds(keysubl, keyaddl, keysubr, keyaddr, keyreset):
+    global root, keybinds
+    
+    # Create a new window
+    keybinds_window = tk.Toplevel(root)
+    keybinds_window.title("Live Window")
+
+    # Create a label to display the keybinds
+    label = tk.Label(keybinds_window, text=keybinds, padx=10, pady=10)
+    label.pack()
+
+    # Create an OK button to close the window
+    ok_button = tk.Button(keybinds_window, text="OK", command=keybinds_window.destroy)
+    ok_button.pack(pady=10)
+    keybinds_window.bind("<F11>", toggle_fullscreen)
+    keybinds_window.bind("<Key>", lambda event: update_scores(event, keysubl, keyaddl, keysubr, keyaddr, keyreset))
+
 if __name__ == "__main__":
-    handelGraphics(True, '04:13', 'possession', 'switch', 'team1', 'team2', False, False, False)
+    handelGraphics(True, '04:13', 'possession', 'switch', 'team1', 'team2', False, False, False, True)
