@@ -86,6 +86,7 @@ Press F1 to show Keybinds again / Open Live Window"""
             timerValue = timerValuestr
             scoreL = 0
             scoreR = 0
+            side = "left"
         elif event.keysym == "Return":
             paused = True
             timerValue = timerValuestr
@@ -136,8 +137,8 @@ Press F1 to show Keybinds again / Open Live Window"""
             tBase2 = -10
             tBase3 = posxT + 200
             tBase4 = posyT + 100
-            team1XYSize = [100, 200, 50]
-            team2XYSize = [400, 200, 50]
+            team1XYSize = [300, 400, 100]
+            team2XYSize = [1200, 400, 100]
         else:
             posxT = 250
             scoreFontSize = 100
@@ -156,8 +157,8 @@ Press F1 to show Keybinds again / Open Live Window"""
             tBase2 = -10
             tBase3 = posxT + 100
             tBase4 = posyT + 60
-            team1XYSize = [100, 200, 30]
-            team2XYSize = [400, 200, 30]
+            team1XYSize = [75, 200, 30]
+            team2XYSize = [425, 200, 30]
 
 
 
@@ -174,8 +175,8 @@ Press F1 to show Keybinds again / Open Live Window"""
         if side == "left":
             colorLeft = "#ff0000"
             colorRight = "#0000ff"
-            leftName = canvas.create_text(team1XYSize[0], team1XYSize[1], text=f"{team1Name}", fill="white", font=font.Font(family='ds-digital', size=team1XYSize[2]))
-            rightName = canvas.create_text(team2XYSize[0], team1XYSize[1], text=f"{team2Name}", fill="white", font=font.Font(family='ds-digital', size=team1XYSize[2]))
+            leftName = canvas.create_text(team1XYSize[0], team1XYSize[1], anchor='center', text=f"{team1Name}", fill="white", font=font.Font(family='ds-digital', size=team1XYSize[2]))
+            rightName = canvas.create_text(team2XYSize[0], team1XYSize[1], anchor='center', text=f"{team2Name}", fill="white", font=font.Font(family='ds-digital', size=team1XYSize[2]))
             if coloredSides:
                 left = canvas.create_rectangle(10, posyt+50, posxl, posyb, fill=colorLeft)
                 right = canvas.create_rectangle(posxr1, posyt+50, posxr2, posyb, fill=colorRight)
@@ -184,8 +185,8 @@ Press F1 to show Keybinds again / Open Live Window"""
         else:
             colorLeft = "#0000ff"
             colorRight = "#ff0000"
-            leftName = canvas.create_text(team1XYSize[0], team1XYSize[1], text=f"{team2Name}", fill="white", font=font.Font(family='ds-digital', size=team1XYSize[2]))
-            rightName = canvas.create_text(team2XYSize[0], team1XYSize[1], text=f"{team1Name}", fill="white", font=font.Font(family='ds-digital', size=team1XYSize[2]))
+            leftName = canvas.create_text(team1XYSize[0], team1XYSize[1], anchor='center',text=f"{team2Name}", fill="white", font=font.Font(family='ds-digital', size=team1XYSize[2]))
+            rightName = canvas.create_text(team2XYSize[0], team1XYSize[1], anchor='center', text=f"{team1Name}", fill="white", font=font.Font(family='ds-digital', size=team1XYSize[2]))
             if coloredSides:
                 left = canvas.create_rectangle(10, posyt+50, posxl, posyb, fill=colorLeft)
                 right = canvas.create_rectangle(posxr1, posyt+50, posxr2, posyb, fill=colorRight)
@@ -278,4 +279,4 @@ def show_keybinds(keysubl, keyaddl, keysubr, keyaddr, keyreset):
     keybinds_window.bind("<Key>", lambda event: update_scores(event, keysubl, keyaddl, keysubr, keyaddr, keyreset))
 
 if __name__ == "__main__":
-    handelGraphics(True, '04:13', 'possession', 'switch', 'team1', 'team2', False, False, False, True)
+    handelGraphics(True, '04:13', 'possession', 'switch', 'Home', 'Away', False, False, False, True)
