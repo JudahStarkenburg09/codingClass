@@ -42,5 +42,6 @@ public class ArithmeticLabWk8 {
         arithmeticLab.num1 = num1;
         arithmeticLab.num2 = num2;
         arithmeticLab.performOperations();
+        scanner.close();
     }
 }
