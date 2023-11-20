@@ -5,11 +5,14 @@ from tkinter import font
 
 
 def handelGraphics(timer, timerValuestr, possession, switch, team1, team2, coloredSides, icon1, icon2, hasPeriod):
-    global switchPossible, currentPos, timerBase, keybinds, toggle_fullscreen, update_scores, period, periodPossible
+    global switchPossible, currentPos, timerBase, keybinds, toggle_fullscreen, update_scores, period, periodPossible, team1Name, team2Name
     global root, colorLeft, colorRight, left, right, score_labelL, score_labelR, scoreL, scoreR, side, timerValue, paused, timerText, possessionPossible
+    global leftName, rightName
     timerValue = timerValuestr
     scoreL = 0
     scoreR = 0
+    team1Name = team1
+    team2Name = team2
     paused = True
     side = "left"
     possessionPossible = possession
@@ -113,6 +116,7 @@ Press F1 to show Keybinds again / Open Live Window"""
     canvas.pack()
 
     def graphics():
+        global team1Name, team2Name, leftName, rightName
         global colorLeft, colorRight, left, right, score_labelR, score_labelL, side, colorRight, colorLeft, timerValue, timerText, timerBase
         if root.attributes('-fullscreen'):
             posxl = root.winfo_screenwidth() / 2 - 7.5
@@ -132,6 +136,8 @@ Press F1 to show Keybinds again / Open Live Window"""
             tBase2 = -10
             tBase3 = posxT + 200
             tBase4 = posyT + 100
+            team1XYSize = [100, 200, 50]
+            team2XYSize = [400, 200, 50]
         else:
             posxT = 250
             scoreFontSize = 100
@@ -150,14 +156,26 @@ Press F1 to show Keybinds again / Open Live Window"""
             tBase2 = -10
             tBase3 = posxT + 100
             tBase4 = posyT + 60
+            team1XYSize = [100, 200, 30]
+            team2XYSize = [400, 200, 30]
+
+
 
         if (left and right) or (coloredSides == False):
             canvas.delete(score_labelL)
             canvas.delete(score_labelR)
+        if timerText:
+            canvas.delete(timerText)
+
+        if leftName:
+            canvas.delete(leftName)
+            canvas.delete(rightName)
 
         if side == "left":
             colorLeft = "#ff0000"
             colorRight = "#0000ff"
+            leftName = canvas.create_text(team1XYSize[0], team1XYSize[1], text=f"{team1Name}", fill="white", font=font.Font(family='ds-digital', size=team1XYSize[2]))
+            rightName = canvas.create_text(team2XYSize[0], team1XYSize[1], text=f"{team2Name}", fill="white", font=font.Font(family='ds-digital', size=team1XYSize[2]))
             if coloredSides:
                 left = canvas.create_rectangle(10, posyt+50, posxl, posyb, fill=colorLeft)
                 right = canvas.create_rectangle(posxr1, posyt+50, posxr2, posyb, fill=colorRight)
@@ -166,14 +184,14 @@ Press F1 to show Keybinds again / Open Live Window"""
         else:
             colorLeft = "#0000ff"
             colorRight = "#ff0000"
+            leftName = canvas.create_text(team1XYSize[0], team1XYSize[1], text=f"{team2Name}", fill="white", font=font.Font(family='ds-digital', size=team1XYSize[2]))
+            rightName = canvas.create_text(team2XYSize[0], team1XYSize[1], text=f"{team1Name}", fill="white", font=font.Font(family='ds-digital', size=team1XYSize[2]))
             if coloredSides:
                 left = canvas.create_rectangle(10, posyt+50, posxl, posyb, fill=colorLeft)
                 right = canvas.create_rectangle(posxr1, posyt+50, posxr2, posyb, fill=colorRight)
             score_labelL = canvas.create_text(posxScoreL-50, posyScoreL+50, text=str(scoreR), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
             score_labelR = canvas.create_text(posxScoreR+50, posyScoreR+50, text=str(scoreL), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
 
-        if timerText:
-            canvas.delete(timerText)
         timerText = canvas.create_text(posxT, posyT, text=f"{timerValue}", fill="red", font=font.Font(family='ds-digital', size=(scoreFontSize-50)), anchor="center")
         if timer:
             if timerBase:
@@ -182,6 +200,8 @@ Press F1 to show Keybinds again / Open Live Window"""
 
         root.after(100, graphics)
 
+    leftName = None
+    rightName = None
     timerText = None
     timerBase = None
     print("here1")
