@@ -16,6 +16,8 @@ def create_window():
     window.title("Create Graphics")
     window.geometry("400x400")
     window.config(bg='light gray')
+    home_icon_path = False
+    away_icon_path = False
 
     # Checkbox with label and entry box (entry box only enabled if checked): Timer
     timer_var = tk.BooleanVar()
@@ -105,8 +107,7 @@ def create_window():
 
 
 
-        home_icon_path = False
-        away_icon_path = False
+
         print(timer_entry.get())
         all = [timer_var.get(), timer_entry.get(), possession_var.get(), switch_sides_var.get(), team1_entry.get(),
             team2_entry.get(), colored_sides_var.get(), hasPeriod.get()]
@@ -161,6 +162,9 @@ def create_window():
                                                             filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
                 print(f"Selected {button.cget('text')} Path:", away_icon_path)
                 show_image(away_icon_path, x, y, 100, 100)
+            home_icon_path = home_icon_path
+            away_icon_path = away_icon_path
+
 
         if has_icon_var.get():
             team1_icon_button.config(command=lambda: browseIcon(team1_icon_button, 10, 20))

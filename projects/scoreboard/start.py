@@ -4,20 +4,22 @@ from tkinter import font
 
 
 
-def handelGraphics(timer, timerValuestr, possession, switch, team1, team2, coloredSides, icon1, icon2, hasPeriod):
+def handelGraphics(timer, timerValuestr, possession, switch, team1, team2, coloredSides, homeIcon, awayIcon, hasPeriod):
     global switchPossible, currentPos, timerBase, keybinds, toggle_fullscreen, update_scores, period, periodPossible, team1Name, team2Name
     global root, colorLeft, colorRight, left, right, score_labelL, score_labelR, scoreL, scoreR, side, timerValue, paused, timerText, possessionPossible
     global leftName, rightName, currentPos, posText
     timerValue = timerValuestr
     scoreL = 0
     scoreR = 0
+    print(f"Icon 1: {homeIcon}")
+    print(f"Icon 2: {awayIcon}")
     team1Name = team1
     team2Name = team2
     paused = True
     side = "left"
     possessionPossible = possession
     if possessionPossible == True:
-        currentPos = '<'
+        currentPos = '←'
     periodPossible = False
     if hasPeriod:
         periodPossible = True
@@ -87,9 +89,11 @@ Press F1 to show Keybinds again / Open Live Window"""
             scoreL = 0
             scoreR = 0
             side = "left"
+            currentPos = "←"
         elif event.keysym == "Return":
             paused = True
             timerValue = timerValuestr
+            currentPos = "→"
         elif event.keysym == 't':
             if paused:
                 paused = False
@@ -97,6 +101,10 @@ Press F1 to show Keybinds again / Open Live Window"""
                 paused = True
         elif event.keysym == "F1":
             show_keybinds(keysubl, keyaddl, keysubr, keyaddr, keyreset)
+        elif event.keysym == 'Right':
+            currentPos = "→"
+        elif event.keysym == 'Left':
+            currentPos = "←"
 
 
 
@@ -128,10 +136,10 @@ Press F1 to show Keybinds again / Open Live Window"""
             posyT = 110
             scoreFontSize = 175
             posyt = 230
-            posxScoreL = ((10 + posxl) / 2) - 50
-            posyScoreL = ((posyt + posyb) / 2) + 50
-            posxScoreR = ((posxr1 + posxr2) / 2) - 50
-            posyScoreR = ((posyt + posyb) / 2) + 50
+            posxScoreL = ((10 + posxl) / 2) - 75
+            posyScoreL = ((posyt + posyb) / 2) + 25
+            posxScoreR = ((posxr1 + posxr2) / 2) - 75
+            posyScoreR = ((posyt + posyb) / 2) + 25
             fontSize = 300
             tBase1 = posxT - 200
             tBase2 = -10
@@ -139,7 +147,7 @@ Press F1 to show Keybinds again / Open Live Window"""
             tBase4 = posyT + 100
             team1XYSize = [300, 400, 100]
             team2XYSize = [1200, 400, 100]
-            possPos = [750, 350, 75]
+            possPos = [800, 350, 75]
 
         else:
             posxT = 250
@@ -242,7 +250,7 @@ Press F1 to show Keybinds again / Open Live Window"""
             # Update timerValue
             timerValue = f"{minutes_str}:{seconds_str}"
 
-            print(timerValue)
+            # print(timerValue)
 
             if total_seconds > 0:
                 # If there are remaining seconds, continue the countdown
