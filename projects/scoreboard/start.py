@@ -7,7 +7,7 @@ from tkinter import font
 def handelGraphics(timer, timerValuestr, possession, switch, team1, team2, coloredSides, icon1, icon2, hasPeriod):
     global switchPossible, currentPos, timerBase, keybinds, toggle_fullscreen, update_scores, period, periodPossible, team1Name, team2Name
     global root, colorLeft, colorRight, left, right, score_labelL, score_labelR, scoreL, scoreR, side, timerValue, paused, timerText, possessionPossible
-    global leftName, rightName
+    global leftName, rightName, currentPos, posText
     timerValue = timerValuestr
     scoreL = 0
     scoreR = 0
@@ -117,7 +117,7 @@ Press F1 to show Keybinds again / Open Live Window"""
     canvas.pack()
 
     def graphics():
-        global team1Name, team2Name, leftName, rightName
+        global team1Name, team2Name, leftName, rightName, possessionPossible, currentPos, posText
         global colorLeft, colorRight, left, right, score_labelR, score_labelL, side, colorRight, colorLeft, timerValue, timerText, timerBase
         if root.attributes('-fullscreen'):
             posxl = root.winfo_screenwidth() / 2 - 7.5
@@ -139,6 +139,8 @@ Press F1 to show Keybinds again / Open Live Window"""
             tBase4 = posyT + 100
             team1XYSize = [300, 400, 100]
             team2XYSize = [1200, 400, 100]
+            possPos = [750, 350, 75]
+
         else:
             posxT = 250
             scoreFontSize = 100
@@ -159,6 +161,7 @@ Press F1 to show Keybinds again / Open Live Window"""
             tBase4 = posyT + 60
             team1XYSize = [75, 200, 30]
             team2XYSize = [425, 200, 30]
+            possPos = [250, 175, 50]
 
 
 
@@ -171,6 +174,12 @@ Press F1 to show Keybinds again / Open Live Window"""
         if leftName:
             canvas.delete(leftName)
             canvas.delete(rightName)
+
+        if posText:
+            canvas.delete(posText)
+
+        if possessionPossible:
+            posText = canvas.create_text(possPos[0], possPos[1], text=f"{currentPos}", fill="white" ,anchor="center", font=font.Font(family='ds-digital', size=possPos[2]))
 
         if side == "left":
             colorLeft = "#ff0000"
@@ -205,6 +214,7 @@ Press F1 to show Keybinds again / Open Live Window"""
     rightName = None
     timerText = None
     timerBase = None
+    posText = None
     print("here1")
     def timerFunction():
         global root, timerValue, paused
@@ -279,4 +289,4 @@ def show_keybinds(keysubl, keyaddl, keysubr, keyaddr, keyreset):
     keybinds_window.bind("<Key>", lambda event: update_scores(event, keysubl, keyaddl, keysubr, keyaddr, keyreset))
 
 if __name__ == "__main__":
-    handelGraphics(True, '04:13', 'possession', 'switch', 'Home', 'Away', False, False, False, True)
+    handelGraphics(True, '04:13', True, 'switch', 'Home', 'Away', False, False, False, True)
