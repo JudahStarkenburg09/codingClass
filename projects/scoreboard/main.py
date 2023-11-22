@@ -166,7 +166,7 @@ def create_window():
                 show_image(away_icon_path, x, y, 100, 100)
                 print("Away Icon Path (browseIcon): " + away_icon_path)
                 print("===========================================")
-            else:
+            else: 
                 print("Error")
 
 
