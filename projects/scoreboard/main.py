@@ -150,24 +150,24 @@ def create_window():
             team2_icon_button = tk.Button(window, text=f"{var2} Icon")
             team2_icon_button.place(x=250, y=210, anchor='center')
 
-        def browseIcon(button, x, y, buttonSide): # Found the problem, the if statment "button.cget('text')" is not working
-                                      # And therefore is returning to the else statement, only saving it as away icon path
-                                      # Use buttonSide to fix it, as "left" or "right"
+        def browseIcon(button, x, y, buttonSide):
             global home_icon_path, away_icon_path
-            if button.cget('text') == 'Home':
+            if buttonSide == 'left':
                 home_icon_path = filedialog.askopenfilename(title=f"Select {button.cget('text')}",
                                                             filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
                 print(f"Selected Home Path:", home_icon_path)
                 show_image(home_icon_path, x, y, 100, 100)
                 print("Home Icon Path (browseIcon): " + home_icon_path)
                 print("===========================================")
-            else:
+            elif buttonSide == 'right':
                 away_icon_path = filedialog.askopenfilename(title=f"Select {button.cget('text')}",
                                                             filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
                 print(f"Selected Away Path:", away_icon_path)
                 show_image(away_icon_path, x, y, 100, 100)
                 print("Away Icon Path (browseIcon): " + away_icon_path)
                 print("===========================================")
+            else:
+                print("Error")
 
 
 
