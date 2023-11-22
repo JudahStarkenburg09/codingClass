@@ -16,6 +16,8 @@ def create_window():
     window.title("Create Graphics")
     window.geometry("400x400")
     window.config(bg='light gray')
+    home_icon_path = False
+    away_icon_path = False
 
     # Checkbox with label and entry box (entry box only enabled if checked): Timer
     timer_var = tk.BooleanVar()

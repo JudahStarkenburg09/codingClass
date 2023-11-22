@@ -1,14 +1,25 @@
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import font
+from PIL import Image, ImageTk, ImageFilter
 
+def resize_image(image_path, width, height):
+    original_image = Image.open(image_path)
+    resized_image = original_image.resize((width, height), resample=Image.LANCZOS)
+    return ImageTk.PhotoImage(resized_image)
 
 
 def handelGraphics(timer, timerValuestr, possession, switch, team1, team2, coloredSides, homeIcon, awayIcon, hasPeriod):
-    global switchPossible, currentPos, timerBase, keybinds, toggle_fullscreen, update_scores, period, periodPossible, team1Name, team2Name
+    global switchPossible, currentPos, timerBase, keybinds, toggle_fullscreen, update_scores, period, periodPossible, team1Name, team2Name, awayIconPath, homeIconPath
     global root, colorLeft, colorRight, left, right, score_labelL, score_labelR, scoreL, scoreR, side, timerValue, paused, timerText, possessionPossible
-    global leftName, rightName, currentPos, posText
+    global leftName, rightName, currentPos, posText, awayIconImage, homeIconImage
     timerValue = timerValuestr
+    if homeIcon:
+        homeIconPath = homeIcon
+    if awayIcon:
+        awayIconPath = awayIcon
+    awayIconImage = False
+    homeIconImage = False
     scoreL = 0
     scoreR = 0
     print(f"Icon 1: {homeIcon}")
@@ -125,7 +136,7 @@ Press F1 to show Keybinds again / Open Live Window"""
     canvas.pack()
 
     def graphics():
-        global team1Name, team2Name, leftName, rightName, possessionPossible, currentPos, posText
+        global team1Name, team2Name, leftName, rightName, possessionPossible, currentPos, posText, homeIconPath, awayIconPath, awayIconImage, homeIconImage
         global colorLeft, colorRight, left, right, score_labelR, score_labelL, side, colorRight, colorLeft, timerValue, timerText, timerBase
         if root.attributes('-fullscreen'):
             posxl = root.winfo_screenwidth() / 2 - 7.5
@@ -148,6 +159,8 @@ Press F1 to show Keybinds again / Open Live Window"""
             team1XYSize = [300, 400, 100]
             team2XYSize = [1200, 400, 100]
             possPos = [800, 350, 75]
+            imagePosLeft = [300, 200, 250]
+            imagePosRight = [800, 200, 250]
 
         else:
             posxT = 250
@@ -170,8 +183,24 @@ Press F1 to show Keybinds again / Open Live Window"""
             team1XYSize = [75, 200, 30]
             team2XYSize = [425, 200, 30]
             possPos = [250, 175, 50]
+            imagePosLeft = [75, 100, 100]
+            imagePosRight = [425, 100, 100]
 
-
+        if homeIconImage:
+            canvas.delete(homeIconImage)
+        if awayIconImage:
+            canvas.delete(awayIconImage)
+    
+        if homeIconPath: #TODO Place image at imagePosLeft/Right, x = [0], y=[1], and width, height = [2], [2]. Because imagePosLeft/Right is a list[]
+            if side == "left":
+                ''
+            else:
+                ''
+        if awayIconPath:
+            if side == "left":
+                ''
+            else:
+                ''
 
         if (left and right) or (coloredSides == False):
             canvas.delete(score_labelL)
