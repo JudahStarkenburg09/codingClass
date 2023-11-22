@@ -16,8 +16,6 @@ def create_window():
     window.title("Create Graphics")
     window.geometry("400x400")
     window.config(bg='light gray')
-    home_icon_path = False
-    away_icon_path = False
 
     # Checkbox with label and entry box (entry box only enabled if checked): Timer
     timer_var = tk.BooleanVar()
@@ -80,12 +78,14 @@ def create_window():
 
     def submit():
         global has_icon_var, home_icon_path, away_icon_path, window, team1_icon_button, team2_icon_button, tk_images, hasPeriod, period
-        global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
+        global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var
         window.geometry('320x300')  # Adjust the size accordingly
         window.config(bg='white')
 
         tk_images = []
         def show_image(image_path, x, y, width, height):
+            print("showing image...")
+            print("Icon Path (show_image) 1: " + image_path)
             global window, tk_images
 
             # Load the image using PIL
@@ -96,10 +96,10 @@ def create_window():
 
             # Create a PhotoImage object from the resized image
             tk_image = ImageTk.PhotoImage(resized_image)
-
             # Keep a reference to the PhotoImage to prevent it from being garbage collected
             tk_images.append(tk_image)
-
+            print("Icon Path (show_image) 2: " + image_path)
+            
             for i in tk_images:
                 # Create a Tkinter label and display the image at specified (x, y) coordinates
                 image_label = tk.Label(window, image=i)
@@ -137,8 +137,8 @@ def create_window():
             f = all[5]
             g = all[6]
             h = all[7]
-            print(home_icon_path)
-            print(away_icon_path)
+            print("Away Icon (finalSubmit): " + str(away_icon_path))
+            print("Home Icon (finalSubmit): " + str(home_icon_path))
             start.handelGraphics(a, b, c, d, e, f, g, home_icon_path, away_icon_path, h)
 
 
@@ -150,25 +150,31 @@ def create_window():
             team2_icon_button = tk.Button(window, text=f"{var2} Icon")
             team2_icon_button.place(x=250, y=210, anchor='center')
 
-        def browseIcon(button, x, y):
+        def browseIcon(button, x, y, buttonSide): # Found the problem, the if statment "button.cget('text')" is not working
+                                      # And therefore is returning to the else statement, only saving it as away icon path
+                                      # Use buttonSide to fix it, as "left" or "right"
             global home_icon_path, away_icon_path
             if button.cget('text') == 'Home':
                 home_icon_path = filedialog.askopenfilename(title=f"Select {button.cget('text')}",
                                                             filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
-                print(f"Selected {button.cget('text')} Path:", home_icon_path)
+                print(f"Selected Home Path:", home_icon_path)
                 show_image(home_icon_path, x, y, 100, 100)
+                print("Home Icon Path (browseIcon): " + home_icon_path)
+                print("===========================================")
             else:
                 away_icon_path = filedialog.askopenfilename(title=f"Select {button.cget('text')}",
                                                             filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
-                print(f"Selected {button.cget('text')} Path:", away_icon_path)
+                print(f"Selected Away Path:", away_icon_path)
                 show_image(away_icon_path, x, y, 100, 100)
-            home_icon_path = home_icon_path
-            away_icon_path = away_icon_path
+                print("Away Icon Path (browseIcon): " + away_icon_path)
+                print("===========================================")
+
 
 
         if has_icon_var.get():
-            team1_icon_button.config(command=lambda: browseIcon(team1_icon_button, 10, 20))
-            team2_icon_button.config(command=lambda: browseIcon(team2_icon_button, 200, 20))
+            team1_icon_button.config(command=lambda: browseIcon(team1_icon_button, 10, 20, "left"))
+            team2_icon_button.config(command=lambda: browseIcon(team2_icon_button, 200, 20, "right"))
+
 
         submit_button = tk.Button(window, text="Submit", command=finalSubmit, anchor="center")
         submit_button.place(x=150, y=250, anchor='center')
