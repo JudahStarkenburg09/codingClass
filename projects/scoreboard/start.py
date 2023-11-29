@@ -14,10 +14,12 @@ def handelGraphics(timer, timerValuestr, possession, switch, team1, team2, color
     global root, colorLeft, colorRight, left, right, score_labelL, score_labelR, scoreL, scoreR, side, timerValue, paused, timerText, possessionPossible
     global leftName, rightName, currentPos, posText, awayIconImage, homeIconImage
     timerValue = timerValuestr
-    if homeIcon:
-        homeIconPath = homeIcon
-    if awayIcon:
-        awayIconPath = awayIcon
+    homeIconPath = homeIcon
+
+
+    # awayIconPath = awayIcon #-------------
+
+
     awayIconImage = False
     homeIconImage = False
     scoreL = 0
@@ -67,7 +69,7 @@ Press F1 to show Keybinds again / Open Live Window"""
 
     def update_scores(event, keysubl='w', keyaddl='q', keysubr='o', keyaddr='p', keyreset='Return'):
         global scoreL, scoreR, side, colorLeft, colorRight, side, timerValue, paused, possessionPossible, switchPossible, currentPos, keybinds
-
+        print("Updating Scores")
         if event.keysym == keyaddl:
             if side == "left":
                 scoreL += 1
@@ -186,21 +188,11 @@ Press F1 to show Keybinds again / Open Live Window"""
             imagePosLeft = [75, 100, 100]
             imagePosRight = [425, 100, 100]
 
-        if homeIconImage:
-            canvas.delete(homeIconImage)
-        if awayIconImage:
-            canvas.delete(awayIconImage)
+        # if homeIconImage:
+        #     canvas.delete(homeIconImage)
+        # if awayIconImage:
+        #     canvas.delete(awayIconImage)
     
-        if homeIconPath: #TODO Place image at imagePosLeft/Right, x = [0], y=[1], and width, height = [2], [2]. Because imagePosLeft/Right is a list[]
-            if side == "left":
-                ''
-            else:
-                ''
-        if awayIconPath:
-            if side == "left":
-                ''
-            else:
-                ''
 
         if (left and right) or (coloredSides == False):
             canvas.delete(score_labelL)
@@ -244,6 +236,31 @@ Press F1 to show Keybinds again / Open Live Window"""
             if timerBase:
                 canvas.delete(timerBase)
             timerBase = canvas.create_rectangle(tBase1, tBase2, tBase3, tBase4, fill=None, outline='gray', width=2)
+
+
+
+        if homeIconPath:
+            if side == "left":
+                print(f"Placed Home Image On Left Side with path: {homeIconPath}")
+                img1 = resize_image(homeIconPath, imagePosLeft[2], imagePosLeft[2])
+                homeIconImage = canvas.create_image(imagePosLeft[0], imagePosLeft[1], anchor=tk.CENTER, image=img1)
+            else:
+                print(f"Placed Home Image On Right Side with path: {homeIconPath}")
+                img2 = resize_image(homeIconPath, imagePosRight[2], imagePosRight[2])
+                homeIconImage = canvas.create_image(imagePosRight[0], imagePosRight[1], anchor=tk.CENTER, image=img2)
+
+        if awayIconPath:
+            if side == "left":
+                print(f"Placed Away Image On Right Side with path: {awayIconPath}")
+                img3 = resize_image(awayIconPath, imagePosRight[2], imagePosRight[2])
+                awayIconImage = canvas.create_image(imagePosRight[0], imagePosRight[1], anchor=tk.CENTER, image=img3)
+            else:
+                print(f"Placed Away Image On Left Side with path: {awayIconPath}")
+                img4 = resize_image(awayIconPath, imagePosLeft[2], imagePosLeft[2])
+                awayIconImage = canvas.create_image(imagePosLeft[0], imagePosLeft[1], anchor=tk.CENTER, image=img4)
+
+
+
 
         root.after(100, graphics)
 
