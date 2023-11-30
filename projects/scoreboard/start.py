@@ -121,10 +121,6 @@ Press F1 to show Keybinds again / Open Live Window"""
 
 
 
-
-    screen_width = root.winfo_screenwidth()
-    screen_height = root.winfo_screenheight()
-
     keysubl = 'w'
     keyaddl = 'q'
     keysubr = 'o'
