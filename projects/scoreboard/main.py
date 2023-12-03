@@ -141,7 +141,7 @@ def create_window():
             h = all[7]
             print("Away Icon (finalSubmit): " + str(away_icon_path))
             print("Home Icon (finalSubmit): " + str(home_icon_path))
-            start.handelGraphics(a, b, c, d, e, f, g, home_icon_path, away_icon_path, h)
+            start.ScoreboardApp(a, b, c, d, e, f, g, home_icon_path, away_icon_path, h)
 
 
         if has_icon_var.get():

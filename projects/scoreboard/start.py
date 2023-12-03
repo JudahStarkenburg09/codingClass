@@ -3,42 +3,37 @@ from tkinter import messagebox
 from tkinter import font
 from PIL import Image, ImageTk, ImageFilter
 
-def resize_image(image_path, width, height):
-    original_image = Image.open(image_path)
-    resized_image = original_image.resize((width, height), resample=Image.LANCZOS)
-    return ImageTk.PhotoImage(resized_image)
-
-
-def handelGraphics(timer, timerValuestr, possession, switch, team1, team2, coloredSides, homeIcon, awayIcon, hasPeriod):
-    global switchPossible, currentPos, timerBase, keybinds, toggle_fullscreen, update_scores, period, periodPossible, team1Name, team2Name, awayIconPath, homeIconPath
-    global root, colorLeft, colorRight, left, right, score_labelL, score_labelR, scoreL, scoreR, side, timerValue, paused, timerText, possessionPossible
-    global leftName, rightName, currentPos, posText, awayIconImage, homeIconImage
-    timerValue = timerValuestr
-    homeIconPath = homeIcon
-
-
-    # awayIconPath = awayIcon #-------------
-
-
-    awayIconImage = False
-    homeIconImage = False
-    scoreL = 0
-    scoreR = 0
-    print(f"Icon 1: {homeIcon}")
-    print(f"Icon 2: {awayIcon}")
-    team1Name = team1
-    team2Name = team2
-    paused = True
-    side = "left"
-    possessionPossible = possession
-    if possessionPossible == True:
-        currentPos = '←'
-    periodPossible = False
-    if hasPeriod:
-        periodPossible = True
-        period = 1
-    switchPossible = switch
-    keybinds = """Press (Q, W) to change left score
+class ScoreboardApp:
+    def __init__(self, timer, timer_value_str, possession, switch, team1, team2, colored_sides, home_icon, away_icon, has_period):
+        self.timer_value = timer_value_str
+        self.leftName = None
+        self.rightName = None
+        self.home_icon_path = home_icon
+        self.away_icon_path = away_icon
+        self.origTimer = timer_value_str
+        self.timerBase = None
+        self.away_icon_image = None
+        self.home_icon_image = None
+        self.timer_value = timer_value_str
+        self.scoreL = 0
+        self.scoreR = 0
+        self.left = None
+        self.right = None
+        self.posText = None
+        self.possessionPossible = possession
+        self.coloredSides = colored_sides
+        self.team1Name = team1
+        self.team2Name = team2
+        self.score_labelL = None
+        self.score_labelR = None
+        self.timer = timer
+        self.paused = True
+        self.side = "left"
+        self.currentPos = '←'
+        self.period_possible = False
+        self.period = 1 if has_period else None
+        self.switch_possible = switch
+        self.keybinds = """Press (Q, W) to change left score
 Press (O, P) to change right score
 Press space to switch sides
 Press T to start/pause the timer
@@ -47,296 +42,227 @@ Press arrow keys (< >) to change possession
 Press Enter to Reset Timer
 Press Ctrl + Enter to Reset Score, Possession, and Timer
 Press F1 to show Keybinds again / Open Live Window"""
-    messagebox.showinfo("Keybinds", keybinds)
-
-    root = tk.Tk()
-    root.geometry('500x400')
-    root.title(" ")
-
-    def toggle_fullscreen(event=None):
-        global colorLeft, colorRight
-        state = not root.attributes('-fullscreen')
-        root.attributes('-fullscreen', state)
-        if root.attributes('-fullscreen'):
-            toast = tk.Label(root, text='Press f11 to toggle fullscreen', background='gray', foreground='white')
-            toast.place(x=root.winfo_screenwidth() / 2, y=15, anchor='center')
-            root.after(2000, lambda: toast.destroy())
-        else: 
-            toast = tk.Label(root, text='Press f11 to toggle fullscreen', background='gray', foreground='white')
-            toast.place(x=250, y=15, anchor='center')
-            root.after(2000, lambda: toast.destroy())
-
-
-    def update_scores(event, keysubl='w', keyaddl='q', keysubr='o', keyaddr='p', keyreset='Return'):
-        global scoreL, scoreR, side, colorLeft, colorRight, side, timerValue, paused, possessionPossible, switchPossible, currentPos, keybinds
-        print("Updating Scores")
-        if event.keysym == keyaddl:
-            if side == "left":
-                scoreL += 1
-            else:
-                scoreR += 1
-        elif event.keysym == keysubl:
-            if side == "left":
-                scoreL -= 1
-            else:
-                scoreR -= 1
-        elif event.keysym == keysubr:
-            if side == "left":
-                scoreR -= 1
-            else:
-                scoreL -= 1
-        elif event.keysym == keyaddr:
-            if side == "left":
-                scoreR += 1
-            else:
-                scoreL += 1
-        elif event.keysym == 'space':
-            if switchPossible:
-                if side == "left":
-                    side = "right"
-                else:
-                    side = "left"
-        elif event.keysym == "Return" and event.state == 0x4:  # 0x4 represents the Control key
-            paused = True
-            timerValue = timerValuestr
-            scoreL = 0
-            scoreR = 0
-            side = "left"
-            currentPos = "←"
-        elif event.keysym == "Return":
-            paused = True
-            timerValue = timerValuestr
-            currentPos = "→"
-        elif event.keysym == 't':
-            if paused:
-                paused = False
-            else:
-                paused = True
-        elif event.keysym == "F1":
-            show_keybinds(keysubl, keyaddl, keysubr, keyaddr, keyreset)
-        elif event.keysym == 'Right':
-            currentPos = "→"
-        elif event.keysym == 'Left':
-            currentPos = "←"
-
-
-
-    keysubl = 'w'
-    keyaddl = 'q'
-    keysubr = 'o'
-    keyaddr = 'p'
-    keyreset = 'Return'
-
-    root.bind("<F11>", toggle_fullscreen)
-    root.bind("<Key>", lambda event: update_scores(event, keysubl, keyaddl, keysubr, keyaddr, keyreset))
-
-    canvas = tk.Canvas(width=10000, height=10000, bg='black')
-    canvas.pack()
-
-    def graphics():
-        global team1Name, team2Name, leftName, rightName, possessionPossible, currentPos, posText, homeIconPath, awayIconPath, awayIconImage, homeIconImage
-        global colorLeft, colorRight, left, right, score_labelR, score_labelL, side, colorRight, colorLeft, timerValue, timerText, timerBase
-        if root.attributes('-fullscreen'):
-            posxl = root.winfo_screenwidth() / 2 - 7.5
-            posxr2 = root.winfo_screenwidth() - 15
-            posxr1 = root.winfo_screenwidth() / 2 + 7.5
-            posyb = root.winfo_screenheight() - 15
-            posxT = root.winfo_screenwidth() / 2
-            posyT = 110
-            scoreFontSize = 175
-            posyt = 230
-            posxScoreL = ((10 + posxl) / 2) - 75
-            posyScoreL = ((posyt + posyb) / 2) + 25
-            posxScoreR = ((posxr1 + posxr2) / 2) - 75
-            posyScoreR = ((posyt + posyb) / 2) + 25
-            fontSize = 300
-            tBase1 = posxT - 200
-            tBase2 = -10
-            tBase3 = posxT + 200
-            tBase4 = posyT + 100
-            team1XYSize = [300, 400, 100]
-            team2XYSize = [1200, 400, 100]
-            possPos = [800, 350, 75]
-            imagePosLeft = [300, 200, 250]
-            imagePosRight = [800, 200, 250]
-
-        else:
-            posxT = 250
-            scoreFontSize = 100
-            posyT = 40
-            posxl = 245
-            posxr2 = 490
-            posxr1 = 255
-            posyb = 390
-            posyt = 100
-            posxScoreL = (10 + posxl) / 2
-            posyScoreL = (posyt + posyb) / 2
-            posxScoreR = (posxr1 + posxr2) / 2
-            posyScoreR = (posyt + posyb) / 2
-            fontSize = 125
-            tBase1 = posxT - 100
-            tBase2 = -10
-            tBase3 = posxT + 100
-            tBase4 = posyT + 60
-            team1XYSize = [75, 200, 30]
-            team2XYSize = [425, 200, 30]
-            possPos = [250, 175, 50]
-            imagePosLeft = [75, 100, 100]
-            imagePosRight = [425, 100, 100]
-
-        # if homeIconImage:
-        #     canvas.delete(homeIconImage)
-        # if awayIconImage:
-        #     canvas.delete(awayIconImage)
-    
-
-        if (left and right) or (coloredSides == False):
-            canvas.delete(score_labelL)
-            canvas.delete(score_labelR)
-        if timerText:
-            canvas.delete(timerText)
-
-        if leftName:
-            canvas.delete(leftName)
-            canvas.delete(rightName)
-
-        if posText:
-            canvas.delete(posText)
-
-        if possessionPossible:
-            posText = canvas.create_text(possPos[0], possPos[1], text=f"{currentPos}", fill="white" ,anchor="center", font=font.Font(family='ds-digital', size=possPos[2]))
-
-        if side == "left":
-            colorLeft = "#ff0000"
-            colorRight = "#0000ff"
-            leftName = canvas.create_text(team1XYSize[0], team1XYSize[1], anchor='center', text=f"{team1Name}", fill="white", font=font.Font(family='ds-digital', size=team1XYSize[2]))
-            rightName = canvas.create_text(team2XYSize[0], team1XYSize[1], anchor='center', text=f"{team2Name}", fill="white", font=font.Font(family='ds-digital', size=team1XYSize[2]))
-            if coloredSides:
-                left = canvas.create_rectangle(10, posyt+50, posxl, posyb, fill=colorLeft)
-                right = canvas.create_rectangle(posxr1, posyt+50, posxr2, posyb, fill=colorRight)
-            score_labelL = canvas.create_text(posxScoreL-50, posyScoreL+50, text=str(scoreL), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
-            score_labelR = canvas.create_text(posxScoreR+50, posyScoreR+50, text=str(scoreR), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
-        else:
-            colorLeft = "#0000ff"
-            colorRight = "#ff0000"
-            leftName = canvas.create_text(team1XYSize[0], team1XYSize[1], anchor='center',text=f"{team2Name}", fill="white", font=font.Font(family='ds-digital', size=team1XYSize[2]))
-            rightName = canvas.create_text(team2XYSize[0], team1XYSize[1], anchor='center', text=f"{team1Name}", fill="white", font=font.Font(family='ds-digital', size=team1XYSize[2]))
-            if coloredSides:
-                left = canvas.create_rectangle(10, posyt+50, posxl, posyb, fill=colorLeft)
-                right = canvas.create_rectangle(posxr1, posyt+50, posxr2, posyb, fill=colorRight)
-            score_labelL = canvas.create_text(posxScoreL-50, posyScoreL+50, text=str(scoreR), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
-            score_labelR = canvas.create_text(posxScoreR+50, posyScoreR+50, text=str(scoreL), fill="white", font=font.Font(family='ds-digital', size=fontSize), anchor="center")
-
-        timerText = canvas.create_text(posxT, posyT, text=f"{timerValue}", fill="red", font=font.Font(family='ds-digital', size=(scoreFontSize-50)), anchor="center")
-        if timer:
-            if timerBase:
-                canvas.delete(timerBase)
-            timerBase = canvas.create_rectangle(tBase1, tBase2, tBase3, tBase4, fill=None, outline='gray', width=2)
-
-
-
-        if homeIconPath:
-            if side == "left":
-                print(f"Placed Home Image On Left Side with path: {homeIconPath}")
-                img1 = resize_image(homeIconPath, imagePosLeft[2], imagePosLeft[2])
-                homeIconImage = canvas.create_image(imagePosLeft[0], imagePosLeft[1], anchor=tk.CENTER, image=img1)
-            else:
-                print(f"Placed Home Image On Right Side with path: {homeIconPath}")
-                img2 = resize_image(homeIconPath, imagePosRight[2], imagePosRight[2])
-                homeIconImage = canvas.create_image(imagePosRight[0], imagePosRight[1], anchor=tk.CENTER, image=img2)
-
-        if awayIconPath:
-            if side == "left":
-                print(f"Placed Away Image On Right Side with path: {awayIconPath}")
-                img3 = resize_image(awayIconPath, imagePosRight[2], imagePosRight[2])
-                awayIconImage = canvas.create_image(imagePosRight[0], imagePosRight[1], anchor=tk.CENTER, image=img3)
-            else:
-                print(f"Placed Away Image On Left Side with path: {awayIconPath}")
-                img4 = resize_image(awayIconPath, imagePosLeft[2], imagePosLeft[2])
-                awayIconImage = canvas.create_image(imagePosLeft[0], imagePosLeft[1], anchor=tk.CENTER, image=img4)
-
-
-
-
-        root.after(100, graphics)
-
-    leftName = None
-    rightName = None
-    timerText = None
-    timerBase = None
-    posText = None
-    print("here1")
-    def timerFunction():
-        global root, timerValue, paused
-
-        minutes, seconds = map(int, timerValue.split(":"))
-
-        # Convert minutes and seconds to total seconds
-        total_seconds = minutes * 60 + seconds
         
-        if not paused:
-            # Decrement total seconds
+        self.root = tk.Tk()
+        self.root.geometry('500x400')
+        self.root.title(" ")
+
+        self.initialize_gui()
+
+    def initialize_gui(self):
+        self.root.bind("<F11>", self.toggle_fullscreen)
+        self.root.bind("<Key>", self.update_scores)
+
+        self.canvas = tk.Canvas(width=10000, height=10000, bg='black')
+        self.canvas.pack()
+
+        self.left_name = None
+        self.right_name = None
+        self.timerText = None
+        self.timer_base = None
+        self.pos_text = None
+
+        self.root.after(0, self.graphics)
+        self.root.after(0, self.timer_function)
+
+        self.color_left = "#ff0000"
+        self.color_right = "#0000ff"
+
+        self.root.mainloop()
+
+    def toggle_fullscreen(self, event=None):
+        state = not self.root.attributes('-fullscreen')
+        self.root.attributes('-fullscreen', state)
+        if self.root.attributes('-fullscreen'):
+            toast = tk.Label(self.root, text='Press f11 to toggle fullscreen', background='gray', foreground='white')
+            toast.place(x=self.root.winfo_screenwidth() / 2, y=15, anchor='center')
+            self.root.after(2000, lambda: toast.destroy())
+        else: 
+            toast = tk.Label(self.root, text='Press f11 to toggle fullscreen', background='gray', foreground='white')
+            toast.place(x=250, y=15, anchor='center')
+            self.root.after(2000, lambda: toast.destroy())
+
+    def update_scores(self, event):
+        # print(f"Keybind Detected: {event.keysym}")
+        if event.keysym == 'space':
+            if self.switch_possible:
+                if self.side == "left":
+                    self.side = "right"
+                else:
+                    self.side = "left"
+        elif event.keysym == "Return" and event.state == 0x4:
+            self.paused = True
+            self.timer_value = self.origTimer
+            self.scoreL = 0
+            self.scoreR = 0
+            self.side = "left"
+            self.currentPos = "←"
+        elif event.keysym == "Return":
+            self.paused = True
+            self.timer_value = self.origTimer
+        elif event.keysym == 't':
+            if self.paused:
+                self.paused = False
+                print("Timer Unpaused")
+            else:
+                self.paused = True
+                print("Timer Paused")
+        elif event.keysym == "F1":
+            self.show_keybinds()
+        elif event.keysym == 'Right':
+            self.currentPos = "→"
+        elif event.keysym == 'Left':
+            self.currentPos = "←"
+        if event.keysym == 'q':
+            if self.side == "left":
+                self.scoreL += 1
+            else:
+                self.scoreR += 1
+        elif event.keysym == 'w':
+            if self.side == "left":
+                self.scoreL -= 1
+            else:
+                self.scoreR -= 1
+        elif event.keysym == 'o':
+            if self.side == "left":
+                self.scoreR -= 1
+            else:
+                self.scoreL -= 1
+        elif event.keysym == 'p':
+            if self.side == "left":
+                self.scoreR += 1
+            else:
+                self.scoreL += 1
+
+    def graphics(self):
+        # print(f"Graphics Running, Left Score: {self.scoreL}. Right Score: {self.scoreR}. Timer: {self.timer_value}")
+        if self.root.attributes('-fullscreen'):
+            self.posxl = self.root.winfo_screenwidth() / 2 - 7.5
+            self.posxr2 = self.root.winfo_screenwidth() - 15
+            self.posxr1 = self.root.winfo_screenwidth() / 2 + 7.5
+            self.posyb = self.root.winfo_screenheight() - 15
+            self.posxT = self.root.winfo_screenwidth() / 2
+            self.posyT = 110
+            self.scoreFontSize = 175
+            self.posyt = 230
+            self.posxScoreL = ((10 + self.posxl) / 2) - 75
+            self.posyScoreL = ((self.posyt + self.posyb) / 2) + 25
+            self.posxScoreR = ((self.posxr1 + self.posxr2) / 2) - 75
+            self.posyScoreR = ((self.posyt + self.posyb) / 2) + 25
+            self.fontSize = 300
+            self.tBase1 = self.posxT - 200
+            self.tBase2 = -10
+            self.tBase3 = self.posxT + 200
+            self.tBase4 = self.posyT + 100
+            self.team1XYSize = [300, 400, 100]
+            self.team2XYSize = [1200, 400, 100]
+            self.possPos = [800, 350, 75]
+            self.imagePosLeft = [300, 200, 250]
+            self.imagePosRight = [800, 200, 250]
+        else:
+            self.posxT = 250
+            self.scoreFontSize = 100
+            self.posyT = 40
+            self.posxl = 245
+            self.posxr2 = 490
+            self.posxr1 = 255
+            self.posyb = 390
+            self.posyt = 100
+            self.posxScoreL = (10 + self.posxl) / 2
+            self.posyScoreL = (self.posyt + self.posyb) / 2
+            self.posxScoreR = (self.posxr1 + self.posxr2) / 2
+            self.posyScoreR = (self.posyt + self.posyb) / 2
+            self.fontSize = 125
+            self.tBase1 = self.posxT - 100
+            self.tBase2 = -10
+            self.tBase3 = self.posxT + 100
+            self.tBase4 = self.posyT + 60
+            self.team1XYSize = [75, 200, 30]
+            self.team2XYSize = [425, 200, 30]
+            self.possPos = [250, 175, 50]
+            self.imagePosLeft = [75, 100, 100]
+            self.imagePosRight = [425, 100, 100]
+
+            if (self.score_labelL):
+                self.canvas.delete(self.score_labelL)
+                self.canvas.delete(self.score_labelR)
+            if self.timerText:
+                self.canvas.delete(self.timerText)
+
+            if self.leftName:
+                self.canvas.delete(self.leftName)
+                self.canvas.delete(self.rightName)
+
+            if self.posText:
+                self.canvas.delete(self.posText)
+
+            if self.possessionPossible:
+                self.posText = self.canvas.create_text(self.possPos[0], self.possPos[1], text=f"{self.currentPos}", fill="white" ,anchor="center", font=font.Font(family='ds-digital', size=self.possPos[2]))
+
+            if self.side == "left":
+                self.color_left = "#ff0000"
+                self.color_right = "#0000ff"
+                self.leftName = self.canvas.create_text(self.team1XYSize[0], self.team1XYSize[1], anchor='center', text=f"{self.team1Name}", fill="white", font=font.Font(family='ds-digital', size=self.team1XYSize[2]))
+                self.rightName = self.canvas.create_text(self.team2XYSize[0], self.team1XYSize[1], anchor='center', text=f"{self.team2Name}", fill="white", font=font.Font(family='ds-digital', size=self.team1XYSize[2]))
+                if self.coloredSides:
+                    self.left = self.canvas.create_rectangle(10, self.posyt+50, self.posxl, self.posyb, fill=self.color_left)
+                    self.right = self.canvas.create_rectangle(self.posxr1, self.posyt+50, self.posxr2, self.posyb, fill=self.color_right)
+                self.score_labelL = self.canvas.create_text(self.posxScoreL-50, self.posyScoreL+50, text=str(self.scoreL), fill="white", font=font.Font(family='ds-digital', size=self.fontSize), anchor="center")
+                self.score_labelR = self.canvas.create_text(self.posxScoreR+50, self.posyScoreR+50, text=str(self.scoreR), fill="white", font=font.Font(family='ds-digital', size=self.fontSize), anchor="center")
+            else:
+                self.color_left = "#0000ff"
+                self.color_right = "#ff0000"
+                self.leftName = self.canvas.create_text(self.team1XYSize[0], self.team1XYSize[1], anchor='center',text=f"{self.team2Name}", fill="white", font=font.Font(family='ds-digital', size=self.team1XYSize[2]))
+                self.rightName = self.canvas.create_text(self.team2XYSize[0], self.team1XYSize[1], anchor='center', text=f"{self.team1Name}", fill="white", font=font.Font(family='ds-digital', size=self.team1XYSize[2]))
+                if self.coloredSides:
+                    self.left = self. canvas.create_rectangle(10, self.posyt+50, self.posxl, self.posyb, fill=self.color_left)
+                    self.right = self.canvas.create_rectangle(self.posxr1, self.posyt+50, self.posxr2, self.posyb, fill=self.color_right)
+                self.score_labelL = self.canvas.create_text(self.posxScoreL-50, self.posyScoreL+50, text=str(self.scoreR), fill="white", font=font.Font(family='ds-digital', size=self.fontSize), anchor="center")
+                self.score_labelR = self.canvas.create_text(self.posxScoreR+50, self.posyScoreR+50, text=str(self.scoreL), fill="white", font=font.Font(family='ds-digital', size=self.fontSize), anchor="center")
+
+            self.timerText = self.canvas.create_text(self.posxT, self.posyT, text=f"{self.timer_value}", fill="red", font=font.Font(family='ds-digital', size=(self.scoreFontSize-50)), anchor="center")
+            if self.timer:
+                if self.timerBase:
+                    self.canvas.delete(self.timerBase)
+                self.timerBase = self.canvas.create_rectangle(self.tBase1, self.tBase2, self.tBase3, self.tBase4, fill=None, outline='gray', width=2)
+
+            self.root.after(100, self.graphics)
+
+
+    def timer_function(self):
+        minutes, seconds = map(int, self.timer_value.split(":"))
+        total_seconds = minutes * 60 + seconds
+        # print("Timer Function Running")
+        if not self.paused:
             if total_seconds > 10:
                 total_seconds -= 1
             else:
                 total_seconds -= .01
 
-            # Calculate new minutes and seconds
             new_minutes = total_seconds // 60
             new_seconds = total_seconds % 60
 
-            # Format the new values
             minutes_str = f"{new_minutes:02d}"
             seconds_str = f"{new_seconds:02d}"
 
-            # Update timerValue
-            timerValue = f"{minutes_str}:{seconds_str}"
-
-            # print(timerValue)
-
-            if total_seconds > 0:
-                # If there are remaining seconds, continue the countdown
-                pass
-            else:
-                print("Timer reached 0:00")
-                # Perform actions when timer reaches 0:00
+            self.timer_value = f"{minutes_str}:{seconds_str}"
+            # print(self.timer_value)
         if total_seconds > 10:
-            root.after(1000, timerFunction)
+            self.root.after(1000, self.timer_function)
         else:
-            root.after(10, timerFunction)
+            self.root.after(10, self.timer_function)
 
-    left = None
-    right = None
-    score_labelL = None
-    score_labelR = None
-    print("here2")
-    root.after(0, graphics)
-    if timer:
-        root.after(0, timerFunction)
-    colorLeft = "#ff0000"
-    colorRight = "#0000ff"
+    def show_keybinds(self):
+        keybinds_window = tk.Toplevel(self.root)
+        keybinds_window.title("Live Window")
 
+        label = tk.Label(keybinds_window, text=self.keybinds, padx=10, pady=10)
+        label.pack()
 
-
-    print("here3")
-    root.mainloop()
-
-def show_keybinds(keysubl, keyaddl, keysubr, keyaddr, keyreset):
-    global root, keybinds
-    
-    # Create a new window
-    keybinds_window = tk.Toplevel(root)
-    keybinds_window.title("Live Window")
-
-    # Create a label to display the keybinds
-    label = tk.Label(keybinds_window, text=keybinds, padx=10, pady=10)
-    label.pack()
-
-    # Create an OK button to close the window
-    ok_button = tk.Button(keybinds_window, text="OK", command=keybinds_window.destroy)
-    ok_button.pack(pady=10)
-    keybinds_window.bind("<F11>", toggle_fullscreen)
-    keybinds_window.bind("<Key>", lambda event: update_scores(event, keysubl, keyaddl, keysubr, keyaddr, keyreset))
+        ok_button = tk.Button(keybinds_window, text="OK", command=keybinds_window.destroy)
+        ok_button.pack(pady=10)
+        keybinds_window.bind("<F11>", self.toggle_fullscreen)
+        keybinds_window.bind("<Key>", self.update_scores)
 
 if __name__ == "__main__":
-    handelGraphics(True, '04:13', True, 'switch', 'Home', 'Away', False, False, False, True)
+    app = ScoreboardApp(True, '04:13', True, 'switch', 'Home', 'Away', False, False, False, True)
