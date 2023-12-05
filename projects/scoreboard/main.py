@@ -63,11 +63,6 @@ def create_window():
     team2_entry.config(bg='white', fg='black')
     team2_entry.place(x=200, y=160, anchor='center')
 
-    # Checkbox with label: Colored Sides
-    colored_sides_var = tk.BooleanVar()
-    colored_sides_checkbutton = tk.Checkbutton(window, text="Colored Sides", variable=colored_sides_var, fg='black', bg='white')
-    colored_sides_checkbutton.place(x=200, y=190, anchor='center')
-
     # Checkbox with label: Has Icon
     has_icon_var = tk.BooleanVar()
     has_icon_checkbutton = tk.Checkbutton(window, text="Has Icon", variable=has_icon_var)
@@ -111,7 +106,7 @@ def create_window():
             window.config(bg='white')
             print(timer_entry.get())
             all = [timer_var.get(), timer_entry.get(), possession_var.get(), switch_sides_var.get(), team1_entry.get(),
-                team2_entry.get(), colored_sides_var.get(), hasPeriod.get()]
+                team2_entry.get(), False, hasPeriod.get()]
             var1 = team1_entry.get()
             var2 = team2_entry.get()
             timer_checkbutton.destroy()
@@ -124,11 +119,10 @@ def create_window():
             # team2_icon_button.destroy()
             timer_entry.destroy()
             switch_sides_checkbutton.destroy()
-            colored_sides_checkbutton.destroy()
     
             def finalSubmit():
                 print("Submitted")
-                global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
+                global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, home_icon_path, away_icon_path
                 window.destroy()
                 a = all[0]
                 b = all[1]
