@@ -17,6 +17,7 @@ class ScoreboardApp:
         self.home_icon_image = None
         self.scoreL = 0
         self.scoreR = 0
+        self.periodText = None
         self.left = None
         self.right = None
         self.posText = None
@@ -30,8 +31,8 @@ class ScoreboardApp:
         self.paused = True
         self.side = "left"
         self.currentPos = '←'
-        self.period_possible = False
-        self.period = 1 if has_period else None
+        self.period_possible = has_period
+        self.period = 1
         self.switch_possible = switch
         self.keybinds = """Press (Q, W) to change left score
 Press (O, P) to change right score
@@ -101,9 +102,12 @@ Use the UP and DOWn arrow to change the period (v, ^)"""
             self.scoreR = 0
             self.side = "left"
             self.currentPos = "←"
+            self.period = 1
         elif event.keysym == "Return":
             self.paused = True
             self.timer_value = self.origTimer
+            self.currentPos = "→"
+            self.side = "right"
         elif event.keysym == 't':
             if self.paused:
                 self.paused = False
@@ -117,7 +121,7 @@ Use the UP and DOWn arrow to change the period (v, ^)"""
             self.currentPos = "→"
         elif event.keysym == 'Left':
             self.currentPos = "←"
-        if event.keysym == 'q':
+        elif event.keysym == 'q':
             if self.side == "left":
                 self.scoreL += 1
             else:
@@ -137,6 +141,10 @@ Use the UP and DOWn arrow to change the period (v, ^)"""
                 self.scoreR += 1
             else:
                 self.scoreL += 1
+        elif event.keysym == 'Up':
+            self.period += 1
+        elif event.keysym == "Down":
+            self.period -= 1
 
     def graphics(self):
         # print(f"Graphics Running, Left Score: {self.scoreL}. Right Score: {self.scoreR}. Timer: {self.timer_value}")
@@ -163,6 +171,7 @@ Use the UP and DOWn arrow to change the period (v, ^)"""
             self.possPos = [800, 350, 75]
             self.imagePosLeft = [130, 60, 250]
             self.imagePosRight = [1100, 60, 250]
+            self.periodConfig = [self.posxT, 600, 100]
             # print("Isfullscreen")
         else:
             self.posxT = 250
@@ -187,6 +196,7 @@ Use the UP and DOWn arrow to change the period (v, ^)"""
             self.possPos = [250, 175, 50]
             self.imagePosLeft = [30, 75, 80]
             self.imagePosRight = [375, 75, 80]
+            self.periodConfig = [self.posxT, 300, 50]
             # print("not Isfullscreen")
 
         if (self.score_labelL):
@@ -210,6 +220,14 @@ Use the UP and DOWn arrow to change the period (v, ^)"""
         
         if self.away_icon_image:
             self.canvas.delete(self.away_icon_image)
+
+        if self.period_possible: 
+            if self.periodText:
+                self.canvas.delete(self.periodText)
+                self.canvas.delete(self.periodLabel)
+            print(self.periodConfig)
+            self.periodText = self.canvas.create_text(self.periodConfig[0], self.periodConfig[1]+25 if not self.isFullscreen else self.periodConfig[1]+75, text="Period", font=font.Font(family='ds-digital', size=self.periodConfig[2]-30 if not self.isFullscreen else self.periodConfig[2] - 65), fill="white", anchor='center')
+            self.periodLabel = self.canvas.create_text(self.periodConfig[0], self.periodConfig[1]-25, text=f"{self.period}", font=font.Font(family='ds-digital', size=self.periodConfig[2]), fill="yellow", anchor='center')
 
         if self.side == "left":
             self.color_left = "#ff0000"

@@ -1,5 +1,6 @@
 import start
 import tkinter as tk
+import re
 from tkinter import messagebox
 from tkinter import filedialog
 from PIL import Image, ImageTk, ImageFilter
@@ -81,8 +82,6 @@ def create_window():
     def submit():
         global has_icon_var, home_icon_path, away_icon_path, window, team1_icon_button, team2_icon_button, tk_images, hasPeriod, period
         global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var
-        window.geometry('320x300')  # Adjust the size accordingly
-        window.config(bg='white')
 
         tk_images = []
         def show_image(image_path, x, y, width, height):
@@ -107,79 +106,81 @@ def create_window():
                 image_label = tk.Label(window, image=i)
                 image_label.place(x=x, y=y)
 
+        if re.match(r"^\d\d:[0-5]\d$", timer_entry.get()):
+            window.geometry('320x300')  # Adjust the size accordingly
+            window.config(bg='white')
+            print(timer_entry.get())
+            all = [timer_var.get(), timer_entry.get(), possession_var.get(), switch_sides_var.get(), team1_entry.get(),
+                team2_entry.get(), colored_sides_var.get(), hasPeriod.get()]
+            var1 = team1_entry.get()
+            var2 = team2_entry.get()
+            timer_checkbutton.destroy()
+            possession_checkbutton.destroy()
+            has_icon_checkbutton.destroy()
+            period.destroy()
+            team2_entry.destroy()
+            # team2_icon_button.destroy()
+            team1_entry.destroy()
+            # team2_icon_button.destroy()
+            timer_entry.destroy()
+            switch_sides_checkbutton.destroy()
+            colored_sides_checkbutton.destroy()
+    
+            def finalSubmit():
+                print("Submitted")
+                global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
+                window.destroy()
+                a = all[0]
+                b = all[1]
+                c = all[2]
+                d = all[3]
+                e = all[4]
+                f = all[5]
+                g = all[6]
+                h = all[7]
+                print("Away Icon (finalSubmit): " + str(away_icon_path))
+                print("Home Icon (finalSubmit): " + str(home_icon_path))
+                start.ScoreboardApp(a, b, c, d, e, f, g, home_icon_path, away_icon_path, h)
+
+
+            if has_icon_var.get():
+                # Adding buttons for each team's icon
+                team1_icon_button = tk.Button(window, text=f"{var1} Icon")
+                team1_icon_button.place(x=50, y=210, anchor='center')
+
+                team2_icon_button = tk.Button(window, text=f"{var2} Icon")
+                team2_icon_button.place(x=250, y=210, anchor='center')
+
+            def browseIcon(button, x, y, buttonSide):
+                global home_icon_path, away_icon_path
+                if buttonSide == 'left':
+                    home_icon_path = filedialog.askopenfilename(title=f"Select {button.cget('text')}",
+                                                                filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
+                    print(f"Selected Home Path:", home_icon_path)
+                    show_image(home_icon_path, x, y, 100, 100)
+                    print("Home Icon Path (browseIcon): " + home_icon_path)
+                    print("===========================================")
+                elif buttonSide == 'right':
+                    away_icon_path = filedialog.askopenfilename(title=f"Select {button.cget('text')}",
+                                                                filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
+                    print(f"Selected Away Path:", away_icon_path)
+                    show_image(away_icon_path, x, y, 100, 100)
+                    print("Away Icon Path (browseIcon): " + away_icon_path)
+                    print("===========================================")
+                else: 
+                    print("Error")
 
 
 
-        print(timer_entry.get())
-        all = [timer_var.get(), timer_entry.get(), possession_var.get(), switch_sides_var.get(), team1_entry.get(),
-            team2_entry.get(), colored_sides_var.get(), hasPeriod.get()]
-        var1 = team1_entry.get()
-        var2 = team2_entry.get()
-        timer_checkbutton.destroy()
-        possession_checkbutton.destroy()
-        has_icon_checkbutton.destroy()
-        period.destroy()
-        team2_entry.destroy()
-        # team2_icon_button.destroy()
-        team1_entry.destroy()
-        # team2_icon_button.destroy()
-        timer_entry.destroy()
-        switch_sides_checkbutton.destroy()
-        colored_sides_checkbutton.destroy()
- 
-        def finalSubmit():
-            print("Submitted")
-            global timer_var, timer_entry, possession_checkbutton, switch_sides_var, team1_entry, team2_entry, colored_sides_var, home_icon_path, away_icon_path
-            window.destroy()
-            a = all[0]
-            b = all[1]
-            c = all[2]
-            d = all[3]
-            e = all[4]
-            f = all[5]
-            g = all[6]
-            h = all[7]
-            print("Away Icon (finalSubmit): " + str(away_icon_path))
-            print("Home Icon (finalSubmit): " + str(home_icon_path))
-            start.ScoreboardApp(a, b, c, d, e, f, g, home_icon_path, away_icon_path, h)
+            if has_icon_var.get():
+                team1_icon_button.config(command=lambda: browseIcon(team1_icon_button, 10, 20, "left"))
+                team2_icon_button.config(command=lambda: browseIcon(team2_icon_button, 200, 20, "right"))
 
 
-        if has_icon_var.get():
-            # Adding buttons for each team's icon
-            team1_icon_button = tk.Button(window, text=f"{var1} Icon")
-            team1_icon_button.place(x=50, y=210, anchor='center')
-
-            team2_icon_button = tk.Button(window, text=f"{var2} Icon")
-            team2_icon_button.place(x=250, y=210, anchor='center')
-
-        def browseIcon(button, x, y, buttonSide):
-            global home_icon_path, away_icon_path
-            if buttonSide == 'left':
-                home_icon_path = filedialog.askopenfilename(title=f"Select {button.cget('text')}",
-                                                            filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
-                print(f"Selected Home Path:", home_icon_path)
-                show_image(home_icon_path, x, y, 100, 100)
-                print("Home Icon Path (browseIcon): " + home_icon_path)
-                print("===========================================")
-            elif buttonSide == 'right':
-                away_icon_path = filedialog.askopenfilename(title=f"Select {button.cget('text')}",
-                                                            filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
-                print(f"Selected Away Path:", away_icon_path)
-                show_image(away_icon_path, x, y, 100, 100)
-                print("Away Icon Path (browseIcon): " + away_icon_path)
-                print("===========================================")
-            else: 
-                print("Error")
-
-
-
-        if has_icon_var.get():
-            team1_icon_button.config(command=lambda: browseIcon(team1_icon_button, 10, 20, "left"))
-            team2_icon_button.config(command=lambda: browseIcon(team2_icon_button, 200, 20, "right"))
-
-
-        submit_button = tk.Button(window, text="Submit", command=finalSubmit, anchor="center")
-        submit_button.place(x=150, y=250, anchor='center')
+            submit_button = tk.Button(window, text="Submit", command=finalSubmit, anchor="center")
+            submit_button.place(x=150, y=250, anchor='center')
+        else:
+            messagebox.showerror("ERROR", "Timer input must be in the format XX:XX where minutes [0-59]")
 
 
     submit_button = tk.Button(window, text="Submit", command=submit, anchor="center")
