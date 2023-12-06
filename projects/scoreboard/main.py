@@ -101,7 +101,9 @@ def create_window():
                 image_label = tk.Label(window, image=i)
                 image_label.place(x=x, y=y)
 
-        if re.match(r"^\d\d:[0-5]\d$", timer_entry.get()):
+        if not (re.match(r"^\d\d:[0-5]\d$", timer_entry.get())) and timer_var.get():
+            messagebox.showerror("ERROR", "Timer input must be in the format XX:XX where minutes [0-59]")
+        else:
             window.geometry('320x300')  # Adjust the size accordingly
             window.config(bg='white')
             print(timer_entry.get())
@@ -173,8 +175,6 @@ def create_window():
 
             submit_button = tk.Button(window, text="Submit", command=finalSubmit, anchor="center")
             submit_button.place(x=150, y=250, anchor='center')
-        else:
-            messagebox.showerror("ERROR", "Timer input must be in the format XX:XX where minutes [0-59]")
 
 
     submit_button = tk.Button(window, text="Submit", command=submit, anchor="center")
