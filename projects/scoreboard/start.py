@@ -149,6 +149,7 @@ Use the UP and DOWn arrow to change the period (v, ^)"""
     def graphics(self):
         # print(f"Graphics Running, Left Score: {self.scoreL}. Right Score: {self.scoreR}. Timer: {self.timer_value}")
         if self.isFullscreen:
+            self.LRHalf = self.root.winfo_screenwidth() / 2
             self.posxl = self.root.winfo_screenwidth() / 2 - 7.5
             self.posxr2 = self.root.winfo_screenwidth() - 15
             self.posxr1 = self.root.winfo_screenwidth() / 2 + 7.5
