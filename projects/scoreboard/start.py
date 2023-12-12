@@ -44,9 +44,10 @@ Press Enter to Reset Timer
 Press Ctrl + Enter to Reset Score, Possession, and Timer
 Press F1 to show Keybinds again / Open Live Window
 Use the UP and DOWn arrow to change the period (v, ^)"""
-        
+        self.width = 500
+        self.height = 400
         self.root = tk.Tk()
-        self.root.geometry('500x400')
+        self.root.geometry(f'{self.width}x{self.height}')
         self.root.title(" ")
 
         self.initialize_gui()
@@ -147,58 +148,26 @@ Use the UP and DOWn arrow to change the period (v, ^)"""
             self.period -= 1
 
     def graphics(self):
-        # print(f"Graphics Running, Left Score: {self.scoreL}. Right Score: {self.scoreR}. Timer: {self.timer_value}")
         if self.isFullscreen:
+            self.fullWidth = self.root.winfo_screenwidth()
+            self.fullHeight = self.root.winfo_screenheight()
             self.LRHalf = self.root.winfo_screenwidth() / 2
-            self.posxl = self.root.winfo_screenwidth() / 2 - 7.5
-            self.posxr2 = self.root.winfo_screenwidth() - 15
-            self.posxr1 = self.root.winfo_screenwidth() / 2 + 7.5
-            self.posyb = self.root.winfo_screenheight() - 15
-            self.posxT = self.root.winfo_screenwidth() / 2
-            self.posyT = 110
-            self.scoreFontSize = 175
-            self.posyt = 230
-            self.posxScoreL = ((10 + self.posxl) / 2) - 75
-            self.posyScoreL = ((self.posyt + self.posyb) / 2) + 25
-            self.posxScoreR = ((self.posxr1 + self.posxr2) / 2)
-            self.posyScoreR = ((self.posyt + self.posyb) / 2) + 25
-            self.fontSize = 300
-            self.tBase1 = self.posxT - 200
-            self.tBase2 = -10
-            self.tBase3 = self.posxT + 200
-            self.tBase4 = self.posyT + 100
-            self.team1XYSize = [280, 400, 100]
-            self.team2XYSize = [1250, 400, 100]
-            self.possPos = [800, 350, 75]
-            self.imagePosLeft = [130, 60, 250]
-            self.imagePosRight = [1100, 60, 250]
-            self.periodConfig = [self.posxT, 600, 100]
-            # print("Isfullscreen")
+            self.TBHalf = self.root.winfo_screenheight() / 2
+            self.LRQuarter = self.root.winfo_screenwidth() / 4
+            self.TBQuarter = self.root.winfo_screenheight() / 4
+            self.WThirds = self.root.winfo_screenwidth() / 3
+            self.WFifths = self.root.winfo_screenwidth() / 5
+            self.fontMultiply = 3
         else:
-            self.posxT = 250
-            self.scoreFontSize = 100
-            self.posyT = 40
-            self.posxl = 245
-            self.posxr2 = 490
-            self.posxr1 = 255
-            self.posyb = 390
-            self.posyt = 100
-            self.posxScoreL = (10 + self.posxl) / 2
-            self.posyScoreL = (self.posyt + self.posyb) / 2
-            self.posxScoreR = (self.posxr1 + self.posxr2) / 2
-            self.posyScoreR = (self.posyt + self.posyb) / 2
-            self.fontSize = 125
-            self.tBase1 = self.posxT - 100
-            self.tBase2 = -10
-            self.tBase3 = self.posxT + 100
-            self.tBase4 = self.posyT + 60
-            self.team1XYSize = [75, 200, 30]
-            self.team2XYSize = [425, 200, 30]
-            self.possPos = [250, 175, 50]
-            self.imagePosLeft = [30, 75, 80]
-            self.imagePosRight = [375, 75, 80]
-            self.periodConfig = [self.posxT, 300, 50]
-            # print("not Isfullscreen")
+            self.fullWidth = self.width
+            self.fullHeight = self.height
+            self.LRHalf = self.width / 2
+            self.TBHalf = self.height / 2
+            self.LRQuarter = self.width / 4
+            self.TBQuarter = self.width / 4
+            self.WThirds = self.width / 3
+            self.WFifths = self.width / 5
+            self.fontMultiply = 1
 
         if (self.score_labelL):
             self.canvas.delete(self.score_labelL)
@@ -214,7 +183,7 @@ Use the UP and DOWn arrow to change the period (v, ^)"""
             self.canvas.delete(self.posText)
 
         if self.possessionPossible:
-            self.posText = self.canvas.create_text(self.possPos[0], self.possPos[1], text=f"{self.currentPos}", fill="white" ,anchor="center", font=font.Font(family='ds-digital', size=self.possPos[2]))
+            self.posText = self.canvas.create_text((self.LRHalf), (0+self.fullHeight/3), text=f"{self.currentPos}", fill="white" ,anchor="center", font=font.Font(family='ds-digital', size=40*self.fontMultiply))
 
         if self.home_icon_image:
             self.canvas.delete(self.home_icon_image)
@@ -226,73 +195,72 @@ Use the UP and DOWn arrow to change the period (v, ^)"""
             if self.periodText:
                 self.canvas.delete(self.periodText)
                 self.canvas.delete(self.periodLabel)
-            print(self.periodConfig)
-            self.periodText = self.canvas.create_text(self.periodConfig[0], self.periodConfig[1]+25 if not self.isFullscreen else self.periodConfig[1]+75, text="Period", font=font.Font(family='ds-digital', size=self.periodConfig[2]-30 if not self.isFullscreen else self.periodConfig[2] - 65), fill="white", anchor='center')
-            self.periodLabel = self.canvas.create_text(self.periodConfig[0], self.periodConfig[1]-25, text=f"{self.period}", font=font.Font(family='ds-digital', size=self.periodConfig[2]), fill="yellow", anchor='center')
+            self.periodText = self.canvas.create_text((self.LRHalf), (self.TBHalf+self.TBQuarter), text="Period", font=font.Font(family='ds-digital', size=25*self.fontMultiply), fill="white", anchor='center')
+            self.periodLabel = self.canvas.create_text((self.LRHalf), (self.TBHalf+self.TBQuarter-(50*self.fontMultiply)), text=f"{self.period}", font=font.Font(family='ds-digital', size=50*self.fontMultiply), fill="yellow", anchor='center')
 
         if self.side == "left":
             self.color_left = "#ff0000"
             self.color_right = "#0000ff"
-            self.leftName = self.canvas.create_text(self.team1XYSize[0], self.team1XYSize[1], anchor='center', text=f"{self.team1Name}", fill="white", font=font.Font(family='ds-digital', size=self.team1XYSize[2]))
-            self.rightName = self.canvas.create_text(self.team2XYSize[0], self.team1XYSize[1], anchor='center', text=f"{self.team2Name}", fill="white", font=font.Font(family='ds-digital', size=self.team1XYSize[2]))
-            if self.coloredSides:
-                self.left = self.canvas.create_rectangle(10, self.posyt+50, self.posxl, self.posyb, fill=self.color_left)
-                self.right = self.canvas.create_rectangle(self.posxr1, self.posyt+50, self.posxr2, self.posyb, fill=self.color_right)
-            self.score_labelL = self.canvas.create_text(self.posxScoreL-50, self.posyScoreL+50, text=str(self.scoreL), fill="white", font=font.Font(family='ds-digital', size=self.fontSize), anchor="center")
-            self.score_labelR = self.canvas.create_text(self.posxScoreR+50, self.posyScoreR+50, text=str(self.scoreR), fill="white", font=font.Font(family='ds-digital', size=self.fontSize), anchor="center")
-            if self.home_icon_path:
-                image1 = Image.open(self.home_icon_path)
-                image1 = image1.resize((self.imagePosLeft[2], self.imagePosLeft[2]), Image.LANCZOS)
-                # Convert the image to a Tkinter PhotoImage object
-                tk_image1 = ImageTk.PhotoImage(image1)
-                # Display the image on the canvas
-                self.canvas.create_image(self.imagePosLeft[0], self.imagePosLeft[1], anchor=tk.NW, image=tk_image1)
-                # Ensure that the image is not garbage collected by keeping a reference
-                self.canvas.imageOne = tk_image1
-            if self.away_icon_path:
-                image2 = Image.open(self.away_icon_path)
-                image2 = image2.resize((self.imagePosRight[2], self.imagePosRight[2]), Image.LANCZOS)
-                # Convert the image to a Tkinter PhotoImage object
-                tk_image2 = ImageTk.PhotoImage(image2)
-                # Display the image on the canvas
-                self.canvas.create_image(self.imagePosRight[0], self.imagePosRight[1], anchor=tk.NW, image=tk_image2)
-                # Ensure that the image is not garbage collected by keeping a reference
-                self.canvas.imageTwo = tk_image2
-        else:
-            self.color_left = "#0000ff"
-            self.color_right = "#ff0000"
-            self.leftName = self.canvas.create_text(self.team1XYSize[0], self.team1XYSize[1], anchor='center',text=f"{self.team2Name}", fill="white", font=font.Font(family='ds-digital', size=self.team1XYSize[2]))
-            self.rightName = self.canvas.create_text(self.team2XYSize[0], self.team1XYSize[1], anchor='center', text=f"{self.team1Name}", fill="white", font=font.Font(family='ds-digital', size=self.team1XYSize[2]))
-            if self.coloredSides:
-                self.left = self. canvas.create_rectangle(10, self.posyt+50, self.posxl, self.posyb, fill=self.color_left)
-                self.right = self.canvas.create_rectangle(self.posxr1, self.posyt+50, self.posxr2, self.posyb, fill=self.color_right)
-            self.score_labelL = self.canvas.create_text(self.posxScoreL-50, self.posyScoreL+50, text=str(self.scoreR), fill="white", font=font.Font(family='ds-digital', size=self.fontSize), anchor="center")
-            self.score_labelR = self.canvas.create_text(self.posxScoreR+50, self.posyScoreR+50, text=str(self.scoreL), fill="white", font=font.Font(family='ds-digital', size=self.fontSize), anchor="center")
-            if self.home_icon_path:
-                image1 = Image.open(self.home_icon_path)
-                image1 = image1.resize((self.imagePosRight[2], self.imagePosRight[2]), Image.LANCZOS)
-                # Convert the image to a Tkinter PhotoImage object
-                tk_image1 = ImageTk.PhotoImage(image1)
-                # Display the image on the canvas
-                self.canvas.create_image(self.imagePosRight[0], self.imagePosRight[1], anchor=tk.NW, image=tk_image1)
-                # Ensure that the image is not garbage collected by keeping a reference
-                self.canvas.imageOne = tk_image1
-            if self.away_icon_path:
-                image2 = Image.open(self.away_icon_path)
-                image2 = image2.resize((self.imagePosLeft[2], self.imagePosLeft[2]), Image.LANCZOS)
-                # Convert the image to a Tkinter PhotoImage object
-                tk_image2 = ImageTk.PhotoImage(image2)
-                # Display the image on the canvas
-                self.canvas.create_image(self.imagePosLeft[0], self.imagePosLeft[1], anchor=tk.NW, image=tk_image2)
-                # Ensure that the image is not garbage collected by keeping a reference
-                self.canvas.imageTwo = tk_image2
+            self.leftName = self.canvas.create_text((0+self.WFifths), (self.TBHalf), anchor='center', text=f"{self.team1Name}", fill="white", font=font.Font(family='ds-digital', size=45*self.fontMultiply))
+            self.rightName = self.canvas.create_text((self.fullWidth-self.WFifths), (self.TBHalf), anchor='center', text=f"{self.team2Name}", fill="white", font=font.Font(family='ds-digital', size=45*self.fontMultiply))
+        #     if self.coloredSides:
+        #         self.left = self.canvas.create_rectangle(10, self.posyt+50, self.posxl, self.posyb, fill=self.color_left)
+        #         self.right = self.canvas.create_rectangle(self.posxr1, self.posyt+50, self.posxr2, self.posyb, fill=self.color_right)
+        #     self.score_labelL = self.canvas.create_text(self.posxScoreL-50, self.posyScoreL+50, text=str(self.scoreL), fill="white", font=font.Font(family='ds-digital', size=self.fontSize), anchor="center")
+        #     self.score_labelR = self.canvas.create_text(self.posxScoreR+50, self.posyScoreR+50, text=str(self.scoreR), fill="white", font=font.Font(family='ds-digital', size=self.fontSize), anchor="center")
+        #     if self.home_icon_path:
+        #         image1 = Image.open(self.home_icon_path)
+        #         image1 = image1.resize((self.imagePosLeft[2], self.imagePosLeft[2]), Image.LANCZOS)
+        #         # Convert the image to a Tkinter PhotoImage object
+        #         tk_image1 = ImageTk.PhotoImage(image1)
+        #         # Display the image on the canvas
+        #         self.canvas.create_image(self.imagePosLeft[0], self.imagePosLeft[1], anchor=tk.NW, image=tk_image1)
+        #         # Ensure that the image is not garbage collected by keeping a reference
+        #         self.canvas.imageOne = tk_image1
+        #     if self.away_icon_path:
+        #         image2 = Image.open(self.away_icon_path)
+        #         image2 = image2.resize((self.imagePosRight[2], self.imagePosRight[2]), Image.LANCZOS)
+        #         # Convert the image to a Tkinter PhotoImage object
+        #         tk_image2 = ImageTk.PhotoImage(image2)
+        #         # Display the image on the canvas
+        #         self.canvas.create_image(self.imagePosRight[0], self.imagePosRight[1], anchor=tk.NW, image=tk_image2)
+        #         # Ensure that the image is not garbage collected by keeping a reference
+        #         self.canvas.imageTwo = tk_image2
+        # else:
+        #     self.color_left = "#0000ff"
+        #     self.color_right = "#ff0000"
+        #     self.leftName = self.canvas.create_text(self.team1XYSize[0], self.team1XYSize[1], anchor='center',text=f"{self.team2Name}", fill="white", font=font.Font(family='ds-digital', size=self.team1XYSize[2]))
+        #     self.rightName = self.canvas.create_text(self.team2XYSize[0], self.team1XYSize[1], anchor='center', text=f"{self.team1Name}", fill="white", font=font.Font(family='ds-digital', size=self.team1XYSize[2]))
+        #     if self.coloredSides:
+        #         self.left = self. canvas.create_rectangle(10, self.posyt+50, self.posxl, self.posyb, fill=self.color_left)
+        #         self.right = self.canvas.create_rectangle(self.posxr1, self.posyt+50, self.posxr2, self.posyb, fill=self.color_right)
+        #     self.score_labelL = self.canvas.create_text(self.posxScoreL-50, self.posyScoreL+50, text=str(self.scoreR), fill="white", font=font.Font(family='ds-digital', size=self.fontSize), anchor="center")
+        #     self.score_labelR = self.canvas.create_text(self.posxScoreR+50, self.posyScoreR+50, text=str(self.scoreL), fill="white", font=font.Font(family='ds-digital', size=self.fontSize), anchor="center")
+        #     if self.home_icon_path:
+        #         image1 = Image.open(self.home_icon_path)
+        #         image1 = image1.resize((self.imagePosRight[2], self.imagePosRight[2]), Image.LANCZOS)
+        #         # Convert the image to a Tkinter PhotoImage object
+        #         tk_image1 = ImageTk.PhotoImage(image1)
+        #         # Display the image on the canvas
+        #         self.canvas.create_image(self.imagePosRight[0], self.imagePosRight[1], anchor=tk.NW, image=tk_image1)
+        #         # Ensure that the image is not garbage collected by keeping a reference
+        #         self.canvas.imageOne = tk_image1
+        #     if self.away_icon_path:
+        #         image2 = Image.open(self.away_icon_path)
+        #         image2 = image2.resize((self.imagePosLeft[2], self.imagePosLeft[2]), Image.LANCZOS)
+        #         # Convert the image to a Tkinter PhotoImage object
+        #         tk_image2 = ImageTk.PhotoImage(image2)
+        #         # Display the image on the canvas
+        #         self.canvas.create_image(self.imagePosLeft[0], self.imagePosLeft[1], anchor=tk.NW, image=tk_image2)
+        #         # Ensure that the image is not garbage collected by keeping a reference
+        #         self.canvas.imageTwo = tk_image2
 
 
-        self.timerText = self.canvas.create_text(self.posxT, self.posyT, text=f"{self.timer_value}", fill="red", font=font.Font(family='ds-digital', size=(self.scoreFontSize-50)), anchor="center")
-        if self.timer:
-            if self.timerBase:
-                self.canvas.delete(self.timerBase)
-            self.timerBase = self.canvas.create_rectangle(self.tBase1, self.tBase2, self.tBase3, self.tBase4, fill=None, outline='gray', width=2)
+        # self.timerText = self.canvas.create_text(self.posxT, self.posyT, text=f"{self.timer_value}", fill="red", font=font.Font(family='ds-digital', size=(self.scoreFontSize-50)), anchor="center")
+        # if self.timer:
+        #     if self.timerBase:
+        #         self.canvas.delete(self.timerBase)
+        #     self.timerBase = self.canvas.create_rectangle(self.tBase1, self.tBase2, self.tBase3, self.tBase4, fill=None, outline='gray', width=2)
 
         self.root.after(10, self.graphics)
 
