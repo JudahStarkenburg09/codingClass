@@ -169,6 +169,8 @@ Use the UP and DOWn arrow to change the period (v, ^)"""
             self.WFifths = self.width / 5
             self.fontMultiply = 1
 
+        print(f"W: {self.fullWidth}, H: {self.fullHeight}")
+
         if (self.score_labelL):
             self.canvas.delete(self.score_labelL)
             self.canvas.delete(self.score_labelR)
@@ -183,7 +185,7 @@ Use the UP and DOWn arrow to change the period (v, ^)"""
             self.canvas.delete(self.posText)
 
         if self.possessionPossible:
-            self.posText = self.canvas.create_text((self.LRHalf), (0+self.fullHeight/3), text=f"{self.currentPos}", fill="white" ,anchor="center", font=font.Font(family='ds-digital', size=40*self.fontMultiply))
+            self.posText = self.canvas.create_text((self.LRHalf), (0+self.fullHeight/2.5), text=f"{self.currentPos}", fill="white" ,anchor="center", font=font.Font(family='ds-digital', size=40*self.fontMultiply))
 
         if self.home_icon_image:
             self.canvas.delete(self.home_icon_image)
@@ -195,37 +197,34 @@ Use the UP and DOWn arrow to change the period (v, ^)"""
             if self.periodText:
                 self.canvas.delete(self.periodText)
                 self.canvas.delete(self.periodLabel)
-            self.periodText = self.canvas.create_text((self.LRHalf), (self.TBHalf+self.TBQuarter), text="Period", font=font.Font(family='ds-digital', size=25*self.fontMultiply), fill="white", anchor='center')
-            self.periodLabel = self.canvas.create_text((self.LRHalf), (self.TBHalf+self.TBQuarter-(50*self.fontMultiply)), text=f"{self.period}", font=font.Font(family='ds-digital', size=50*self.fontMultiply), fill="yellow", anchor='center')
+            self.periodText = self.canvas.create_text((self.LRHalf), (self.TBHalf+self.TBQuarter+self.fullHeight/12), text="Period", font=font.Font(family='ds-digital', size=25*self.fontMultiply if not self.isFullscreen else 20*self.fontMultiply), fill="white", anchor='center')
+            self.periodLabel = self.canvas.create_text((self.LRHalf), (self.TBHalf+self.TBQuarter-(40*self.fontMultiply)+self.fullHeight/12), text=f"{self.period}", font=font.Font(family='ds-digital', size=50*self.fontMultiply if not self.isFullscreen else 40*self.fontMultiply), fill="yellow", anchor='center')
 
         if self.side == "left":
             self.color_left = "#ff0000"
             self.color_right = "#0000ff"
-            self.leftName = self.canvas.create_text((0+self.WFifths), (self.TBHalf), anchor='center', text=f"{self.team1Name}", fill="white", font=font.Font(family='ds-digital', size=45*self.fontMultiply))
-            self.rightName = self.canvas.create_text((self.fullWidth-self.WFifths), (self.TBHalf), anchor='center', text=f"{self.team2Name}", fill="white", font=font.Font(family='ds-digital', size=45*self.fontMultiply))
-        #     if self.coloredSides:
-        #         self.left = self.canvas.create_rectangle(10, self.posyt+50, self.posxl, self.posyb, fill=self.color_left)
-        #         self.right = self.canvas.create_rectangle(self.posxr1, self.posyt+50, self.posxr2, self.posyb, fill=self.color_right)
-        #     self.score_labelL = self.canvas.create_text(self.posxScoreL-50, self.posyScoreL+50, text=str(self.scoreL), fill="white", font=font.Font(family='ds-digital', size=self.fontSize), anchor="center")
-        #     self.score_labelR = self.canvas.create_text(self.posxScoreR+50, self.posyScoreR+50, text=str(self.scoreR), fill="white", font=font.Font(family='ds-digital', size=self.fontSize), anchor="center")
-        #     if self.home_icon_path:
-        #         image1 = Image.open(self.home_icon_path)
-        #         image1 = image1.resize((self.imagePosLeft[2], self.imagePosLeft[2]), Image.LANCZOS)
-        #         # Convert the image to a Tkinter PhotoImage object
-        #         tk_image1 = ImageTk.PhotoImage(image1)
-        #         # Display the image on the canvas
-        #         self.canvas.create_image(self.imagePosLeft[0], self.imagePosLeft[1], anchor=tk.NW, image=tk_image1)
-        #         # Ensure that the image is not garbage collected by keeping a reference
-        #         self.canvas.imageOne = tk_image1
-        #     if self.away_icon_path:
-        #         image2 = Image.open(self.away_icon_path)
-        #         image2 = image2.resize((self.imagePosRight[2], self.imagePosRight[2]), Image.LANCZOS)
-        #         # Convert the image to a Tkinter PhotoImage object
-        #         tk_image2 = ImageTk.PhotoImage(image2)
-        #         # Display the image on the canvas
-        #         self.canvas.create_image(self.imagePosRight[0], self.imagePosRight[1], anchor=tk.NW, image=tk_image2)
-        #         # Ensure that the image is not garbage collected by keeping a reference
-        #         self.canvas.imageTwo = tk_image2
+            self.leftName = self.canvas.create_text((self.WFifths), (self.TBHalf+self.fullHeight/10), anchor='center', text=f"{self.team1Name}", fill="white", font=font.Font(family='ds-digital', size=45*self.fontMultiply))
+            self.rightName = self.canvas.create_text((self.fullWidth-self.WFifths), (self.TBHalf+self.fullHeight/10), anchor='center', text=f"{self.team2Name}", fill="white", font=font.Font(family='ds-digital', size=45*self.fontMultiply))
+            self.score_labelL = self.canvas.create_text((self.WFifths), (self.fullHeight-self.TBQuarter+self.fullHeight/10), text=str(self.scoreL), fill="white", font=font.Font(family='ds-digital', size=(60*self.fontMultiply)), anchor="center")
+            self.score_labelR = self.canvas.create_text((self.fullWidth-self.WFifths), (self.fullHeight-self.TBQuarter+self.fullHeight/10), text=str(self.scoreR), fill="white", font=font.Font(family='ds-digital', size=(60*self.fontMultiply)), anchor="center")
+            if self.home_icon_path:
+                image1 = Image.open(self.home_icon_path)
+                image1 = image1.resize((int(self.fullWidth/5), int(self.fullWidth/5)), Image.LANCZOS)
+                # Convert the image to a Tkinter PhotoImage object
+                tk_image1 = ImageTk.PhotoImage(image1)
+                # Display the image on the canvas
+                self.canvas.create_image((self.WFifths), (self.TBQuarter+self.fullHeight/12), anchor="center", image=tk_image1)
+                # Ensure that the image is not garbage collected by keeping a reference
+                self.canvas.imageOne = tk_image1
+            if self.away_icon_path:
+                image2 = Image.open(self.away_icon_path)
+                image2 = image2.resize((int(self.fullWidth/5), int(self.fullWidth/5)), Image.LANCZOS)
+                # Convert the image to a Tkinter PhotoImage object
+                tk_image2 = ImageTk.PhotoImage(image2)
+                # Display the image on the canvas
+                self.canvas.create_image((self.fullWidth-self.WFifths), (self.TBQuarter+self.fullHeight/12), anchor="center", image=tk_image2)
+                # Ensure that the image is not garbage collected by keeping a reference
+                self.canvas.imageTwo = tk_image2
         # else:
         #     self.color_left = "#0000ff"
         #     self.color_right = "#ff0000"
