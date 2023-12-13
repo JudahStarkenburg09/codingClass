@@ -203,10 +203,10 @@ Use the UP and DOWn arrow to change the period (v, ^)"""
         if self.side == "left":
             self.color_left = "#ff0000"
             self.color_right = "#0000ff"
-            self.leftName = self.canvas.create_text((self.WFifths), (self.TBHalf+self.fullHeight/10), anchor='center', text=f"{self.team1Name}", fill="white", font=font.Font(family='ds-digital', size=45*self.fontMultiply))
-            self.rightName = self.canvas.create_text((self.fullWidth-self.WFifths), (self.TBHalf+self.fullHeight/10), anchor='center', text=f"{self.team2Name}", fill="white", font=font.Font(family='ds-digital', size=45*self.fontMultiply))
-            self.score_labelL = self.canvas.create_text((self.WFifths), (self.fullHeight-self.TBQuarter+self.fullHeight/10), text=str(self.scoreL), fill="white", font=font.Font(family='ds-digital', size=(60*self.fontMultiply)), anchor="center")
-            self.score_labelR = self.canvas.create_text((self.fullWidth-self.WFifths), (self.fullHeight-self.TBQuarter+self.fullHeight/10), text=str(self.scoreR), fill="white", font=font.Font(family='ds-digital', size=(60*self.fontMultiply)), anchor="center")
+            self.leftName = self.canvas.create_text((self.WFifths), (self.TBHalf+self.fullHeight/10), anchor='center', text=f"{self.team1Name}", fill="white", font=font.Font(family='ds-digital', size=30*self.fontMultiply))
+            self.rightName = self.canvas.create_text((self.fullWidth-self.WFifths), (self.TBHalf+self.fullHeight/10), anchor='center', text=f"{self.team2Name}", fill="white", font=font.Font(family='ds-digital', size=30*self.fontMultiply))
+            self.score_labelL = self.canvas.create_text((self.WFifths), (self.fullHeight-self.TBQuarter+self.fullHeight/10), text=str(self.scoreL), fill="white", font=font.Font(family='ds-digital', size=(70*self.fontMultiply)), anchor="center")
+            self.score_labelR = self.canvas.create_text((self.fullWidth-self.WFifths), (self.fullHeight-self.TBQuarter+self.fullHeight/10), text=str(self.scoreR), fill="white", font=font.Font(family='ds-digital', size=(70*self.fontMultiply)), anchor="center")
             if self.home_icon_path:
                 image1 = Image.open(self.home_icon_path)
                 image1 = image1.resize((int(self.fullWidth/5), int(self.fullWidth/5)), Image.LANCZOS)
