@@ -93,7 +93,7 @@ def fakeReceipt():
     return receiptPrank()
 
 def responseHello(regexMatches, talk):
-    helloResponseComplexList = [f"Hello {regexMatches[0]}, I'm Linus!", f"Hello {regexMatches[0]}, my name is Linus!", f"Hi {regexMatches[0]}, I'm Linus!"]
+    helloResponseComplexList = [f"Hello {str(regexMatches[0])[:1].capitalize() + str(regexMatches[0])[1:]}, I'm Linus!", f"Hello {str(regexMatches[0])[:1].capitalize() + str(regexMatches[0])[1:]}, my name is Linus!", f"Hi {str(regexMatches[0])[:1].capitalize() + str(regexMatches[0])[1:]}, I'm Linus!"]
     helloChoiceResponse = random.choice(helloResponseComplexList)
     return helloChoiceResponse
 
@@ -285,11 +285,11 @@ responses = [
         "responses": ["Hello!", "Hi there!", "Hey!", "Hi!"], #Use correct grammer, with multiple responses. Try not to add many questions, but if you do, than make sure to add a new "input" with what the user would answer with
     },
     {
-        "input": ["how are you", "how are you linus", "are you okay", "how do you do", "how are you feeling", "how are you doing", "how are you doing today","how are you feeling today"],
+        "input": ["how are you", "how are you linus", "are you okay", "how do you do", "how are you feeling", "how are you doing", "how are you doing today","how are you feeling today", "how are you doing today linus"],
         "responses": ["I'm good, thank you!", "I'm doing well!", "I'm fine, how about you?"],
     },
     {
-        "input": ["good","awesome","epic","great","im good how about you", "im good","im awesome","im epic","im great","im fine", "fine"],
+        "input": ["good","awesome","epic","great","im good how about you", "im good","im awesome","im epic","im great","im fine", "fine", "im good thanks"],
         "responses": ["That's great!", "Good."],
     },
     {
@@ -321,7 +321,7 @@ responses = [
         "response": ["Yes?", "That's my name!"],
     },
     {
-        "input": ['tell me a joke', 'joke', 'tell me another joke'],
+        "input": ['tell me a joke', 'joke', 'tell me another joke', "can you tell me a joke"],
         "action": 'chooseJoke',
     },
     {
