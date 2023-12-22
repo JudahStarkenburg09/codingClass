@@ -49,5 +49,6 @@ public class LoopSumCalculation {
         // Calculate and print the sum using do-while loop
         int resultDoWhile = sumUsingDoWhile(maxValue);
         System.out.println("Sum using do-while loop: " + resultDoWhile);
+        scanner.close();
     }
 }
