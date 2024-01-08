@@ -3,7 +3,7 @@ public class Square
    private int sideLength;
    private int area;
 
-   public makeSquare(int initialLength)
+   public void makeSquare(int initialLength)
    {
       sideLength = initialLength;
       area = sideLength * sideLength;
