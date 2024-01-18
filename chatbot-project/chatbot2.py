@@ -24,17 +24,17 @@ import smtplib
 import time
 
 
-from pong import pongGame
+# from pong import pongGame
 from TicTacToe1p import tic_tac_toe1p
 from TicTacToe2p import tic_tac_toe2p
 from countryData import CCCdatbase
-from nameGenerator import randName
-from gaunteloco import guanteloco
+# from nameGenerator import randName
+# from gaunteloco import guanteloco
 import math
-from hangman import hangManGame
-from carGameForChatbot import carGame
-from receiptProjectPDF import receiptPrank
-from jokesDatabase import allJokes
+# from hangman import hangManGame
+# from carGameForChatbot import carGame
+# from receiptProjectPDF import receiptPrank
+# from jokesDatabase import allJokes
 from roastDatabase import allRoasts
 
 
@@ -90,7 +90,8 @@ def restartSong():
         return "Song restarted"
 
 def fakeReceipt():
-    return receiptPrank()
+    print("Game Unavailable")
+    return
 
 def responseHello(regexMatches, talk):
     helloResponseComplexList = [f"Hello {str(regexMatches[0])[:1].capitalize() + str(regexMatches[0])[1:]}, I'm Linus!", f"Hello {str(regexMatches[0])[:1].capitalize() + str(regexMatches[0])[1:]}, my name is Linus!", f"Hi {str(regexMatches[0])[:1].capitalize() + str(regexMatches[0])[1:]}, I'm Linus!"]
@@ -108,13 +109,16 @@ def tic_tac_toe():
         return "Canceled"
 
 def randomNameGenerator():
-    return randName()
+    print("Game Unavailable")
+    return
 
 def guanteLocoGame():
-    return guanteloco()
+    print("Game Unavailable")
+    return
 
 def playHangMan():
-    return hangManGame()
+    print("Game Unavailable")
+    return
 
 current_directory = os.getcwd()
 folder1 = 'data'
@@ -232,7 +236,8 @@ def songRequests():
         return "Canceled!"
     
 def chooseJoke():
-    joke = random.choice(allJokes)
+    print("Game Unavailable")
+    return
     print(text_linus + joke["joke"])
     time.sleep(3)
     return joke["secondResponse"]
@@ -276,7 +281,8 @@ def mathing(matches, talk):
     return "Done!"
 
 def carHighwayGame():
-    carGame()
+    print("Game Unavailable")
+    return
 
 
 responses = [
