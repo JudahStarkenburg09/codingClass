@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Stream</title>
+    <!-- JavaScript for sending notification -->
+    <script>
+        function sendNotification() {
+            var userInput = document.getElementById("notificationInput").value;
+            fetch('/send_notification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: userInput }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        alert(data.error);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error sending notification:', error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <img src="{{ url_for('video_feed') }}" width="{{ screen_width }}" height="{{ screen_height }}" />
+    <div>
+        <!-- Input box and button for sending notifications -->
+        <input type="text" id="notificationInput" placeholder="Enter your message">
+        <button onclick="sendNotification()">Send Notification</button>
+    </div>
+</body>
+</html>
