@@ -31,7 +31,7 @@ def generate():
         mouse_x, mouse_y = pyautogui.position()
 
         # Draw a red circle to represent the mouse cursor
-        cv2.circle(frame, (mouse_x, mouse_y), 5, (0, 0, 255), -1)
+        cv2.circle(frame, (mouse_x, mouse_y), 5, (255, 0, 0), -1)
 
         _, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
@@ -76,4 +76,4 @@ def send_notification():
     return '', 204
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=1171)

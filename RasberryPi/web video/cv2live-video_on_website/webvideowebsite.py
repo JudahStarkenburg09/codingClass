@@ -2,7 +2,15 @@ from flask import Flask, render_template, Response
 import cv2
 
 app = Flask(__name__)
-cap = cv2.VideoCapture(0)  # 0 represents the default camera (change if needed)
+
+# Try to initialize a webcam. If not available, use the default camera (built-in camera).
+try:
+    cap = cv2.VideoCapture(1)  # Try using the second camera (change if needed)
+    if not cap.isOpened():
+        raise Exception("Webcam not available")
+except Exception as e:
+    print(f"Error: {e}")
+    cap = cv2.VideoCapture(0)  # Fall back to the default camera
 
 def generate():
     while True:
