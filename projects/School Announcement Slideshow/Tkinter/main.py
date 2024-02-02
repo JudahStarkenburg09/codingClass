@@ -8,6 +8,11 @@ import os
 from createAndShare import create_google_sheet  # Arguments: create_google_sheet(sheet_name="", shared_emails=[""])
 import sys
 from datetime import datetime
+import threading
+from googleapiclient.discovery import build
+from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import InstalledAppFlow
+
 
 class SlideshowApp:
     def __init__(self, root):
@@ -32,6 +37,47 @@ class SlideshowApp:
         # Create create sheet button
         self.create_sheet_button = ttk.Button(root, text="Don't have a configuration sheet? Create one!", command=self.create_sheet)
         self.create_sheet_button.pack(pady=10)
+
+    def connected(self, sheet, creds, credentials, gc, sheet_key):
+        messagebox.showinfo("Success", f"Google Sheet linked successfully!\nSheet Title: {sheet.title}")
+
+        try:
+            worksheet = sheet.sheet1  # Assuming it's the first worksheet, adjust if needed
+            slides_link = worksheet.acell('K2').value
+
+            if slides_link:
+                # Get slideshow name from the Google Slides API
+                slideshow_name = self.get_slideshow_name(slides_link, credentials)
+                messagebox.showinfo("Slideshow Information", f"Name of Slideshow: {slideshow_name}")
+            else:
+                messagebox.showinfo("Slideshow Information", "Please provide a link to your announcement slides, and set shared to 'Anyone with the link can view'")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to check Google Slides link.\nError: {str(e)}")
+            print(str(e))
+
+        # Clear the contents of the root window
+        for widget in self.root.winfo_children():
+            widget.destroy()
+
+    def get_slideshow_name(self, slides_link, credentials):
+        # Fetch the presentation name using Google Slides API
+        try:
+            # Setup the Slides API
+            service = build('slides', 'v1', credentials=credentials)
+
+            # Extract presentation ID from the link
+            presentation_id = slides_link.split('/')[-1]
+
+            # Fetch the presentation
+            presentation = service.presentations().get(presentationId=presentation_id).execute()
+
+            # Get the presentation title
+            slideshow_name = presentation['title']
+            return slideshow_name
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to fetch Slideshow information.\nError: {str(e)}")
+            return "Unknown Slideshow"
+
 
     def load_credentials(self):
         # Check if creds.json exists in the current directory
@@ -67,14 +113,17 @@ class SlideshowApp:
         try:
             creds = self.load_credentials()
             if creds is None:
+                print("Creds is None")
                 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
                 credentials = ServiceAccountCredentials.from_json_keyfile_name("creds.json", scope)
             else:
+                print("creds is not None")
                 credentials = ServiceAccountCredentials.from_json_keyfile_dict(creds)
 
             gc = gspread.authorize(credentials)
             sheet = gc.open_by_key(sheet_key)
-            messagebox.showinfo("Success", f"Google Sheet linked successfully!\nSheet Title: {sheet.title}")
+            self.connected(sheet, creds, credentials, gc, sheet_key)
+
         except Exception as e:
             messagebox.showerror("Error", f"Failed to access the Google Sheet.\nError: {str(e)}")
 
@@ -105,6 +154,9 @@ class SlideshowApp:
             messagebox.showinfo("Success", f"Google Sheet '{sheet_name}' created successfully!\nSheet Link: {link}")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to create the Google Sheet.\nError: {str(e)}")
+
+
+
 
 if __name__ == "__main__":
     root = tk.Tk()
