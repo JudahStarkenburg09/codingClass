@@ -3,7 +3,37 @@ import json
 import launchpad_py as launchpad
 import time
 import pygame
+import os
+import subprocess
+import platform
 import threading
+from ctypes import cast, POINTER
+from comtypes import CLSCTX_ALL
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+
+file_to_delete = "config.json" # We will add it back later
+if os.path.exists(file_to_delete):
+    os.remove(file_to_delete)
+else:
+    print(f"The file '{file_to_delete}' does not exist.")
+
+def change_volume(change_type, step=0.05):
+    devices = AudioUtilities.GetSpeakers()
+    interface = devices.Activate(
+        IAudioEndpointVolume._iid_, CLSCTX_ALL, None
+    ).QueryInterface(IAudioEndpointVolume)
+
+    current_volume = interface.GetMasterVolumeLevelScalar()
+    
+    if change_type == "up":
+        new_volume = min(1.0, current_volume + step)
+    elif change_type == "down":
+        new_volume = max(0.0, current_volume - step)
+    else:
+        print("Invalid change_type. Use 'up' or 'down'.")
+        return
+
+    interface.SetMasterVolumeLevelScalar(new_volume, None)
 
 badNumbers= [8,24,40,56,72,88,104]
 
@@ -11,6 +41,27 @@ badNumbers= [8,24,40,56,72,88,104]
 MAX_BUTTONS = 120
 config_file_path = os.path.join(os.getcwd(), "config.json")
 sounds_folder_path = os.path.join(os.getcwd(), "Sounds")
+
+def stop_all_sounds():
+    global lp
+
+    config_data = loadConfig()
+    
+    lp.LedCtrlRaw(207, 255, 0)
+
+    for button_data in config_data:
+        button_number = button_data["Button#"]
+        mp3_file = button_data["MP3File"]
+
+        if mp3_file:
+            # Stop the sound on the corresponding button channel
+            pygame.mixer.Channel(button_number).stop()
+
+            # Turn the button back to red
+            lp.LedCtrlRaw(button_number, 255, 0)
+
+    time.sleep(0.5)
+
 
 def createConfig():
     config_data = [{"Button#": i, "MP3File": ""} for i in range(MAX_BUTTONS)]
@@ -61,6 +112,10 @@ def assignSounds():
         mp3_files = [file for file in os.listdir(sounds_folder_path) if file.endswith(".mp3")]
         config_data = loadConfig()
         done = False
+        lp.LedCtrlRaw(207, 255, 255)
+        lp.LedCtrlRaw(200, 255, 255)
+        lp.LedCtrlRaw(201, 255, 255)
+
         while not done:
             countMP3s = len(mp3_files)
             done = True
@@ -103,6 +158,16 @@ def play_sound(button, mp3_path):
     # Sound has finished, turn the button back to red
     lp.LedCtrlRaw(button, 255, 0)
 
+def set_system_volume(volume):
+    system_platform = platform.system()
+
+    if system_platform == "Windows":
+        subprocess.run(["nircmd.exe", "setsysvolume", str(int(volume * 65535))])
+    elif system_platform == "Linux":
+        subprocess.run(["amixer", "set", "Master", f"{int(volume * 100)}%"])
+    elif system_platform == "Darwin":  # macOS
+        subprocess.run(["osascript", "-e", f'set volume output volume {int(volume * 100)}'])
+
 def playLoop():
     global lp
     print("Sound loop started")
@@ -114,6 +179,7 @@ def playLoop():
 
     # Create a dictionary to map buttons to tracks
     button_tracks = {}
+    volume = 0.5  # Initial volume
 
     while True:
         buttons = lp.ButtonStateRaw()
@@ -122,7 +188,19 @@ def playLoop():
                 pressed_button = buttons[0]
                 config_data = loadConfig()
 
-                if 0 <= pressed_button < MAX_BUTTONS and config_data[pressed_button]["MP3File"]:
+                if pressed_button == 207:
+                    stop_all_sounds()
+                    lp.LedCtrlRaw(207, 255, 255)
+                elif pressed_button == 200:
+                    change_volume("up", step=0.1)
+                    lp.LedCtrlRaw(200, 255, 255)
+
+                elif pressed_button == 201:
+                    change_volume("down", step=0.1)
+                    lp.LedCtrlRaw(201, 255, 255)
+
+
+                elif 0 <= pressed_button < MAX_BUTTONS and config_data[pressed_button]["MP3File"]:
                     mp3_file = config_data[pressed_button]["MP3File"]
                     mp3_path = os.path.join(sounds_folder_path, mp3_file)
 
@@ -136,6 +214,8 @@ def playLoop():
 
                         # Store the thread in the dictionary
                         button_tracks[pressed_button] = track_thread
+
+
 
 
 
