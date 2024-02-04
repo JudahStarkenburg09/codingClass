@@ -62,10 +62,12 @@ def assignSounds():
         config_data = loadConfig()
         done = False
         while not done:
+            countMP3s = len(mp3_files)
             done = True
             for button_number, mp3_file in enumerate(mp3_files):
-                print(f"MP3 File: {mp3_file}")
-                print("Press a button to assign to the MP3 file")
+                print(f"Sounds Left: {countMP3s}")
+                countMP3s -= 1
+                print(f"MP3 File: [{mp3_file}], Press a button to assign to the MP3 file")
                 button_pressed = getButtonPress(lp)
 
                 if (0 <= button_pressed < MAX_BUTTONS) and not any(int(button_pressed) == i for i in badNumbers):
