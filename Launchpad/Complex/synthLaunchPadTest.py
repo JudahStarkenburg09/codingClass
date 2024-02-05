@@ -59,7 +59,7 @@ if lp.Open():
         # Check for button events
         buttons = lp.ButtonStateRaw()
 
-        if buttons:
+        if buttons: # Add function to see if pressed bad button
             if buttons[1]:
                 note = button_to_note.get(buttons[0], None)
                 print(f"Played note {note}")
