@@ -168,7 +168,7 @@ def set_system_volume(volume):
     elif system_platform == "Darwin":  # macOS
         subprocess.run(["osascript", "-e", f'set volume output volume {int(volume * 100)}'])
 
-def playLoop():
+def SFXLoop():
     global lp
     print("Sound loop started")
     pygame.init()
@@ -216,9 +216,18 @@ def playLoop():
                         button_tracks[pressed_button] = track_thread
 
 
+def SYNTHLoop():
+    ''
+
 
 
 
 assignSounds()
+print("\n\n")
 print("Playing loop")
-playLoop()
+page = "SFX"
+while True:
+    if page == "SFX":
+        SFXLoop()
+    elif page == "SYNTH":
+        SYNTHLoop()
