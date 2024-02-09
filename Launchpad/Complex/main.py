@@ -151,23 +151,6 @@ def assignSounds():
     else:
         print("Did not find any Launchpad Mk1.")
 
-def play_sound(button, mp3_path, volume=0.25):  # Adjust volume as needed (between 0.0 and 1.0)
-    global lp, page
-
-    channel = pygame.mixer.Channel(button)
-    sound = pygame.mixer.Sound(mp3_path)
-    
-    # Set the volume before playing the sound
-    sound.set_volume(volume)
-
-    channel.play(sound)
-
-    while channel.get_busy():
-        time.sleep(0.1)
-
-    if page == "SFX":
-        lp.LedCtrlRaw(button, 255, 0)
-
 def set_system_volume(volume):
     system_platform = platform.system()
 
@@ -177,9 +160,29 @@ def set_system_volume(volume):
         subprocess.run(["amixer", "set", "Master", f"{int(volume * 100)}%"])
     elif system_platform == "Darwin":
         subprocess.run(["osascript", "-e", f'set volume output volume {int(volume * 100)}'])
+        
+def play_sound(button, mp3_path, volume=0.25):  # Adjust volume as needed (between 0.0 and 1.0)
+    global lp, page, active_sounds
+    if mp3_path not in active_sounds:
+        channel = pygame.mixer.Channel(button)
+        sound = pygame.mixer.Sound(mp3_path)
+        
+        # Set the volume before playing the sound
+        sound.set_volume(volume)
+
+        channel.play(sound)
+
+        while channel.get_busy():
+            time.sleep(0.1)
+
+        if page == "SFX":
+            lp.LedCtrlRaw(button, 255, 0)
+
+
+active_sounds = set()
 
 def SFXLoop():
-    global page, lp, midi_output, buttonsToColorSFX
+    global page, lp, midi_output, buttonsToColorSFX, active_sounds
 
     print("Sound loop started")
 
@@ -191,20 +194,16 @@ def SFXLoop():
     lp.LedCtrlRaw(207, 255, 255)
     lp.LedCtrlRaw(200, 255, 255)
     lp.LedCtrlRaw(201, 255, 255)
-
     lp.LedCtrlRaw(205, 255, 0)
-
 
     for i in buttonsToColorSFX:
         lp.LedCtrlRaw(i, 255, 0)
-
 
     while True:
         if not pygame.midi.get_init():
             pygame.midi.init()
 
         buttons = lp.ButtonStateRaw()
-
 
         if buttons:
             if buttons[1]:
@@ -224,7 +223,6 @@ def SFXLoop():
                     page = "SYNTH"
                     pygame.midi.quit()
                     return
-                    
                 elif 0 <= pressed_button < MAX_BUTTONS and config_data[pressed_button]["MP3File"]:
                     mp3_file = config_data[pressed_button]["MP3File"]
                     mp3_path = os.path.join(sounds_folder_path, mp3_file)
@@ -234,6 +232,7 @@ def SFXLoop():
                         track_thread = threading.Thread(target=play_sound, args=(pressed_button, mp3_path))
                         track_thread.start()
                         button_tracks[pressed_button] = track_thread
+                        active_sounds.add(mp3_file)  # Add the sound to the active_sounds set
 
     pygame.midi.quit()
 
@@ -255,7 +254,7 @@ def SYNTHLoop():
     pygame.init()
 
     BAD_NUMBERS = [8, 24, 40, 56, 72, 88, 104, 120]
-    instrumentButtons = {8: "synth.json", 24: "piano.json", 40: "trumpet.json", 56: "bagpipe.json", 72:"Bass.json", 88:"SawtoothSynth.json", 104: "aahs.json", 120:"e-guitar.json", 204:"custom.json"}
+    instrumentButtons = {8: "synth.json", 24: "piano.json", 40: "trumpet.json", 56: "bagpipe.json", 72:"Bass.json", 88:"SawtoothSynth.json", 104: "bells.json", 120:"e-guitar.json", 204:"custom.json"}
     instrumentButtonsN = [8,24,40,56,72, 88, 104, 120, 204] #REMEMBER TO HAVE THIS THE SAME AS THE INSTRUMENTBUTTONS JUST NUMBERS
     
 
@@ -284,6 +283,8 @@ def SYNTHLoop():
             midi_output.set_instrument(int(instrument))
             midi_output.note_on(instrument_NOTE, velocity)
             # active_notes.add(instrument_NOTE)
+
+            
                 
         
         
@@ -328,6 +329,8 @@ def SYNTHLoop():
             midi_output.set_instrument(needed_instrument)
             midi_output.note_on(note, velocity)
             active_notes.add(note)
+        
+        print(active_notes)
 
     def stop_midi_note(note, velocity=127, needed_instrument=0):
         global selected
