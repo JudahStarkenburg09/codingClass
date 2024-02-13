@@ -1,6 +1,11 @@
 import pygame
 import sys
 import pygame.midi
+import json
+from tkinter import messagebox, Tk
+
+# Import the clipboard module
+import pyperclip
 
 pygame.init()
 pygame.midi.init()
@@ -52,7 +57,22 @@ keyboardToNote = [
     {'key': 'b', 'note#': 60, 'noteL': 'B'},
 ]
 
-numberToInstrument = {1: 1, 2: 51, 3: 34, 4: 43, 5: 74, 6: 82}
+try:
+    with open("instruments.json", 'r') as file:
+        jsonFile = json.load(file)
+    print(jsonFile)
+    print("-------")
+except FileNotFoundError:
+    messagebox.showinfo("Missing File", "Make sure you have the instruments.json file in the same location as the exe! Also make sure its named 'instruments.json' EXACTLY!")
+    exit()
+except json.JSONDecodeError:
+    messagebox.showinfo("Missing Instrument", "Please put a value for each number key. If you don't want a corresponding instrument, set the value to 0!")
+    exit()
+new_dict = {int(key): value for key, value in jsonFile.items()}
+
+print(new_dict)
+
+numberToInstrument = new_dict
 
 def play_midi_note(note, velocity=127, needed_instrument=0):
     midi_output.set_instrument(needed_instrument)
@@ -68,6 +88,14 @@ def stop_midi_note(note, velocity=127, needed_instrument=0):
 def stop_all_midi_notes():
     for i in range(0, 128):
         midi_output.note_off(i, velocity=127)
+
+def copy_link_to_clipboard():
+    # Define the link to be copied
+    link = "https://docs.google.com/spreadsheets/d/1tCoK4zb98rY2qjzXvQwMqbRKKk75U-Ka_i3TH3o07lE/edit#gid=0"
+    # Copy the link to the clipboard
+    pyperclip.copy(link)
+    # Show message box confirming that link is copied
+    messagebox.showinfo("Link Copied", f"The link '{link}' has been copied to the clipboard!")
 
 # Initialize Pygame
 pygame.init()
@@ -174,9 +202,23 @@ while running:
                     text = font.render("", True, (0, 0, 0))
             text_rect = text.get_rect(center=key_rect.center)
             window.blit(text, text_rect)
+    
+    # Draw a button
+    button_rect = pygame.Rect(685, 335, 100, 40)
+    pygame.draw.rect(window, (0, 0, 255), button_rect)
+    font = pygame.font.SysFont(None, 24)
+    text = font.render("Copy Link", True, (255, 255, 255))
+    text_rect = text.get_rect(center=button_rect.center)
+    window.blit(text, text_rect)
 
     # Update the display
     pygame.display.flip()
+
+    # Check for button click event
+    mouse_pos = pygame.mouse.get_pos()
+    if button_rect.collidepoint(mouse_pos):
+        if pygame.mouse.get_pressed()[0]:  # Left mouse button clicked
+            copy_link_to_clipboard()
 
 # Quit Pygame
 pygame.quit()
