@@ -22,7 +22,7 @@ except ImportError:
 import random
 from pygame import time
 
-message = "Hi"
+message = "ZECH"
 
 def main():
 
