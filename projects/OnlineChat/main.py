@@ -1,9 +1,13 @@
 from flask import Flask, render_template_string, request
 from flask_socketio import SocketIO, emit
 
+from flask import Flask, render_template_string, request
+from flask_socketio import SocketIO
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='threading')  # Specify a valid async mode here
+
 
 # HTML content for the form page
 form_page = """
