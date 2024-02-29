@@ -162,6 +162,13 @@ def welcome():
     global bad_list
     name = request.args.get('name', '')
     profile = request.args.get('profile', '')
+    print(profiles)
+    equals = True
+    for i in profiles:
+        if i["name"] != profile and equals:
+            equals = False
+    if equals:
+        profile = "smile"
     return render_template_string(welcome_page, name=name, profile=profile, bad_list=bad_list)
 
 
